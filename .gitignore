@@ -1,0 +1,6 @@
+#configuration php
+
+src/conf/
+vendor/
+composer.json
+composer.lock
