@@ -1,10 +1,9 @@
 <?php
-namespace wishlist\models;
 
 require_once 'vendor/autoload.php';
 
-use \Illuminate\Database\Eloquent\Model as Model;
 use \Illuminate\Database\Capsule\Manager as DB;
+use \wishlist\models as m;
 
 $info = parse_ini_file('src/conf/conf.ini');
 
@@ -26,20 +25,20 @@ $db->bootEloquent();
 
 
 /**
-$items = Item::select('id', 'liste_id', 'nom', 'descr', 'img', 'url', 'tarif')->get();
+$items = m\Item::select('id', 'liste_id', 'nom', 'descr', 'img', 'url', 'tarif')->get();
 foreach ($items as $value) {
   echo("id = ".$value->id.", liste_id = ".$value->liste_id.", nom = ".$value->nom.", descr = ".$value->descr.", img = ".$value->img.", url = ".$value->url.", tarif = ".$value->tarif."<br>");
 }
 */
 /**
 if(isset($_GET['id'])){
-  $item = Item::where('id','=',$_GET['id'])->first();
+  $item = m\Item::where('id','=',$_GET['id'])->first();
 }
 echo("id = ".$item->id.", liste_id = ".$item->liste_id.", nom = ".$item->nom.", descr = ".$item->descr.", img = ".$item->img.", url = ".$item->url.", tarif = ".$item->tarif."<br>");
 */
 
 /** insertion
-$i = new Item();
+$i = new m\Item();
 $i->liste_id = 0;
 $i->nom = 'testInsert';
 
@@ -49,7 +48,7 @@ echo 'fait';
  */
 
 /**
-$l = Liste::where('no','=','1')->first();
+$l = m\Liste::where('no','=','1')->first();
 $i = $l->items()->get();
 
 foreach ($i as $value) {
@@ -58,7 +57,7 @@ foreach ($i as $value) {
 **/
 
 /**
-$item = Item::where('id','=',1)->first();
+$item = m\Item::where('id','=',1)->first();
 $liste = $item->liste()->first();
 
 echo("no = ".$liste->no.", user_id = ".$liste->user_id.", titre = ".$liste->titre.", description = ".$liste->description.", expiration = ".$liste->expiration.", token = ".$liste->token."<br>");
@@ -66,7 +65,7 @@ echo("no = ".$liste->no.", user_id = ".$liste->user_id.", titre = ".$liste->titr
 
 // indiquer le nom de la liste de souhait dans la liste des items
 /**
-$items = Item::get();
+$items = m\Item::get();
 foreach ($items as $value) {
   $liste = $value->liste()->first();
   if(isset($liste)){
@@ -81,7 +80,7 @@ foreach ($items as $value) {
 //lister les items d'une liste donnée dont l'id est passé en paramètre
 
 if(isset($_GET['no'])){
-  $liste = Liste::where('no','=',$_GET['no'])->first();
+  $liste = m\Liste::where('no','=',$_GET['no'])->first();
   $i = $liste->items()->get();
 
   foreach ($i as $value) {
