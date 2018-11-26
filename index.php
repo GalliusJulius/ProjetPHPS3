@@ -1,12 +1,12 @@
 <?php
 namespace wishlist\models;
 
-require_once '../../vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
 use \Illuminate\Database\Eloquent\Model as Model;
 use \Illuminate\Database\Capsule\Manager as DB;
 
-$info = parse_ini_file('../conf/conf.ini');
+$info = parse_ini_file('src/conf/conf.ini');
 
 $db = new DB();
 
