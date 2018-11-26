@@ -9,16 +9,7 @@ $info = parse_ini_file('src/conf/conf.ini');
 
 $db = new DB();
 
-$db->addConnection( [
- 'driver' => $info['driver'],
- 'host' => $info['host'],
- 'database' => $info['database'],
- 'username' => $info['username'],
- 'password' => $info['password'],
- 'charset' => $info['charset'],
- 'collation' => $info['collation'],
- 'prefix' => $info['prefix']
-] );
+$db->addConnection($info);
 
 $db->setAsGlobal();
 $db->bootEloquent();
