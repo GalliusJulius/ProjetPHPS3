@@ -14,9 +14,7 @@ class GestionMembre{
     public function seConnecter(){
         if(isset($_POST['connexion'])){
             $var=m\Membre::select('mdp')->  where('email','=',$_POST['mail'])->first();
-            
             if($var->mdp == ($_POST['pass'])){
-                printf("acces ok");
                 header('Location: Accueil.php');
             }
         }
