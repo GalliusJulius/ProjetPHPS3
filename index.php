@@ -4,6 +4,7 @@ require_once 'vendor/autoload.php';
 
 use \Illuminate\Database\Capsule\Manager as DB;
 use \wishlist\models as m;
+use \wishlist\controleurs as c;
 
 $info = parse_ini_file('src/conf/conf.ini');
 
@@ -13,6 +14,14 @@ $db->addConnection($info);
 
 $db->setAsGlobal();
 $db->bootEloquent();
+
+$contItem = new c\ContItem($db);
+if(isset($_GET['nom']) && isset($_GET['desc'])){
+  $contItem->ajouterItem($_GET['nom'],$_GET['desc']);
+  echo 'fait';
+}else{
+  echo 'pas fait';
+}
 
 
 /**
@@ -70,6 +79,7 @@ foreach ($items as $value) {
 
 //lister les items d'une liste donnée dont l'id est passé en paramètre
 
+/**
 if(isset($_GET['no'])){
   $liste = m\Liste::where('no','=',$_GET['no'])->first();
   $i = $liste->items()->get();
@@ -78,3 +88,4 @@ if(isset($_GET['no'])){
     echo("id = ".$value->id.", liste_id = ".$value->liste_id.", nom = ".$value->nom.", descr = ".$value->descr.", img = ".$value->img.", url = ".$value->url.", tarif = ".$value->tarif."<br>");
   }
 }
+*/
