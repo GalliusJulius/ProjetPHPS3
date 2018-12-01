@@ -9,6 +9,12 @@ $db = new DB();
 $db->addConnection($info);
 $db->setAsGlobal();
 $db->bootEloquent();
+
+//$cont = new c\ContAffichageListe();
+//$cont->afficherListe('nosecure1');
+//$cont->afficherItemListe(1);
+
+
 $gestionConnec = new c\GestionMembre($db);
 if(isset($_POST['connexion'])){
     $gestionConnec->seConnecter();
@@ -64,4 +70,4 @@ if(isset($_POST['connexion'])){
             </div>
         </div>
     </body> 
- </html>
+</html>
