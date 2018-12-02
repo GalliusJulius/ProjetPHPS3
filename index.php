@@ -9,6 +9,12 @@ $db = new DB();
 $db->addConnection($info);
 $db->setAsGlobal();
 $db->bootEloquent();
+
+//$cont = new c\ContAffichageListe();
+//$cont->afficherListe('nosecure1');
+//$cont->afficherItemListe(1);
+
+
 $gestionConnec = new c\GestionMembre($db);
 session_start();
 ?>
@@ -73,4 +79,4 @@ session_start();
             </div>
         </div>
     </body> 
- </html>
+</html>
