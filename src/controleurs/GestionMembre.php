@@ -14,8 +14,8 @@ class GestionMembre{
     public function seConnecter(){
         if(isset($_POST['connexion'])){
             $var=m\Membre::select('mdp')->where('email','=',$_POST['mail'])->first();
-            if($var->mdp == ($_POST['pass'])){
-                //session_start();
+            //verif mdp
+            if(password_verify($_POST['pass'],$var->mdp)){
                 $_SESSION['mail'] = $_POST['mail'];
                 header('Location: Accueil.php');
             }
@@ -45,7 +45,7 @@ class GestionMembre{
                     $insert->email=$_POST['email'];
                     $insert->Nom=$_POST['nom'];
                     $insert->Prénom=$_POST['prenom'];
-                    $insert->mdp=$_POST['mdp'];
+                    $insert->mdp=password_hash($_POST['mdp'],PASSWORD_DEFAULT);
                     $insert->save();
                 }
                 else{
