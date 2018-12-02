@@ -13,15 +13,18 @@ class GestionMembre{
     
     public function seConnecter(){
         if(isset($_POST['connexion'])){
-            $var=m\Membre::select('mdp')->  where('email','=',$_POST['mail'])->first();
+            $var=m\Membre::select('mdp')->where('email','=',$_POST['mail'])->first();
             if($var->mdp == ($_POST['pass'])){
-                session_start();
+                //session_start();
                 $_SESSION['mail'] = $_POST['mail'];
                 header('Location: Accueil.php');
             }
+            else{
+                print("<p class=\"erreur\">Mot de passe ou email inconnu</p>");
+            }
         }
         else{
-            print("Problème de connexion");
+            print("<p class=\"erreur\">Problème de connexion</p>");
         }
     }
     
@@ -34,7 +37,25 @@ class GestionMembre{
     }
     
     public function enregistrer(){
-        
+        if(isset($_POST['inscription'])){
+            $count=m\Membre::where('email','=',$_POST['email'])->count();
+            if($count == 0){
+                if($_POST['mdp'] == $_POST['mdpc']){
+                    $insert = new m\Membre();
+                    $insert->email=$_POST['email'];
+                    $insert->Nom=$_POST['nom'];
+                    $insert->Prénom=$_POST['prenom'];
+                    $insert->mdp=$_POST['mdp'];
+                    $insert->save();
+                }
+                else{
+                    print("<p class=\"erreur\">Les mots de passes ne sont pas les mêmes</p>");
+                }
+            }
+            else{
+                print("<p class=\"erreur\">Mail non disponible</p>");
+            }
+        }
     }
     
     public function erreurPasCo(){

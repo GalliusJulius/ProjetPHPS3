@@ -15,10 +15,7 @@ session_start();
 if(!isset($_SESSION['mail'])){
     $gestionConnec->erreurPasCo();
 }
-//Si il veux se déconnecter
-if(isset($_POST['deconnexion'])){
-    $gestionConnec->seDeconnecter();
-}
+$courant = m\Membre::select('nom','prénom')->where('email','=',$_SESSION['mail'])->first();
 ?>
 <html>
 	<head>
@@ -28,17 +25,12 @@ if(isset($_POST['deconnexion'])){
 	</head>
 	<body>
         <div class="container">
-            <div class="row">
-            <form method="post" action="">
-                    <div  class="col col-lg-4"> 
-                        <button type="submit" class="btn btn-primary" name="deconnexion">Se déconnecter</button>
-                    </div>
-                </form>
-                <div class="col col-l-4">
-                    <a href="Compte.php">
-                        <button class="btn btn-primary" >Mon compte</button></a>
-                </div>
-            </div>
+            <h1>Modification du compte</h1>
+            <ul>
+            <li>Nom : <?php printf($courant->nom) ?></li>
+            <li>Prenom : <?php printf($courant->prénom)?></li>
+            <li>Email : <?php printf($_SESSION['mail']) ?></li>
+            </ul>
         </div>
     </body> 
  </html>
