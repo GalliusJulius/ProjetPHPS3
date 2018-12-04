@@ -1,42 +1,42 @@
 <?php
 namespace wishlist\controleurs;
-require_once 'vendor/autoload.php';
-use \Illuminate\Database\Capsule\Manager as DB;
 use \wishlist\models as m;
+use \wishlist\vues as v;
 
 class GestionMembre{
     
-    private $db;
-    public function __construct($connec){
-        $this->db = $connec;
+    private $erreurC ="";
+    private $erreurI ="";
+    
+    public function __construct(){
     }
     
     public function seConnecter(){
-        if(isset($_POST['connexion'])){
-            $var=m\Membre::select('mdp')->where('email','=',$_POST['mail'])->first();
-            //verif mdp
-            if(password_verify($_POST['pass'],$var->mdp)){
-                $_SESSION['mail'] = $_POST['mail'];
-                header('Location: Accueil.php');
-            }
-            else{
-                print("<p class=\"erreur\">Mot de passe ou email inconnu</p>");
-            }
+        $erreurI ="";
+        $res = false;
+        $var=m\Membre::select('mdp')->where('email','=',$_POST['mail'])->first();
+        if(isset($var) && password_verify($_POST['pass'],$var->mdp)){
+            $_SESSION['mail'] = $_POST['mail'];
+            $res=true;
         }
         else{
-            print("<p class=\"erreur\">Problème de connexion</p>");
+            $this->erreurC = ("<p class=\"erreur\">Mot de passe ou email inconnu</p>");
         }
+        return $res;
     }
     
     public function seDeconnecter(){
-        if(isset($_POST['deconnexion'])){
-            session_start();
-            session_destroy();
-            header('Location: Index.php');
-        }
+         session_start();
+         session_destroy();
+    }
+    
+    public function recupererVue(){
+        $v = new v\VueConnexion();
+        $v->render($this->erreurI,$this->erreurC );
     }
     
     public function enregistrer(){
+        $erreurC ="";
         if(isset($_POST['inscription'])){
             $count=m\Membre::where('email','=',$_POST['email'])->count();
             if($count == 0){
@@ -49,16 +49,12 @@ class GestionMembre{
                     $insert->save();
                 }
                 else{
-                    print("<p class=\"erreur\">Les mots de passes ne sont pas les mêmes</p>");
+                     $this->erreurI = ("<p class=\"erreur\">Les mots de passes ne sont pas les mêmes</p>");
                 }
             }
             else{
-                print("<p class=\"erreur\">Mail non disponible</p>");
+                 $this->erreurI =("<p class=\"erreur\">Mail non disponible</p>");
             }
         }
-    }
-    
-    public function erreurPasCo(){
-        header('Location: Index.php');
     }
 }
