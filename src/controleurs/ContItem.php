@@ -10,11 +10,7 @@ use \wishlist\vues as v;
 
 class ContItem {
 
-  private $db;
-
-  public function __construct(){
-    //$this->db = $connexion;
-  }
+  public function __construct(){}
 
 
   public function afficherItem($id){
