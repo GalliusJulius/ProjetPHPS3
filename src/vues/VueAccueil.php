@@ -2,8 +2,11 @@
 namespace wishlist\vues;
 
 class VueAccueil{
+    private $lienCompte="";
     
     public function __construct(){
+        $app = \Slim\Slim::getInstance();
+        $this->lienCompte = $app->urlFor('Compte');
     }
     
     public function render(){
@@ -24,7 +27,7 @@ class VueAccueil{
                         </div>
                     </form>
                     <div class="col col-l-4">
-                        <a href="Compte.php">
+                        <a href=$this->lienCompte>
                             <button class="btn btn-primary" >Mon compte</button></a>
                     </div>
                 </div>

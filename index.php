@@ -23,36 +23,42 @@ $app->get('/',function(){
 $app->post('/',function(){
     $app = \Slim\Slim::getInstance();
     $gest = new c\GestionMembre();
+    //Si on veux se connecter
     if(isset($_POST['connexion'])){
+        //Si on peut se connecter on redirige
         if($gest->seConnecter()){
             $app->redirect($_SERVER['SCRIPT_NAME'].'/Accueil');
-            printf("Ok");
-            printf("Faire acces Accueil");
         }
+        //sinon on redonne la vue de la connexion
         else{
             $gest->recupererVue();
         }
     }
+    //si on veux s'inscrire
     else{
         $gest->enregistrer();
         $gest->recupererVue();
     }
 });
 
-    //Routage dans l'accueil
-    $app->get('/Accueil',function(){
-        $acc = new c\ControleurAccueil();
-        $acc->recupererVue();
-    });
+//Routage dans l'accueil
+$app->get('/Accueil',function(){
+    $acc = new c\ControleurAccueil();
+    $acc->recupererVue();
+});
 
-    $app->post('/Accueil',function(){
-        $app = \Slim\Slim::getInstance();
-         if(isset($_POST['deconnexion'])){
-             $gest = new c\GestionMembre();
-             $gest->seDeconnecter();
-             $app->redirect($_SERVER['SCRIPT_NAME'].'');
-         }
-    });
+$app->post('/Accueil',function(){
+    $app = \Slim\Slim::getInstance();
+     if(isset($_POST['deconnexion'])){
+         $gest = new c\GestionMembre();
+         $gest->seDeconnecter();
+         $app->redirect($_SERVER['SCRIPT_NAME'].'');
+     }
+});
+
+$app->get('/Compte',function(){
+   echo("tkt meme pas"); 
+})->name('Compte');
 
 $app->get('/liste/:token', function($token){
     $cont = new c\ContAffichageListe();
