@@ -62,14 +62,27 @@ $app->get('/liste/:token', function($token){
 $app->get('/item/:id', function($id){
     $cont = new c\ContAffichageListe();
     $cont->afficherItemListe($id);
-});
+})->name('itemListe');
 
 $app->get('/liste', function(){
     $cont = new c\ContAffichageListe();
     $cont->afficherListes();
 });
 
+$app->get('/item/:id/reserver', function($id){
+    $cont = new c\ContAffichageListe();
+    $cont->afficherReservationItem($id);
+});
 
+$app->post('/item/:id/reserver', function($id){
+    $cont = new c\ContAffichageListe();
+    $cont->reserverItem($id);
+})->name('reserverItem');
+
+$app->get('/test/:id', function($id)  {
+  $contItem = new c\ContItem();
+  $contItem->afficherItem($id);
+});
 
 
 $app->run();

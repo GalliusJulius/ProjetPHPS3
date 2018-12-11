@@ -21,16 +21,14 @@ class VueContItem{
         <!DOCTYPE html>
         <html>
            <head>
-            <meta charset="utf-8">
+            <meta charset='utf-8'/>
             <title>Gestion Items</title>
-            <link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>
-        </head>
+            <link rel='stylesheet' href="./../src/css/grid.css" />
+            <link rel='stylesheet' href="./../src/css/bootstrap.min.css" />
+
+          </head>
         <body>
-            <div class="container">
-
-                $body
-
-            </div>
+          $body
         </body>
      </html>
 END;
@@ -39,18 +37,30 @@ END;
 
 
     private function afficher(){
-      $id = $this->item['id'];
       $nom = $this->item['nom'];
       $descr = $this->item['descr'];
       $img = $this->item['img'];
+      $tarif = $this->item['tarif'];
       $bod = <<<END
-      <div>
-        <h3> Item </h3>
-        <p><strong>id</strong> = $id </p>
-        <p><strong>nom</strong> = $nom </p>
-        <p><strong>descr</strong> = $descr </p>
-        <p><strong>img</strong> = $img </p>
-      </div>
+     <div class="row">
+         <div class="col-md-2">
+             <img src="../img/$img" class="rounded float-left img-fluid img-thumbnail" height="70%" width="70%" alt="">
+         </div>
+         <div class="col-md-8">
+             <p>$nom</p>
+           <div class="row">
+             <div class="col-md-9">
+                 $descr
+             </div>
+             <div class="col-md-3">
+                 <p>$tarif</p>
+             </div>
+           </div>
+             <form>
+                 <button class="btn btn-primary" >ajouter</button>
+             </form>
+         </div>
+       </div>
 END;
       return $bod;
     }
