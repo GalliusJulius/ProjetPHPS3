@@ -6,7 +6,24 @@ class VueConnexion{
     public function __construct(){
     }
     
-    public function render($e1,$e2){
+    public function render($erreur){
+        $e1="";
+        $e2="";
+        switch($erreur){
+            case "ER_CONNEXION" :{
+                $e2="<p class=\"erreur\">Mail ou mot de passe incorrect</p>";
+                break;
+            }
+            case "ER_INSCRIPTION1" :{
+                $e1="<p class=\"erreur\">Les mots de passes ne sont pas les mêmes</p>";
+                break;
+            }
+            case "ER_INSCRIPTION2" :{
+                $e1="<p class=\"erreur\">Mail non disponible</p>";
+                break;
+            }
+        }
+        
         $html =  <<< END
         <!DOCTYPE html>
         <html>

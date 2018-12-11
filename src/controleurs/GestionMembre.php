@@ -5,14 +5,13 @@ use \wishlist\vues as v;
 
 class GestionMembre{
     
-    private $erreurC ="";
-    private $erreurI ="";
+    private $erreur ="";
     
     public function __construct(){
     }
     
     public function seConnecter(){
-        $erreurI ="";
+        $this->erreur ="";
         $res = false;
         $var=m\Membre::select('mdp')->where('email','=',$_POST['mail'])->first();
         if(isset($var) && password_verify($_POST['pass'],$var->mdp)){
@@ -20,7 +19,7 @@ class GestionMembre{
             $res=true;
         }
         else{
-            $this->erreurC = ("<p class=\"erreur\">Mot de passe ou email inconnu</p>");
+            $this->erreur = "ER_CONNEXION";
         }
         return $res;
     }
@@ -32,7 +31,7 @@ class GestionMembre{
     
     public function recupererVue(){
         $v = new v\VueConnexion();
-        $v->render($this->erreurI,$this->erreurC );
+        $v->render($this->erreur);
     }
     
     public function enregistrer(){
@@ -49,11 +48,11 @@ class GestionMembre{
                     $insert->save();
                 }
                 else{
-                     $this->erreurI = ("<p class=\"erreur\">Les mots de passes ne sont pas les mêmes</p>");
+                     $this->erreur = "ER_INSCRIPTION1";
                 }
             }
             else{
-                 $this->erreurI =("<p class=\"erreur\">Mail non disponible</p>");
+                 $this->erreur ="ER_INSCRIPTION2";
             }
         }
     }
