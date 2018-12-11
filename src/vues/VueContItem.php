@@ -23,8 +23,8 @@ class VueContItem{
            <head>
             <meta charset='utf-8'/>
             <title>Gestion Items</title>
-            <link rel='stylesheet' href="./../src/css/grid.css" />
-            <link rel='stylesheet' href="./../src/css/bootstrap.min.css" />
+            <link rel='stylesheet' href="../src/css/grid.css" />
+            <link rel='stylesheet' href="../src/css/bootstrap.min.css" />
 
           </head>
         <body>
