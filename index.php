@@ -10,10 +10,6 @@ $db->addConnection($info);
 $db->setAsGlobal();
 $db->bootEloquent();
 
-$app->get('/books/:id', function ($id) {
- echo "index books $id" ;
-});
-
 //Routage pour la connexion (racine)
 $app->get('/',function(){
     $gest = new c\GestionMembre();
@@ -63,6 +59,23 @@ $app->post('/Accueil',function(){
 $app->get('/Compte',function(){
    echo("tkt meme pas"); 
 })->name('Compte');
+
+$app->get('/liste/:token', function($token){
+    $cont = new c\ContAffichageListe();
+    $cont->afficherListe($token);
+});
+
+$app->get('/item/:id', function($id){
+    $cont = new c\ContAffichageListe();
+    $cont->afficherItemListe($id);
+});
+
+$app->get('/liste', function(){
+    $cont = new c\ContAffichageListe();
+    $cont->afficherListes();
+});
+
+
 
 
 $app->run();
