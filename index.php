@@ -68,27 +68,48 @@ $app->get('/liste/:token', function($token){
 $app->get('/item/:id', function($id){
     $cont = new c\ContAffichageListe();
     $cont->afficherItemListe($id);
-})->name('itemListe');
+});
 
 $app->get('/liste', function(){
     $cont = new c\ContAffichageListe();
     $cont->afficherListes();
 });
 
-$app->get('/item/:id/reserver', function($id){
-    $cont = new c\ContAffichageListe();
-    $cont->afficherReservationItem($id);
-});
-
-$app->post('/item/:id/reserver', function($id){
-    $cont = new c\ContAffichageListe();
-    $cont->reserverItem($id);
-})->name('reserverItem');
-
 $app->get('/test/:id', function($id)  {
   $contItem = new c\ContItem();
   $contItem->afficherItem($id);
 });
+
+
+$app->get('/item/ajouter/:n/:d', function($n,$d) {
+  $contItem = new c\ContItem();
+  $contItem->ajouterItem($n,$d);
+});
+
+
+$app->get('/item/supprimer/:id', function($id) {
+  $contItem = new c\ContItem();
+  $contItem->supprimerItem($id);
+});
+
+
+$app->post('/test/:id/modifier',function($id){
+  //if(isset($_POST['ajouter'])){
+    $contItem = new c\ContItem();
+    //$contItem->ajouterItem($n,$d);
+    $contItem->modifier($id);
+    //}
+}); // voir pour prendre les paramètres
+
+
+$app->post('/test/:id', function($id)  {
+  if(isset($_POST['nom']) && isset($_POST['descr']) && isset($_POST['tarif'])){
+    $contItem = new c\ContItem();
+    $contItem->modifierItem($id,$_POST);
+    $contItem->afficherItem($id);
+  }
+});
+
 
 
 $app->run();
