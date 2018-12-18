@@ -37,6 +37,19 @@ class ContAffichageListe {
         $vue = new VueParticipant(array('item' => $item));
         $vue->render(3);
     }
+    
+    public function afficherReservationItem($id){
+        
+        $item = Item::where('id', '=', $id)->first();
+        
+        $vue = new VueParticipant(array('item' => $item));
+        $vue->render(4);
+    }
+    
+    public function reserverItem($id){
+        $app = \Slim\Slim::getInstance();
+        $app->response->redirect($app->urlFor('itemListe', array('id' => $id)));
+    }
 
 }
 

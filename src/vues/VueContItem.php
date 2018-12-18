@@ -16,21 +16,13 @@ class VueContItem{
         $body = $this->afficher();
         break;
       }
+      case 'MODIFIER' : {
+        $body = $this->modifier();
+      }
     }
         $html = <<< END
         <!DOCTYPE html>
-        <html>
-           <head>
-            <meta charset="utf-8">
-            <title>Gestion Items</title>
-            <link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>
-        </head>
-        <body>
-            <div class="container">
-
-                $body
-
-            </div>
+          $body
         </body>
      </html>
 END;
@@ -43,14 +35,75 @@ END;
       $nom = $this->item['nom'];
       $descr = $this->item['descr'];
       $img = $this->item['img'];
+      $tarif = $this->item['tarif'];
       $bod = <<<END
-      <div>
-        <h3> Item </h3>
-        <p><strong>id</strong> = $id </p>
-        <p><strong>nom</strong> = $nom </p>
-        <p><strong>descr</strong> = $descr </p>
-        <p><strong>img</strong> = $img </p>
-      </div>
+      <html>
+         <head>
+         <meta charset='utf-8' />
+         <link rel='stylesheet' href='../src/css/bootstrap.min.css' />
+         <link rel='stylesheet' href='../src/css/grid.css' />
+         <script src='../src/css/snowstorm.js' ></script>
+        </head>
+      <body>
+     <div class="row">
+         <div class="col-md-2">
+             <img src="../img/$img" class="rounded float-left img-fluid img-thumbnail" height="100%" width="100%" alt="">
+         </div>
+        <div class="col-md-6">
+             $nom
+           <div class="row">
+             <div class="col-md-9">
+                 $descr
+             </div>
+             <div class="col-md-3">
+                 <p>$tarif</p>
+             </div>
+           </div>
+            <form method="post" action="/Projet/projet/test/$id/modifier">
+              <button type="submit" class="btn btn-primary" name="modifier">modifier</button>
+           </form>
+           <form method="post" action="/Projet/projet/test/$id/ajouter">
+             <button type="submit" class="btn btn-primary" name="ajouter">ajouter</button>
+          </form>
+          <form method="post" action="/Projet/projet/test/$id/supprimer">
+            <button type="submit" class="btn btn-primary" name="supprimer">supprimer</button>
+         </form>
+         </div>
+       </div>
+END;
+      return $bod;
+    }
+// pour les paramétres les passer dans le lien transmit par le bouton
+    private function modifier(){
+      $id = $this->item['id'];
+      $img = $this->item['img'];
+      $bod = <<<END
+      <html>
+         <head>
+         <meta charset='utf-8' />
+         <link rel='stylesheet' href='../../src/css/bootstrap.min.css' />
+         <link rel='stylesheet' href='../../src/css/grid.css' />
+         <script src='../src/css/snowstorm.js' ></script>
+        </head>
+      <body>
+      <div class="row">
+          <div class="col-md-2">
+              <img src="../../img/$img" class="rounded float-left img-fluid img-thumbnail" height="100%" width="100%" alt="">
+          </div>
+         <div class="col-md-6">
+         <form method="post" action="/Projet/projet/test/$id">
+           <p><input type="text" name="nom" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Nom" required/></p>
+            <div class="row">
+              <div class="col-md-9">
+                <p><input type="text" name="descr" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Description" required/></p>
+              </div>
+              <div class="col-md-3">
+                <p><input type="number" name="tarif" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Tarif" required/></p>
+              </div>
+                <button type="submit" class="btn btn-primary" name="valider">valider</button>
+             </form>
+            </div>
+          </div>
 END;
       return $bod;
     }

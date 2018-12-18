@@ -4,7 +4,7 @@ namespace wishlist\vues;
 
 class VueParticipant {
     
-    private $liste, $item;
+    private $liste, $item, $app;
     
     public function __construct($tab) {
         if(isset($tab['liste'])){
@@ -14,6 +14,8 @@ class VueParticipant {
         if(isset($tab['item'])){
             $this->item = $tab['item'];
         }
+        
+        $this->app = \Slim\Slim::getInstance();
     }
     
     
@@ -71,6 +73,16 @@ class VueParticipant {
         return $html;
     }
     
+    private function afficherReservationItem(){
+        
+        $html = $this->affichageItem();
+        $html .= "<form method='POST' action='" . $this->app->urlFor('reserverItem', array('id' => $this->item->id)) . "'>";
+        $html .= "<button type='submit'>Valider</button>";
+        $html .= "</form>";
+
+        return $html;
+    }
+    
     
     public function render($code) {
         $content = "";
@@ -81,6 +93,8 @@ class VueParticipant {
             $content = $this->affichageListe();
         } else if($code == 3){
             $content = $this->affichageItem();
+        } else if($code == 4){
+            $content = $this->afficherReservationItem();
         }
         
         $html = <<<END
