@@ -1,9 +1,9 @@
 <?php
 require_once 'vendor/autoload.php';
-
 $app = new \Slim\Slim();
 use \wishlist\controleurs as c;
 use \Illuminate\Database\Capsule\Manager as DB;
+use \wishlist\Auth as a;
 $db = new DB();
 $info= parse_ini_file('src/conf/conf.ini');
 $db->addConnection($info);
@@ -22,21 +22,34 @@ $app->get('/',function(){
 });
 $app->post('/',function(){
     $app = \Slim\Slim::getInstance();
-    $gest = new c\GestionMembre();
+    $gest = new c\ControleurConnexion();
     //Si on veux se connecter
     if(isset($_POST['connexion'])){
-        //Si on peut se connecter on redirige
-        if($gest->seConnecter()){
+        try{
+            a\Authentification::authentificate($_POST['mail'],$_POST['pass']); a\Authentification::loadProfil($_POST['mail']);
+            //pas sur que ca soit bon
             $app->redirect($_SERVER['SCRIPT_NAME'].'/Accueil');
         }
-        //sinon on redonne la vue de la connexion
-        else{
-            $gest->recupererVue();
+         catch(Exception $e){
+             $gest->erreur="ER_CONNEXION";
+             $gest->recupererVue();
         }
     }
     //si on veux s'inscrire
-    else{
-        $gest->enregistrer();
+    else if(isset($_POST['inscription'])){
+        try{
+            a\Authentification::createUser($_POST['email'],$_POST['mdp'],$_POST['mdpc'],$_POST['nom'],$_POST['prenom'],$_POST['pseudo']); 
+        }
+        catch(Exception $e){
+            echo($e->getMessage());
+            var_dump($e);
+            if($e->getMessage()=="mail"){ 
+                $gest->erreur="ER_INSCRIPTION2";
+            }
+            else if($e->getMessage()=="mdp"){
+                $gest->erreur="ER_INSCRIPTION1";
+            }
+        }
         $gest->recupererVue();
     }
 });
