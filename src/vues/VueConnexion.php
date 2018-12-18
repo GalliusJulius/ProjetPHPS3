@@ -48,7 +48,7 @@ class VueConnexion{
                                     <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Adresse mail" required/>
                                 </p>
                                 <p>
-                                   <input type="text" name="nom" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Pseudo" required/>
+                                   <input type="text" name="pseudo" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Pseudo" required/>
                                 </p>
                                 <p>
                                     <input type="password" name="mdp" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Mot de passe" required/>
@@ -58,7 +58,7 @@ class VueConnexion{
                                 </p>
                                 $e1
                                 <p>
-                                    <button type="submit" class="btn btn-primary" name="inscription">Inscription</button>
+                                    <button type="submit" class="btn btn-primary" name="inscription" vale="inscription">Inscription</button>
                                 </p>
                             </form>
                         </div>
