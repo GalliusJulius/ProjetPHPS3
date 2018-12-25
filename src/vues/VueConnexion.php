@@ -2,24 +2,37 @@
 namespace wishlist\vues;
 
 class VueConnexion{
+    protected $typepage;
     
-    public function __construct(){
+    public function __construct($type){
+        $this->typepage=$type;
     }
     
     public function render($erreur){
-        $e1="";
-        $e2="";
+        $err="";
         switch($erreur){
             case "ER_CONNEXION" :{
-                $e2="<p class=\"erreur\">Mail ou mot de passe incorrect</p>";
+                $err="<p class=\"erreur\">Mail ou mot de passe incorrect</p>";
                 break;
             }
             case "ER_INSCRIPTION1" :{
-                $e1="<p class=\"erreur\">Les mots de passes ne sont pas les mêmes</p>";
+                $err="<p class=\"erreur\">Les mots de passes ne sont pas les mêmes</p>";
                 break;
             }
             case "ER_INSCRIPTION2" :{
-                $e1="<p class=\"erreur\">Mail non disponible</p>";
+                $err="<p class=\"erreur\">Mail non disponible</p>";
+                break;
+            }
+        }
+        
+        $contenu ="<h1>Errer de contenu</h1>";
+        switch($this->typepage){
+            case "connexion":{
+                $contenu = $this->connexion();
+                break;
+            }
+            case "inscription":{
+                $contenu = $this->inscription();
                 break;
             }
         }
@@ -33,12 +46,27 @@ class VueConnexion{
                 <link rel='stylesheet'  href='src/css/Generique.css'/>
                 <link rel='stylesheet'  href='src/css/bootstrap.min.css'/>
             </head>
-            <body>
+            <body class="text-center">
                 <div class="container">
                     <div class="row justify-content-md-center">
-                        <div class="col col-lg-4">
-                            <form method="post" action="">
-                                <p>
+                        <div class="col col-lg-4 justify-content-md-center">
+                        
+                        $contenu
+                        $err
+                        
+                        </div>
+                    </div>
+                </div>
+            </body> 
+        </html>
+END;
+        echo $html;
+    }   
+    
+    public function inscription(){
+        $html = <<<END
+        <form method="post" action="">
+                         <p>
                                     <input type="text" name="prenom" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Prénom" required/>
                                 </p>
                                 <p>
@@ -56,31 +84,34 @@ class VueConnexion{
                                 <p>
                                     <input type="password" name="mdpc" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Confirmez mot de passe" required/>
                                 </p>
-                                $e1
+                               
                                 <p>
                                     <button type="submit" class="btn btn-primary" name="inscription" vale="inscription">Inscription</button>
                                 </p>
                             </form>
-                        </div>
-                        <div class = "col-lg-3">
-                            <form method="post" action="">
+END;
+        return $html;
+    }
+    
+    public function connexion(){
+        $app = \Slim\Slim::getInstance();
+        $lien=$app->urlFor('Inscription');
+        $html = <<<END
+         <form class="form-signin" method="post" action="">
                              <p>
                                     <input type="email" name="mail" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Votre adresse mail" required/>
                                 </p>
                                 <p>
                                    <input type="password" name="pass" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Mot de passe" required/>
                                 </p>
-                                $e2
+                               
+                               
                                 <p>
                                     <button type="submit" class="btn btn-primary" name="connexion" value="connec">Connexion</button>
                                 </p>
+                                    <a href=$lien><p class="text-muted">Pas de compte? S'inscrire</p></a>
                             </form>
-                        </div>
-                    </div>
-                </div>
-            </body> 
-        </html>
 END;
-        echo $html;
-    }   
+        return $html;
+    }
 }

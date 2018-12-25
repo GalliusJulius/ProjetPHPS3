@@ -16,8 +16,8 @@ class ControleurConnexion{
          session_destroy();
     }
     
-    public function recupererVue(){
-        $v = new v\VueConnexion();
+    public function recupererVue($type){
+        $v = new v\VueConnexion($type);
         $v->render($this->erreur);
     }
 }

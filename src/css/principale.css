@@ -1,0 +1,24 @@
+.bg-dark{
+    background-color: #393E46!important;
+}
+
+nav img {
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+@media (max-width: 768px) {
+    .navbar-brand{
+        display: none;
+    }
+    
+    .nav-item img{
+        display: none;
+    }
+}
+
+@media (min-width: 768px) {
+    #compte{
+        display: none;
+    }
+}

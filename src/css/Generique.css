@@ -7,3 +7,11 @@
     color: red;
     font-style: italic;
 }
+
+.text-muted{
+    font-style: italic;
+}
+
+.text-muted:hover{
+    text-decoration: none;
+}

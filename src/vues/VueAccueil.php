@@ -21,8 +21,8 @@ class VueAccueil{
     <link rel="icon" href="../../../../favicon.ico">
 
     <title>Navbar Template for Bootstrap</title>
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/principale.css" rel="stylesheet">
+    <link rel="stylesheet" href="../src/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../src/css/principale.css">
   </head>
 
   <body>
@@ -68,7 +68,7 @@ class VueAccueil{
                 </div>
             </div>
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-            <script src="../js/bootstrap.min.js"></script>
+            <script src="../src/js/bootstrap.min.js"></script>
         </body> 
      </html>
 END;

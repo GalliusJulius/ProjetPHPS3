@@ -10,16 +10,12 @@ $db->addConnection($info);
 $db->setAsGlobal();
 $db->bootEloquent();
 
-//Routage pour la connexion (racine)
+//Routage pour la connexion
 $app->get('/',function(){
-    $gest = new c\GestionMembre();
-    if(!isset($_SESSION['mail'])){
-        $gest->recupererVue();
-    }
-    else{
-        printf('On va  à l\'accueil');   
-    }
+    $gest = new c\ControleurConnexion();
+    $gest->recupererVue("connexion");
 });
+
 $app->post('/',function(){
     $app = \Slim\Slim::getInstance();
     $gest = new c\ControleurConnexion();
@@ -32,11 +28,21 @@ $app->post('/',function(){
         }
          catch(Exception $e){
              $gest->erreur="ER_CONNEXION";
-             $gest->recupererVue();
+             $gest->recupererVue("connexion");
         }
-    }
+    }   
+});
+
+$app->get('/inscription',function(){
+    $gest = new c\ControleurConnexion();
+    $gest->recupererVue("inscription");
+})->name('Inscription');
+
+$app->post('/inscription',function(){
+    $app = \Slim\Slim::getInstance();
+    $gest = new c\ControleurConnexion();
     //si on veux s'inscrire
-    else if(isset($_POST['inscription'])){
+    if(isset($_POST['inscription'])){
         try{
             a\Authentification::createUser($_POST['email'],$_POST['mdp'],$_POST['mdpc'],$_POST['nom'],$_POST['prenom'],$_POST['pseudo']); 
         }
@@ -50,7 +56,7 @@ $app->post('/',function(){
                 $gest->erreur="ER_INSCRIPTION1";
             }
         }
-        $gest->recupererVue();
+        $gest->recupererVue("inscription");
     }
 });
 
@@ -63,7 +69,7 @@ $app->get('/Accueil',function(){
 $app->post('/Accueil',function(){
     $app = \Slim\Slim::getInstance();
      if(isset($_POST['deconnexion'])){
-         $gest = new c\GestionMembre();
+         $gest = new c\ControleurConnexion();
          $gest->seDeconnecter();
          $app->redirect($_SERVER['SCRIPT_NAME'].'');
      }
