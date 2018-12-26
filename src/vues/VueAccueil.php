@@ -2,14 +2,30 @@
 namespace wishlist\vues;
 
 class VueAccueil{
-    private $lienCompte="";
+    private $typePage;
+
     
-    public function __construct(){
-        $app = \Slim\Slim::getInstance();
-        $this->lienCompte = $app->urlFor('Compte');
+    public function __construct($type){
+        $this->typePage=$type;
     }
     
     public function render(){
+        $app = \Slim\Slim::getInstance();
+        $contenu = "<h1>ERREUR</h1>";
+        $style="";
+        switch($this->typePage){
+            case "accueil":{
+                $contenu = $this->accueil();
+                break;
+            }
+            case "compte":{
+                $contenu = $this->monCompte();
+                $style = "<link rel=\"stylesheet\" href=\"../src/css/monCompte.css\">"; 
+                break;
+            }
+                
+        }
+        $lienAccueil = $app->urlFor('accueil');
         $html = <<< END
         <!doctype html>
 <html lang="en">
@@ -23,11 +39,12 @@ class VueAccueil{
     <title>Navbar Template for Bootstrap</title>
     <link rel="stylesheet" href="../src/css/bootstrap.min.css">
     <link rel="stylesheet" href="../src/css/principale.css">
+    $style
   </head>
 
   <body>
             <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-              <a class="navbar-brand" href="#">My Wish List</a>
+              <a class="navbar-brand" href="$lienAccueil">My Wish List</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
@@ -54,7 +71,23 @@ class VueAccueil{
                     <img src="../profil.png" width="30" height="30" alt="">
                 </a>
             </nav>
+            
             <div class="container">
+                $contenu
+            </div>
+            
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <script src="../src/js/bootstrap.min.js"></script>
+        </body> 
+     </html>
+END;
+        echo $html;
+    }
+    
+    public function accueil(){
+        $app = \Slim\Slim::getInstance();
+        $lien = $app->urlFor('Compte');
+        $html = <<< END
                 <div class="row">
                 <form method="post" action="">
                         <div  class="col col-lg-4"> 
@@ -62,16 +95,49 @@ class VueAccueil{
                         </div>
                     </form>
                     <div class="col col-l-4">
-                        <a href=$this->lienCompte>
+                        <a href=$lien>
                             <button class="btn btn-primary" >Mon compte</button></a>
                     </div>
                 </div>
-            </div>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-            <script src="../src/js/bootstrap.min.js"></script>
-        </body> 
-     </html>
+        
 END;
-        echo $html;
+        return $html;
+    }
+    
+    public function monCompte(){
+        $app = \Slim\Slim::getInstance();
+        $lienAccueil = $app->urlFor('accueil');
+        #Permet la modification dynamique
+        try{ session_start();}
+        catch(\Exception $e){}
+        $html= <<<END
+            <div class="row justify-content-md-center">
+            <div class="col col-lg-4 justify-content-md-center">
+                <form method="post" class="text-center">
+END;
+        foreach($_SESSION['profil'] as $key=>$val){
+            $temp = <<<END
+            <p>$key actuel : $val<input type="text" name="$key" class="form-control" placeholder="Nouveau $key"></p>
+END;
+             $html = $html . $temp;
+        }
+        $fin = <<<END
+         <div id = "modifMdp"class="row justify-content-md-center">
+                                 <p> Changer son mot de passe
+                                <input type="password" name ="mdp" class="form-control" placeholder="Nouveau mot de passe">
+                                <input type="password" name="mdpc" class="form-control" placeholder="Confirmation">
+                                </p>
+                            </div>
+                            <a href=$lienAccueil>
+                                <label class="btn btn-secondary">Annuler</label>
+                            </a>
+                                <button type="submit" class="btn btn-primary" name="valider" value="validation">Effectuer les modifications</button>
+                        </form>
+                    </div>
+                </div>
+END;
+        $html=$html.$fin;
+        return $html;
+        
     }
 }

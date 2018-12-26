@@ -14,16 +14,15 @@ $db->bootEloquent();
 $app->get('/',function(){
     $gest = new c\ControleurConnexion();
     $gest->recupererVue("connexion");
-});
+})->name('connexion');
 
 $app->post('/',function(){
     $app = \Slim\Slim::getInstance();
     $gest = new c\ControleurConnexion();
     //Si on veux se connecter
     if(isset($_POST['connexion'])){
-        try{
+        try{    
             a\Authentification::authentificate($_POST['mail'],$_POST['pass']); a\Authentification::loadProfil($_POST['mail']);
-            //pas sur que ca soit bon
             $app->redirect($_SERVER['SCRIPT_NAME'].'/Accueil');
         }
          catch(Exception $e){
@@ -33,6 +32,7 @@ $app->post('/',function(){
     }   
 });
 
+//Routage pour l'inscription
 $app->get('/inscription',function(){
     $gest = new c\ControleurConnexion();
     $gest->recupererVue("inscription");
@@ -45,6 +45,7 @@ $app->post('/inscription',function(){
     if(isset($_POST['inscription'])){
         try{
             a\Authentification::createUser($_POST['email'],$_POST['mdp'],$_POST['mdpc'],$_POST['nom'],$_POST['prenom'],$_POST['pseudo']); 
+            $app->redirect($app->urlFor('accueil'));
         }
         catch(Exception $e){
             echo($e->getMessage());
@@ -63,21 +64,29 @@ $app->post('/inscription',function(){
 //Routage dans l'accueil
 $app->get('/Accueil',function(){
     $acc = new c\ControleurAccueil();
-    $acc->recupererVue();
-});
+    $acc->recupererVue("accueil");
+})->name('accueil');
 
 $app->post('/Accueil',function(){
     $app = \Slim\Slim::getInstance();
      if(isset($_POST['deconnexion'])){
          $gest = new c\ControleurConnexion();
          $gest->seDeconnecter();
-         $app->redirect($_SERVER['SCRIPT_NAME'].'');
+         $app->redirect($app->urlFor('connexion'));
      }
 });
 
+//Routage pour la gestion de compte
 $app->get('/Compte',function(){
-   echo("tkt meme pas"); 
+   $acc = new c\ControleurAccueil();
+    $acc->recupererVue("compte");
 })->name('Compte');
+
+$app->post('/Compte',function(){
+   $acc = new c\ControleurAccueil();
+   $acc->miseAjour();
+    $acc->recupererVue("compte");
+});
 
 $app->get('/liste/:token', function($token){
     $cont = new c\ContAffichageListe();
@@ -128,7 +137,5 @@ $app->post('/test/:id', function($id)  {
     $contItem->afficherItem($id);
   }
 });
-
-
 
 $app->run();
