@@ -63,7 +63,7 @@ $app->get('/Compte',function(){
 $app->get('/liste/:token', function($token){
     $cont = new c\ContAffichageListe();
     $cont->afficherListe($token);
-});
+})->name('liste');
 
 $app->get('/item/:id', function($id){
     $cont = new c\ContAffichageListe();
@@ -75,19 +75,19 @@ $app->get('/liste', function(){
     $cont->afficherListes();
 });
 
-$app->get('/item/:id/reserver', function($id){
+$app->get( '/item/:id/reserver', function($id){
     $cont = new c\ContAffichageListe();
     $cont->afficherReservationItem($id);
 });
 
-$app->post('/item/:id/reserver', function($id){
+$app->post( '/item/:id/reserver', function($id){
     $cont = new c\ContAffichageListe();
     $cont->reserverItem($id);
 })->name('reserverItem');
 
-$app->get('/test/:id', function($id)  {
-  $contItem = new c\ContItem();
-  $contItem->afficherItem($id);
+$app->get( '/test/:id', function($id) {
+    $contItem = new c\ContItem();
+    $contItem->afficherItem($id);
 });
 
 
