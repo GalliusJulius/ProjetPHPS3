@@ -20,15 +20,17 @@ class VueParticipant {
     
     
     private function affichageListes() {
-        $link = "<link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>";
+        $link = "<link rel='stylesheet'  href='./src/css/bootstrap.min.css'/>
+        <link rel='stylesheet'  href='./src/css/grid.css'/>
+        <link rel='stylesheet'  href='./src/css/itemsListes.css'/>";
         
-        $html = '<section><ul>';
+        $html = '<section><ul class="listes">';
         
         foreach($this->liste as $l){
             $items = $l->items()->get();
             
             if(isset($l)){
-                $html .= '<li><p>' . $l->titre . '</p><p>' . $l->description . '</p><p>' . $l->expiration . '</p>';
+                $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><p class="date">' . $l->expiration . '</p>';
                 $html .= '<form method="GET" action="' . $this->app->urlFor('liste', array('token' => $l->token)) . '">';
                 $html .= '<button class="btn btn-primary">Détails</button>';
                 $html .= '</li>';
@@ -43,24 +45,27 @@ class VueParticipant {
     
     
     private function affichageListe() {
-        $link = "<link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>";
+        $link = "<link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>
+        <link rel='stylesheet'  href='../src/css/grid.css'/>
+        <link rel='stylesheet'  href='../src/css/itemsListes.css'/>";
         
-        $html = '<section><ul>';
+        $html = '<section><ul class="listes">';
         
         foreach($this->liste as $l){
             $items = $l->items()->get();
             
             if(isset($l)){
-                $html .= '<li><p>' . $l->titre . '</p><p>' . $l->description . '</p><p>' . $l->expiration . '</p><ul>';
+                $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
 
                 foreach($items as $i){
-                    $html .= '<li><p>' . $i->nom . ' - ' . $i->img . ' - ' . $i->tarif .  '</p></li>' . '<br/><br/>';
+                    $html .= '<div class="col col-l-3">';
+                    $html .= '<p class="nom"><h4>' . $i->nom . '</h4></p><img src="../src/img/' . $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
                     $html .= '<form method="GET" action="' . $this->app->urlFor('itemListe', array('id' => $i->id)) . '">';
                     $html .= '<button class="btn btn-primary">Détails</button>';
-                    $html .= '</li>';
                     $html .= "</form>";
+                    $html .= '</div>';
                 }
-                $html .= '</ul></li>';
+                $html .= '</div><p class="date">' . $l->expiration . '</p></li>';
             }
         }
         
