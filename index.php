@@ -1,5 +1,6 @@
 <?php
 require_once 'vendor/autoload.php';
+#require_once 'passwordPolicy/lib/password.php';
 $app = new \Slim\Slim();
 use \wishlist\controleurs as c;
 use \Illuminate\Database\Capsule\Manager as DB;
@@ -45,11 +46,11 @@ $app->post('/inscription',function(){
     if(isset($_POST['inscription'])){
         try{
             a\Authentification::createUser($_POST['email'],$_POST['mdp'],$_POST['mdpc'],$_POST['nom'],$_POST['prenom'],$_POST['pseudo']); 
+            a\Authentification::authentificate($_POST['email'],$_POST['mdp']);
+            a\Authentification::loadProfil($_POST['email']);
             $app->redirect($app->urlFor('accueil'));
         }
         catch(Exception $e){
-            echo($e->getMessage());
-            var_dump($e);
             if($e->getMessage()=="mail"){ 
                 $gest->erreur="ER_INSCRIPTION2";
             }
@@ -63,7 +64,7 @@ $app->post('/inscription',function(){
 
 //Routage dans l'accueil
 $app->get('/Accueil',function(){
-    $acc = new c\ControleurAccueil();
+    $acc = new c\ControleurCompte();
     $acc->recupererVue("accueil");
 })->name('accueil');
 
@@ -78,15 +79,26 @@ $app->post('/Accueil',function(){
 
 //Routage pour la gestion de compte
 $app->get('/Compte',function(){
-   $acc = new c\ControleurAccueil();
+   $acc = new c\ControleurCompte();
     $acc->recupererVue("compte");
 })->name('Compte');
 
 $app->post('/Compte',function(){
-   $acc = new c\ControleurAccueil();
+   $acc = new c\ControleurCompte();
    $acc->miseAjour();
-    $acc->recupererVue("compte");
+   $acc->recupererVue("compte");
 });
+
+$app->get('SupprimerCompte',function(){
+    $acc = new c\ControleurCompte();
+    $acc->recupererVue("suppCompte");
+})->name('suppCompte');
+
+$app->post('SupprimerCompte',function(){
+    $acc = new c\ControleurCompte();
+    $acc->supprimerCompte();
+    $acc->recupererVue("confSupp");
+})->name('suppCompte');
 
 $app->get('/liste/:token', function($token){
     $cont = new c\ContAffichageListe();
@@ -108,18 +120,15 @@ $app->get('/test/:id', function($id)  {
   $contItem->afficherItem($id);
 });
 
-
 $app->get('/item/ajouter/:n/:d', function($n,$d) {
   $contItem = new c\ContItem();
   $contItem->ajouterItem($n,$d);
 });
 
-
 $app->get('/item/supprimer/:id', function($id) {
   $contItem = new c\ContItem();
   $contItem->supprimerItem($id);
 });
-
 
 $app->post('/test/:id/modifier',function($id){
   //if(isset($_POST['ajouter'])){
@@ -127,8 +136,7 @@ $app->post('/test/:id/modifier',function($id){
     //$contItem->ajouterItem($n,$d);
     $contItem->modifier($id);
     //}
-}); // voir pour prendre les paramètres
-
+});     
 
 $app->post('/test/:id', function($id)  {
   if(isset($_POST['nom']) && isset($_POST['descr']) && isset($_POST['tarif'])){

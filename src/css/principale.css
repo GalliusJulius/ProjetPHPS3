@@ -2,6 +2,15 @@
     background-color: #393E46!important;
 }
 
+.erreur{
+    color: red;
+    font-style: italic;
+}
+
+.btn{
+    vertical-align: baseline;
+}
+
 nav img {
     margin-left: 20%;
     margin-right: 20%;

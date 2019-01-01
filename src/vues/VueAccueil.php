@@ -3,10 +3,12 @@ namespace wishlist\vues;
 
 class VueAccueil{
     private $typePage;
+    private $messageErreur;
 
     
-    public function __construct($type){
+    public function __construct($type,$erreur){
         $this->typePage=$type;
+        $this->messageErreur=$erreur;
     }
     
     public function render(){
@@ -19,6 +21,9 @@ class VueAccueil{
                 break;
             }
             case "compte":{
+                if($this->messageErreur!=""){
+                    $this->messageErreur="<p class=\"erreur\">$this->messageErreur</p>";
+                }
                 $contenu = $this->monCompte();
                 $style = "<link rel=\"stylesheet\" href=\"../src/css/monCompte.css\">"; 
                 break;
@@ -26,6 +31,7 @@ class VueAccueil{
                 
         }
         $lienAccueil = $app->urlFor('accueil');
+        $lienCompte = $app->urlFor('Compte');
         $html = <<< END
         <!doctype html>
 <html lang="en">
@@ -63,12 +69,12 @@ class VueAccueil{
                     <a class="nav-link" href="#">Autres <span class="sr-only">(current)</span></a>
                   </li>
                 <li class="nav-item active" id="compte">
-                    <a class="nav-link" href="#">Mon compte <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href=$lienCompte>Mon compte <span class="sr-only">(current)</span></a>
                   </li>
                 </ul>
                 </div>
-                <a class="nav-item " href="#">
-                    <img src="../profil.png" width="30" height="30" alt="">
+                <a class="nav-item " href=$lienCompte>
+                    <img src="../src/img/profil.png" width="30" height="30" alt="">
                 </a>
             </nav>
             
@@ -91,13 +97,11 @@ END;
                 <div class="row">
                 <form method="post" action="">
                         <div  class="col col-lg-4"> 
-                            <button type="submit" class="btn btn-primary" name="deconnexion">Se déconnecter</button>
+                            <a href="">
+                                <button type="submit" class="btn btn-primary" name="deconnexion">Se déconnecter</button>
+                            </a>
                         </div>
                     </form>
-                    <div class="col col-l-4">
-                        <a href=$lien>
-                            <button class="btn btn-primary" >Mon compte</button></a>
-                    </div>
                 </div>
         
 END;
@@ -132,6 +136,7 @@ END;
                                 <label class="btn btn-secondary">Annuler</label>
                             </a>
                                 <button type="submit" class="btn btn-primary" name="valider" value="validation">Effectuer les modifications</button>
+                                $this->messageErreur
                         </form>
                     </div>
                 </div>
