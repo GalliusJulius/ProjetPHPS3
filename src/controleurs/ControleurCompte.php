@@ -3,6 +3,7 @@ namespace wishlist\controleurs;
 use \wishlist\vues as v;
 use \wishlist\models as m;
 use \wishlist\Auth as a;
+use \wishlist\controleurs as c;
 
 class ControleurCompte{
     
@@ -45,5 +46,16 @@ class ControleurCompte{
         }
         $perso->save();
         a\Authentification::loadProfil($_SESSION['profil']['Email']);
+    }
+    
+    public function supprimerCompte(){
+        if(!isset($_SESSION)) 
+        { 
+            session_start(); 
+        } 
+        $ligneSuppr = m\Membre::where("email","=",$_SESSION['profil']['Email'])->delete();
+        $gest = new c\ControleurConnexion();
+        $gest->seDeconnecter();
+        
     }
 }

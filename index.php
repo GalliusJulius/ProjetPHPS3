@@ -42,7 +42,6 @@ $app->get('/inscription',function(){
 $app->post('/inscription',function(){
     $app = \Slim\Slim::getInstance();
     $gest = new c\ControleurConnexion();
-    //si on veux s'inscrire
     if(isset($_POST['inscription'])){
         try{
             a\Authentification::createUser($_POST['email'],$_POST['mdp'],$_POST['mdpc'],$_POST['nom'],$_POST['prenom'],$_POST['pseudo']); 
@@ -89,16 +88,16 @@ $app->post('/Compte',function(){
    $acc->recupererVue("compte");
 });
 
-$app->get('SupprimerCompte',function(){
+$app->get('/SupprimerCompte',function(){
     $acc = new c\ControleurCompte();
     $acc->recupererVue("suppCompte");
 })->name('suppCompte');
 
-$app->post('SupprimerCompte',function(){
+$app->post('/SupprimerCompte',function(){
     $acc = new c\ControleurCompte();
     $acc->supprimerCompte();
     $acc->recupererVue("confSupp");
-})->name('suppCompte');
+});
 
 $app->get('/liste/:token', function($token){
     $cont = new c\ContAffichageListe();

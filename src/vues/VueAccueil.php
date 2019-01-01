@@ -28,6 +28,15 @@ class VueAccueil{
                 $style = "<link rel=\"stylesheet\" href=\"../src/css/monCompte.css\">"; 
                 break;
             }
+            case "suppCompte":{
+                $contenu = $this->supprimerCompte();
+                break;    
+            }
+            case "confSupp":{
+                $contenu = $this->confSupp();
+                break;
+            }
+            
                 
         }
         $lienAccueil = $app->urlFor('accueil');
@@ -90,6 +99,44 @@ END;
         echo $html;
     }
     
+    public function supprimerCompte(){
+        $cont = <<< END
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-7 justify-content-md-center">
+                <h1>Supprimer son compte</h1>
+                <p>Vous êtes sur le point de supprimer votre compte, si vous confirmez cette suppression toutes vos informations personnelles, listes et toutes informations que notre application possède sur vous sera définitivement supprimé. En cliquant sur le bouton ci-dessus vous l'acceptez, cette action est définitive.</p>
+                <form method="post" action="">
+                             <a href="">
+                                <button type="submit" class="btn btn-primary" name="suppression">Supprimer votre compte</button>
+                              </a>
+                </form>
+            </div>
+        </div>
+        
+END;
+        return $cont;
+            
+    } 
+    
+    public function confSupp(){
+        $app = \Slim\Slim::getInstance();
+        $lienAccueil = $app->urlFor('connexion');
+        $cont = <<< END
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-7 justify-content-md-center">
+                <h1>Confirmation</h1>
+                <p>Votre compte a bien été supprimé, nous espérons vous revoir bientot!</p>
+                     <a href=$lienAccueil>
+                             <button class="btn btn-primary" name="suppression">Retour page de connexion</button>
+                        </a>
+                </form>
+            </div>
+        </div>
+END;
+        return $cont;
+        
+    }
+    
     public function accueil(){
         $app = \Slim\Slim::getInstance();
         $lien = $app->urlFor('Compte');
@@ -111,6 +158,7 @@ END;
     public function monCompte(){
         $app = \Slim\Slim::getInstance();
         $lienAccueil = $app->urlFor('accueil');
+        $lienSupp = $app->urlFor('suppCompte');
         #Permet la modification dynamique
         try{ session_start();}
         catch(\Exception $e){}
@@ -137,6 +185,9 @@ END;
                             </a>
                                 <button type="submit" class="btn btn-primary" name="valider" value="validation">Effectuer les modifications</button>
                                 $this->messageErreur
+                            <a href=$lienSupp>
+                                <label class="btn btn-danger">Supprimer le compte</label>
+                            </a>
                         </form>
                     </div>
                 </div>
