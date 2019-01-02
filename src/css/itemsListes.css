@@ -72,6 +72,23 @@ button.btn:hover{
     background-color: rgba(255, 20, 20, 0.75);
 }
 
+
+
+h6.hidden{
+    margin-bottom: 5%;
+}
+
+p.hidden{
+    font-size: 0.85em;
+    margin: 5% 3% 0% 3%;
+}
+
+section.hidden{
+    display: none;
+}
+
+
+
 @media (max-width: 1200px) {
     ul.listes > li{
         margin: 2% 5% 2% 5%;

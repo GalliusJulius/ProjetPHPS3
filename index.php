@@ -23,8 +23,9 @@ $app->post('/',function(){
     if(isset($_POST['connexion'])){
         try{
             a\Authentification::authentificate($_POST['mail'],$_POST['pass']); a\Authentification::loadProfil($_POST['mail']);
-            //pas sur que ca soit bon
-            $app->redirect($_SERVER['SCRIPT_NAME'].'/Accueil');
+            //pas sur que ca soit bon --> PAS BIEN :) --> faire avec les routes nommées
+            $app->response->redirect($app->urlFor('Accueil'));
+            //$app->redirect($_SERVER['SCRIPT_NAME'].'/Accueil');
         }
          catch(Exception $e){
              $gest->erreur="ER_CONNEXION";
@@ -73,16 +74,21 @@ $app->post('/Accueil',function(){
          $gest->seDeconnecter();
          $app->redirect($_SERVER['SCRIPT_NAME'].'');
      }
-});
+})->name('Accueil');
 
 $app->get('/Compte',function(){
    echo("tkt meme pas"); 
 })->name('Compte');
-
+// Revoir route
 $app->get('/liste/:token', function($token){
     $cont = new c\ContAffichageListe();
     $cont->afficherListe($token);
-})->name('liste');
+})->name('listeCrea');
+// Revoir route
+$app->get('/liste/:share/partager', function($share){
+    $cont = new c\ContAffichageListe();
+    $cont->afficherListeInvite($share);
+})->name('listeShare');
 
 $app->get('/item/:id', function($id){
     $cont = new c\ContAffichageListe();
@@ -92,7 +98,7 @@ $app->get('/item/:id', function($id){
 $app->get('/liste', function(){
     $cont = new c\ContAffichageListe();
     $cont->afficherListes();
-});
+})->name('liste');
 
 $app->get('/test/:id', function($id)  {
   $contItem = new c\ContItem();

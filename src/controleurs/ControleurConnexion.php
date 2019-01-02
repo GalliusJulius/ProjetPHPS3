@@ -12,8 +12,7 @@ class ControleurConnexion{
     }
     
     public function seDeconnecter(){
-         session_start();
-         session_destroy();
+         a::deconnexion();
     }
     
     public function recupererVue($type){

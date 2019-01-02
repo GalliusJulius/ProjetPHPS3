@@ -2,6 +2,8 @@
 namespace wishlist\Auth;
 use \wishlist\models as m;
 
+session_start();
+
 class Authentification{
 
     static function createUser($mail,$pass,$passC,$nom,$prenom,$pseudo){
@@ -34,4 +36,31 @@ class Authentification{
     static function loadProfil($mail){
         $_SESSION['profil']['mail'] = $mail;
     }
+	
+	public static function isLogged(){
+		return isset($_SESSION['profil']['mail']);
+	}
+    
+    public static function isCreator($token){
+        if(self::isLogged()){
+            $m = m\Membre::where('email', 'like', $_SESSION['profil']['mail'])->first();
+            $res = $m->listes()->where('token', 'like', $token)->first();
+            
+            if($res != false){
+                return true;
+            } else{
+                return false;
+            }
+            
+        } else{
+            return false;
+        }
+        
+        
+    }
+
+	public static function deconnexion(){
+		$_SESSION=[];
+        session_destroy();
+	}
 }
