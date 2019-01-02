@@ -15,7 +15,7 @@ class Authentification{
                         $insert = new m\Membre();
                         $insert->email=$mail;
                         $insert->Nom=$nom;
-                        $insert->Prénom=$prenom;
+                        $insert->Prenom=$prenom;
                         $insert->Pseudo=$pseudo;
                         $token = openssl_random_pseudo_bytes(32);
                         $token = bin2hex($token);
@@ -26,10 +26,6 @@ class Authentification{
                     else{
                         throw new \Exception("mdp");
                     }
-                #}
-                #else{
-                    #echo("pas bon");
-                #}
             }
         else{
             throw new \Exception("mail");
@@ -42,7 +38,7 @@ class Authentification{
             throw new \Exception("mailInvalide");
         }
         $var=m\Membre::select('mdp','comp')->where('email','=',$user)->first();
-        if(!(isset($var) && password_verify($_POST['pass'] . $var->comp,$var->mdp))){
+        if(!(isset($var) && password_verify($pass . $var->comp,$var->mdp))){
             throw new \Exception("AuthException");
         }
     }

@@ -169,7 +169,7 @@ END;
 END;
         foreach($_SESSION['profil'] as $key=>$val){
             $temp = <<<END
-            <p>$key actuel : $val<input type="text" name="$key" class="form-control" placeholder="Nouveau $key"></p>
+            <p>$key actuel : $val</p><input type="text" name="$key" class="form-control" placeholder="Nouveau $key">
 END;
              $html = $html . $temp;
         }
