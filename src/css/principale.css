@@ -2,7 +2,18 @@
     background-color: #393E46!important;
 }
 
+.erreur{
+    color: red;
+    font-style: italic;
+}
+
+.compte{
+    vertical-align: baseline;
+}
+
 nav img {
+    width: 40px;
+    height: 40px;
     margin-left: 20%;
     margin-right: 20%;
 }
@@ -14,6 +25,11 @@ nav img {
     
     .nav-item img{
         display: none;
+    }
+    
+    .mb-2, .my-2 {
+        margin-right: 3em;
+        text-align: center;
     }
 }
 

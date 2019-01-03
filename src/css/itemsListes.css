@@ -1,5 +1,5 @@
 body{
-    background-color: rgba(57, 62, 70, 1);/*rgba(255, 244, 224, 0.5);*/
+    background-color: rgba(57, 62, 70, 0.05);/*rgba(255, 244, 224, 0.5);*/
 }
 
 ul.listes{
@@ -68,7 +68,7 @@ button.btn{
     background-color: #FC3C3C;
 }
 
-button.btn:hover{
+button.btn:hover, button.btn:disabled{
     background-color: rgba(255, 20, 20, 0.75);
 }
 
@@ -87,6 +87,39 @@ section.hidden{
     display: none;
 }
 
+li [class*="col-"] {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    background-color: rgba(52, 62, 70, .15);
+    border: 1px solid rgba(52, 62, 70, 0.2);
+    border-radius: 15px;
+}
+
+
+div.modal textarea{
+    display: block;
+    margin: auto;
+    margin-bottom: 5%;
+    resize: both;
+}
+
+div.modal div.form{
+    background-color: rgba(196, 196, 196, 0.5);
+    margin-bottom: 0%;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 3%;
+    border-radius: 20px;
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+
+div.modal{
+    display: none;
+    background-color: rgba(57, 62, 70, 0.9);
+    font-size: 1.5em;
+    margin-bottom: 0%;
+}
 
 
 @media (max-width: 1200px) {

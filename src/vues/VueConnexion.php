@@ -26,12 +26,17 @@ class VueConnexion{
         }
         
         $contenu ="<h1>Errer de contenu</h1>";
+        $style="";
         switch($this->typepage){
             case "connexion":{
                 $contenu = $this->connexion();
+                $style="<link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>
+                <link rel='stylesheet'  href='src/css/Generique.css'/>  ";
                 break;
             }
             case "inscription":{
+                $style="<link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>
+                <link rel='stylesheet'  href='../src/css/Generique.css'/>";
                 $contenu = $this->inscription();
                 break;
             }
@@ -43,8 +48,7 @@ class VueConnexion{
             <head>
                 <meta charset="utf-8">
                   <title>Connexion/Inscription</title>
-                <link rel='stylesheet'  href='src/css/Generique.css'/>
-                <link rel='stylesheet'  href='src/css/bootstrap.min.css'/>
+                    $style
             </head>
             <body class="text-center">
                 <div class="container">
@@ -64,29 +68,34 @@ END;
     }   
     
     public function inscription(){
+        $app = \Slim\Slim::getInstance();
+        $lienConnec = $app->urlFor('connexion');
         $html = <<<END
         <form method="post" action="">
                          <p>
-                                    <input type="text" name="prenom" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Prénom" required/>
+                                    <input type="text" name="prenom" class="form-control" aria-describedby="emailHelp" placeholder="Prénom" required/>
                                 </p>
                                 <p>
-                                    <input type="text" name="nom" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Nom" required/>
+                                    <input type="text" name="nom" class="form-control" aria-describedby="emailHelp" placeholder="Nom" required/>
                                 </p>
                                 <p>
-                                    <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Adresse mail" required/>
+                                    <input type="email" name="email" class="form-control" aria-describedby="emailHelp" placeholder="Adresse mail" required/>
                                 </p>
                                 <p>
-                                   <input type="text" name="pseudo" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Pseudo" required/>
+                                   <input type="text" name="pseudo" class="form-control" aria-describedby="emailHelp" placeholder="Pseudo" required/>
                                 </p>
                                 <p>
-                                    <input type="password" name="mdp" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Mot de passe" required/>
+                                    <input type="password" name="mdp" class="form-control" aria-describedby="emailHelp" placeholder="Mot de passe" required/>
                                 </p>
                                 <p>
-                                    <input type="password" name="mdpc" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Confirmez mot de passe" required/>
+                                    <input type="password" name="mdpc" class="form-control" aria-describedby="emailHelp" placeholder="Confirmez mot de passe" required/>
                                 </p>
                                
                                 <p>
-                                    <button type="submit" class="btn btn-primary" name="inscription" vale="inscription">Inscription</button>
+                                    <a href=$lienConnec>
+                                        <label class="btn btn-secondary">Annuler</label>
+                                    </a>
+                                    <button type="submit" class="btn btn-primary" name="inscription" value="inscription">Inscription</button>
                                 </p>
                             </form>
 END;
@@ -99,17 +108,15 @@ END;
         $html = <<<END
          <form class="form-signin" method="post" action="">
                              <p>
-                                    <input type="email" name="mail" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Votre adresse mail" required/>
+                                    <input type="email" name="mail" class="form-control" id="mail" aria-describedby="emailHelp" placeholder="Votre adresse mail" required/>
                                 </p>
                                 <p>
-                                   <input type="password" name="pass" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Mot de passe" required/>
+                                   <input type="password" name="pass" class="form-control" id="pass" aria-describedby="emailHelp" placeholder="Mot de passe" required/>
                                 </p>
-                               
-                               
+                                    <a href=$lien><p class="text-muted">Pas de compte? S'inscrire</p></a>
                                 <p>
                                     <button type="submit" class="btn btn-primary" name="connexion" value="connec">Connexion</button>
                                 </p>
-                                    <a href=$lien><p class="text-muted">Pas de compte? S'inscrire</p></a>
                             </form>
 END;
         return $html;

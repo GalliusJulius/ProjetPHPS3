@@ -30,12 +30,11 @@ class VueParticipant {
     
     private function affichageListes() {
         $link = "<link rel='stylesheet'  href='./src/css/bootstrap.min.css'/>
-        <link rel='stylesheet'  href='./src/css/grid.css'/>
         <link rel='stylesheet'  href='./src/css/itemsListes.css'/>
-        <link rel='stylesheet' href='./src/css/bootstrap.min.css'>
         <link rel='stylesheet' href='./src/css/principale.css'>";
         $script = '<script src="./src/js/details.js"></script>
         <script src="./src/js/bootstrap.min.js"></script>';
+        $imgMenu = '<img src="./src/img/profil.png" width="30" height="30" alt="">';
         
         $html = '<section><ul class="listes">';
         
@@ -53,18 +52,17 @@ class VueParticipant {
         
         $html .= '</ul></section>';
         
-        return array('html' => $html, 'link' => $link, 'script' => $script);
+        return array('html' => $html, 'link' => $link, 'script' => $script, 'imgMenu' => $imgMenu);
     }
     
     
     private function affichageListeCrea() {
         $link = "<link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>
-        <link rel='stylesheet'  href='../src/css/grid.css'/>
         <link rel='stylesheet'  href='../src/css/itemsListes.css'/>
-        <link rel='stylesheet' href='../src/css/bootstrap.min.css'>
         <link rel='stylesheet' href='../src/css/principale.css'>";
         $script = '<script src="../src/js/details.js"></script>
         <script src="../src/js/bootstrap.min.js"></script>';
+        $imgMenu = '<img src="../src/img/profil.png" width="30" height="30" alt="">';
         
         $html = '<section><ul class="listes">';
         $cpt = 1;
@@ -101,28 +99,29 @@ class VueParticipant {
         
         $html .= '</ul></section>';
         
-        return array('html' => $html, 'link' => $link, 'script' => $script);
+        return array('html' => $html, 'link' => $link, 'script' => $script, 'imgMenu' => $imgMenu);
     }
     
     private function affichageListeInvite($n) { // TODO page de réservation ( + modif. sur la BDD)
         if($n == 0){
           $link = "<link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>
-        <link rel='stylesheet'  href='../src/css/grid.css'/>
         <link rel='stylesheet'  href='../src/css/itemsListes.css'/>
-        <link rel='stylesheet' href='../src/css/bootstrap.min.css'>
-        <link rel='stylesheet' href='../src/css/principale.css'>";  
+        <link rel='stylesheet' href='../src/css/principale.css'>";
+            $script = '<script src="../src/js/details.js"></script>
+        <script src="../src/js/bootstrap.min.js"></script>';
+            $imgMenu = '<img src="../src/img/profil.png" width="30" height="30" alt="">';
         } else{
             $link = "<link rel='stylesheet'  href='../../src/css/bootstrap.min.css'/>
-        <link rel='stylesheet'  href='../../src/css/grid.css'/>
         <link rel='stylesheet'  href='../../src/css/itemsListes.css'/>
-        <link rel='stylesheet' href='../../src/css/bootstrap.min.css'>
         <link rel='stylesheet' href='../../src/css/principale.css'>";
+            $script = '<script src="../../src/js/details.js"></script>
+        <script src="../../src/js/bootstrap.min.js"></script>';
+            $imgMenu = '<img src="../../src/img/profil.png" width="30" height="30" alt="">';
         }
-        
-        $script = '<script src="../../src/js/bootstrap.min.js"></script>';
         
         
         $html = '<section><ul class="listes">';
+        $cpt = 1;
         
         foreach($this->liste as $l){
             $items = $l->items()->get();
@@ -134,16 +133,55 @@ class VueParticipant {
                     $html .= '<div class="col col-l-3">';
                     $html .= '<p class="nom"><h4>' . $i->nom;
                     if($n == 0){
-                         $html .= '</h4></p><img src="../src/img/';
+                        $html .= '</h4></p><img src="../src/img/';
                     } else{
                         $html .= '</h4></p><img src="../../src/img/';
                     }
                     $html .= $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
                     
-                    $html .= '<form method="GET" action="' . $this->app->urlFor('itemListe', array('id' => $i->id)) . '">';
-                    $html .= '<button class="btn btn-primary">Détails</button>';
-                    $html .= "</form>";
+                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
+                    
+                    if(count($i->reservations()->get()) > 0){
+                        
+                        $html .= '<button disabled class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
+                        
+                    } else{
+                        
+                        $html .= '<button class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
+                    
+                        $html .= '<section class="hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
+                        $html .= '<p class="hidden desc">' . $i->descr . '</p>';
+
+                        if($i->url != null or $i->url != ""){
+                            $html .= '<a class="hidden" target="_blank" href="' . $i->url . '>Produit disponible ici !</a>';
+                        } else{
+                            $html .= '<p class="hidden">Aucune URL associé !</p>';
+                        }
+                        $html .= '</section>';
+
+                        $html .= '<div class="modal h' . $cpt . '"><div class="form">';
+                        $html .= '<form id="Reserv" method="POST" action="">';
+                        // Route de réservation :
+                        // ' . $this->app->urlFor('reserver', array('idItem' => $i->id, 'idListe' => $l->no)) . '
+                        $html .= '<p>Nom de l\'item à reserver : </p><input type="text" name="nomItem" value="' . $i->nom . '" disabled>';
+                        $html .= '<p>Prix de réservation : </p><input type="text" name="prix" value="' . $i->tarif . '" disabled>';
+                        $html .= '<p>Votre nom : </p><input type="text" name="nom" value="">';
+                        $html .= '<p>Votre prénom : </p><input type="text" name="prénom" 
+                        value="">';
+                        $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Reserv"></textarea>';
+
+                        $html .= '<button type="submit" class="btn btn-primary confirmer h' . $cpt . '">Réserver</button>';
+
+                        $html .= '</form>';
+                        $html .= '<button class="btn btn-primary annuler h' . $cpt . '">Annuler</button>';
+
+                        $html .= '</div>';
+                        $html .= '</div>';
+                        
+                    }
+                    
                     $html .= '</div>';
+                    $cpt++;
                 }
                 $html .= '</div><p class="date">' . $l->expiration . '</p></li>';
             }
@@ -151,29 +189,31 @@ class VueParticipant {
         
         $html .= '</ul></section>';
         
-        return array('html' => $html, 'link' => $link, 'script' => $script);
+        return array('html' => $html, 'link' => $link, 'script' => $script, 'imgMenu' => $imgMenu);
     }
     
     
     private function affichageItem() {
         $link = "<link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>";
         $script = '<script src="../src/js/bootstrap.min.js"></script>';
+        $imgMenu = '<img src="../src/img/profil.png" width="30" height="30" alt="">';
         
         $html = '<p>' . $this->item->nom . ' - ' . $this->item->description . ' - ' . $this->item->img . ' - ' . $this->item->tarif . '</p>';
         
-        return array('html' => $html, 'link' => $link, 'script' => $script);
+        return array('html' => $html, 'link' => $link, 'script' => $script, 'imgMenu' => $imgMenu);
     }
     
     private function afficherReservationItem(){
         $link = "<link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>";
         $script = '<script src="../src/js/bootstrap.min.js"></script>';
+        $imgMenu = '<img src="../src/img/profil.png" width="30" height="30" alt="">';
         
         $html = $this->affichageItem();
         $html .= "<form method='POST' action='" . $this->app->urlFor('reserverItem', array('id' => $this->item->id)) . "'>";
         $html .= "<button type='submit'>Valider</button>";
         $html .= "</form>";
 
-        return array('html' => $html, 'link' => $link, 'script' => $script);
+        return array('html' => $html, 'link' => $link, 'script' => $script, 'imgMenu' => $imgMenu);
     }
     
     
@@ -202,6 +242,7 @@ class VueParticipant {
         $content = $res['html'];
         $link = $res['link'];
         $script = $res['script'];
+        $imgMenu = $res['imgMenu'];
         
         $html = <<<END
  <html>
@@ -239,24 +280,23 @@ class VueParticipant {
                 </ul>
                 </div>
                 <a class="nav-item " href="#">
-                    <img src="../profil.png" width="30" height="30" alt="">
+                    $imgMenu
                 </a>
             </nav>
             <div class="container">
                 <div class="row">
                 <form method="post" action="">
                         <div  class="col col-lg-4"> 
-                            <button type="submit" class="btn btn-primary" name="deconnexion">Se déconnecter</button>
+                            <button type="submit" class="btn btn-primary compte" name="deconnexion">Se déconnecter</button>
                         </div>
                     </form>
                     <div class="col col-l-4">
                         <a href="#">
-                            <button class="btn btn-primary" >Mon compte</button></a>
+                            <button class="btn btn-primary compte" >Mon compte</button></a>
                     </div>
                 </div>
             </div>
-            
-        $content
+            $content
     </body>
 
     <footer></footer>

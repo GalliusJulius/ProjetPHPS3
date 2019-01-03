@@ -5,7 +5,6 @@ var process = (function () {
         $("button.details").on("click", (event) => afficher(event));
 
         function afficher(evt){
-            console.log($(evt.target).attr("class").split(' ')[3][1]);
             let i = $(evt.target).attr("class").split(' ')[3][1];
             let e = $("section.hide" + i);
             
@@ -17,4 +16,27 @@ var process = (function () {
         }
 
     });
+})();
+
+var fenReserver = (function(){
+	window.addEventListener("load", () => {
+        
+		$(".reserver").on("click", (event) => popup(event));
+		$(".confirmer").on("click", (event) => clear(event));
+        $(".annuler").on("click", (event) => clear(event));
+		
+		function popup(evt){
+            let i = $(evt.target).attr("class").split(' ')[3][1];
+            let e = $("div.modal.h" + i);
+            
+			e.fadeTo("slow",1);
+		}
+		
+		function clear(evt){
+            let i = $(evt.target).attr("class").split(' ')[3][1];
+            let e = $("div.modal.h" + i);
+            
+			e.fadeOut("slow");
+		}
+	});
 })();

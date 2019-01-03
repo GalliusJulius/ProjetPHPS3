@@ -12,7 +12,14 @@ class ControleurConnexion{
     }
     
     public function seDeconnecter(){
-         a::deconnexion();
+        // Je verrais plsu un truc du genre :
+        //a::deconnexion();
+        
+        if(!isset($_SESSION)) 
+        { 
+            session_start(); 
+        } 
+         session_destroy();
     }
     
     public function recupererVue($type){
