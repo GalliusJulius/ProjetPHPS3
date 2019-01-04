@@ -28,5 +28,21 @@ ALTER TABLE liste ADD share varchar(255) NOT NULL				-- token de partage --
 
 -- On suppose que dans les verisions futur de l'application, on pourra réserver un item à plusieurs --
 
+ALTER TABLE reservation ADD nom varchar(255) NOT NULL;
+
+ALTER TABLE reservation ADD prénom varchar(255) NOT NULL;
+
+-- Placer des valeurs dans les 2 champs précédents --
+
+ALTER TABLE `reservation` CHANGE `idUser` `idUser` INT(255) NULL DEFAULT NULL;
+
+ALTER TABLE liste ADD public BOOLEAN NOT NULL;
+
+-- Changer des valeurs dans cette nouvelle colonne (par défaut à 0 --> false)
+
+ALTER TABLE membres ADD Pseudo varchar(25);
+ALTER TABLE membres ADD comp varchar(32) NOT NULL;
+
+
 
 

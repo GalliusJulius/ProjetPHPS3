@@ -4,7 +4,7 @@ use \Illuminate\Database\Eloquent\Model as Model;
 
 class Membre extends Model{
     protected $table='membres';
-    protected $primaryKey = 'email';
+    protected $primaryKey = 'idUser';
     public $timestamps = false;
     public $incrementing = false;
     // A changer (à supprimer) : par un id

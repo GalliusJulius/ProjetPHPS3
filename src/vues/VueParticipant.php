@@ -2,6 +2,8 @@
 
 namespace wishlist\vues;
 
+use \wishlist\Auth\Authentification as Auth;
+use \wishlist\models\Membre;
 
 const LISTES = 1.0;
 const LISTE_CREA = 2.0;
@@ -67,34 +69,35 @@ class VueParticipant {
         $html = '<section><ul class="listes">';
         $cpt = 1;
         
-        foreach($this->liste as $l){
-            $items = $l->items()->get();
+        
+        $l = $this->liste;
             
-            if(isset($l)){
-                $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
+        if(isset($l)){
+            $items = $l->items()->get();
 
-                foreach($items as $i){
-                    $html .= '<div class="col col-l-3">';
-                    $html .= '<p class="nom"><h4>' . $i->nom . '</h4></p><img src="../src/img/' . $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
-                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
-                    $html .= '<form method="GET" action="' . $this->app->urlFor('itemListe', array('id' => $i->id)) . '">'; // TODO changer route
-                    $html .= '<button class="btn btn-primary">Modifier</button>';
-                    $html .= '</form>';
-                    
-                    $html .= '<section class="hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
-                    $html .= '<p class="hidden desc">' . $i->descr . '</p>';
-                    
-                    if($i->url != null or $i->url != ""){
-                        $html .= '<a class="hidden" target="_blank" href="' . $i->url . '>Produit disponible ici !</a>';
-                    } else{
-                        $html .= '<p class="hidden">Aucune URL associé !</p>';
-                    }
-                    
-                    $html .= '</section></div>';
-                    $cpt++;
+            $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
+
+            foreach($items as $i){
+                $html .= '<div class="col col-l-3">';
+                $html .= '<p class="nom"><h4>' . $i->nom . '</h4></p><img src="../src/img/' . $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
+                $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
+                $html .= '<form method="GET" action="' . $this->app->urlFor('itemListe', array('id' => $i->id)) . '">'; // TODO changer route
+                $html .= '<button class="btn btn-primary">Modifier</button>';
+                $html .= '</form>';
+
+                $html .= '<section class="hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
+                $html .= '<p class="hidden desc">' . $i->descr . '</p>';
+
+                if($i->url != null or $i->url != ""){
+                    $html .= '<a class="hidden" target="_blank" href="' . $i->url . '>Produit disponible ici !</a>';
+                } else{
+                    $html .= '<p class="hidden">Aucune URL associé !</p>';
                 }
-                $html .= '</div><p class="date">' . $l->expiration . '</p></li>';
+
+                $html .= '</section></div>';
+                $cpt++;
             }
+            $html .= '</div><p class="date">' . $l->expiration . '</p></li>';
         }
         
         $html .= '</ul></section>';
@@ -104,87 +107,107 @@ class VueParticipant {
     
     private function affichageListeInvite($n) { // TODO page de réservation ( + modif. sur la BDD)
         if($n == 0){
-          $link = "<link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>
-        <link rel='stylesheet'  href='../src/css/itemsListes.css'/>
-        <link rel='stylesheet' href='../src/css/principale.css'>";
-            $script = '<script src="../src/js/details.js"></script>
-        <script src="../src/js/bootstrap.min.js"></script>';
-            $imgMenu = '<img src="../src/img/profil.png" width="30" height="30" alt="">';
-        } else{
-            $link = "<link rel='stylesheet'  href='../../src/css/bootstrap.min.css'/>
+          $link = "<link rel='stylesheet'  href='../../src/css/bootstrap.min.css'/>
         <link rel='stylesheet'  href='../../src/css/itemsListes.css'/>
         <link rel='stylesheet' href='../../src/css/principale.css'>";
             $script = '<script src="../../src/js/details.js"></script>
         <script src="../../src/js/bootstrap.min.js"></script>';
             $imgMenu = '<img src="../../src/img/profil.png" width="30" height="30" alt="">';
+        } else{
+            $link = "<link rel='stylesheet'  href='../../../src/css/bootstrap.min.css'/>
+        <link rel='stylesheet'  href='../../../src/css/itemsListes.css'/>
+        <link rel='stylesheet' href='../../../src/css/principale.css'>";
+            $script = '<script src="../../../src/js/details.js"></script>
+        <script src="../../../src/js/bootstrap.min.js"></script>';
+            $imgMenu = '<img src="../../../src/img/profil.png" width="30" height="30" alt="">';
         }
         
         
         $html = '<section><ul class="listes">';
         $cpt = 1;
         
-        foreach($this->liste as $l){
+        $l = $this->liste;
+
+        if(isset($l)){
             $items = $l->items()->get();
             
-            if(isset($l)){
-                $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
+            $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
 
-                foreach($items as $i){
-                    $html .= '<div class="col col-l-3">';
-                    $html .= '<p class="nom"><h4>' . $i->nom;
-                    if($n == 0){
-                        $html .= '</h4></p><img src="../src/img/';
-                    } else{
-                        $html .= '</h4></p><img src="../../src/img/';
-                    }
-                    $html .= $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
-                    
-                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
-                    
-                    if(count($i->reservations()->get()) > 0){
-                        
-                        $html .= '<button disabled class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
-                        
-                    } else{
-                        
-                        $html .= '<button class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
-                    
-                        $html .= '<section class="hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
-                        $html .= '<p class="hidden desc">' . $i->descr . '</p>';
-
-                        if($i->url != null or $i->url != ""){
-                            $html .= '<a class="hidden" target="_blank" href="' . $i->url . '>Produit disponible ici !</a>';
-                        } else{
-                            $html .= '<p class="hidden">Aucune URL associé !</p>';
-                        }
-                        $html .= '</section>';
-
-                        $html .= '<div class="modal h' . $cpt . '"><div class="form">';
-                        $html .= '<form id="Reserv" method="POST" action="">';
-                        // Route de réservation :
-                        // ' . $this->app->urlFor('reserver', array('idItem' => $i->id, 'idListe' => $l->no)) . '
-                        $html .= '<p>Nom de l\'item à reserver : </p><input type="text" name="nomItem" value="' . $i->nom . '" disabled>';
-                        $html .= '<p>Prix de réservation : </p><input type="text" name="prix" value="' . $i->tarif . '" disabled>';
-                        $html .= '<p>Votre nom : </p><input type="text" name="nom" value="">';
-                        $html .= '<p>Votre prénom : </p><input type="text" name="prénom" 
-                        value="">';
-                        $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Reserv"></textarea>';
-
-                        $html .= '<button type="submit" class="btn btn-primary confirmer h' . $cpt . '">Réserver</button>';
-
-                        $html .= '</form>';
-                        $html .= '<button class="btn btn-primary annuler h' . $cpt . '">Annuler</button>';
-
-                        $html .= '</div>';
-                        $html .= '</div>';
-                        
-                    }
-                    
-                    $html .= '</div>';
-                    $cpt++;
+            foreach($items as $i){
+                $html .= '<div class="col col-l-3">';
+                $html .= '<p class="nom"><h4>' . $i->nom;
+                if($n == 0){
+                    $html .= '</h4></p><img src="../../src/img/';
+                } else{
+                    $html .= '</h4></p><img src="../../../src/img/';
                 }
-                $html .= '</div><p class="date">' . $l->expiration . '</p></li>';
+                $html .= $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
+
+                $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
+
+                $reservs = $i->reservations()->get();
+
+                if(count($reservs) > 0){
+
+                    $html .= '<button disabled class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
+
+                    $html .= '<p>Cette item a déjà été réservée par :</p>';
+                    $html .= '<ul class="reserv">';
+
+                    foreach($reservs as $r){
+                        $html .= '<li>' . $r->prénom . ' ' . $r->nom . '</li>';
+                    }
+
+                    $html .= '</ul>';
+
+                } else{
+
+                    $html .= '<button class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
+
+                    $html .= '<div class="modal h' . $cpt . '"><div class="form">';
+                    $html .= '<form id="Reserv" method="POST" action="' . $this->app->urlFor('reserver', array('share' => $l->share, 'idItem' => $i->id)) . '">';
+                    $html .= '<p>Nom de l\'item à reserver : </p><input type="text" name="nomItem" value="' . $i->nom . '" disabled>';
+                    $html .= '<p>Prix de réservation : </p><input type="text" name="prix" value="' . $i->tarif . '" disabled>';
+
+                    $n = ''; $p = '';
+                    $idUser = Auth::getIdUser();
+                    
+                    if(isset($idUser)){
+                        $m = Membre::where('idUser', '=', $idUser)->first();
+                        $n = $m->Nom;
+                        $p = $m->Prénom;
+                    }
+
+                    $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '">';
+                    $html .= '<p>Votre prénom : </p><input type="text" name="prénom" 
+                    value="' . $p . '">';
+                    $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Reserv"></textarea>';
+
+                    $html .= '<button type="submit" class="btn btn-primary confirmer h' . $cpt . '">Réserver</button>';
+
+                    $html .= '</form>';
+                    $html .= '<button class="btn btn-primary annuler h' . $cpt . '">Annuler</button>';
+
+                    $html .= '</div>';
+                    $html .= '</div>';
+
+                }
+
+                $html .= '<section class="hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
+                $html .= '<p class="hidden desc">' . $i->descr . '</p>';
+
+                if($i->url != null or $i->url != ""){
+                    $html .= '<a class="hidden" target="_blank" href="' . $i->url . '>Produit disponible ici !</a>';
+                } else{
+                    $html .= '<p class="hidden">Aucune URL associé !</p>';
+                }
+                $html .= '</section>';
+
+
+                $html .= '</div>';
+                $cpt++;
             }
+            $html .= '</div><p class="date">' . $l->expiration . '</p></li>';
         }
         
         $html .= '</ul></section>';
@@ -244,6 +267,82 @@ class VueParticipant {
         $script = $res['script'];
         $imgMenu = $res['imgMenu'];
         
+        if(Auth::isLogged()){
+            $navBar = '
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+              <a class="navbar-brand" href="' . $this->app->urlFor('Accueil') . '">My Wish List</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+               <form class="form-inline my-2 my-md-0">
+                  <input class="form-control" type="text" placeholder="Rechercher">
+                </form> 
+              <div class="collapse navbar-collapse" id="navbarsExample04">
+                <ul class="navbar-nav mr-auto">
+                  <li class="nav-item active">
+                    <a class="nav-link" href="' . $this->app->urlFor('liste') . '">Mes listes <span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="nav-item active">
+                    <a class="nav-link" href="' . $this->app->urlFor('listePublic') . '">Les listes du moment <span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="nav-item active">
+                    <a class="nav-link" href="#">Autres <span class="sr-only">(current)</span></a>
+                  </li>
+                <li class="nav-item active" id="compte">
+                    <a class="nav-link" href="' . $this->app->urlFor('Compte') . '">Mon compte <span class="sr-only">(current)</span></a>
+                  </li>
+                </ul>
+                </div>
+                <a class="nav-item " href="#">
+                    ' . $imgMenu . '
+                </a>
+            </nav>
+            <div class="container">
+                <div class="row">
+                <form method="post" action="">
+                        <div  class="col col-lg-4"> 
+                            <button type="submit" class="btn btn-primary compte" name="deconnexion">Se déconnecter</button>
+                        </div>
+                    </form>
+                    <div class="col col-l-4">
+                        <a href="' . $this->app->urlFor('Compte') . '">
+                            <button class="btn btn-primary compte" >Mon compte</button></a>
+                    </div>
+                </div>
+            </div>';
+        } else{
+            $navBar = '
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+              <a class="navbar-brand" href="' . $this->app->urlFor('Accueil') . '">My Wish List</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+               <form class="form-inline my-2 my-md-0">
+                  <input class="form-control" type="text" placeholder="Rechercher">
+                </form> 
+              <div class="collapse navbar-collapse" id="navbarsExample04">
+                <ul class="navbar-nav mr-auto">
+                  <li class="nav-item active">
+                    <a class="nav-link" href="' . $this->app->urlFor('listePublic') . '">Les listes du moment<span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="nav-item active">
+                    <a class="nav-link" href="#">Découvrir <span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="nav-item active">
+                    <a class="nav-link" href="#">Autres <span class="sr-only">(current)</span></a>
+                  </li>
+                <li class="nav-item active" id="compte">
+                    <a class="nav-link" href="' . $this->app->urlFor('Inscription') . '">Créer un compte <span class="sr-only">(current)</span></a>
+                  </li>
+                </ul>
+                </div>
+                <a class="nav-item " href="' . $this->app->urlFor('connexion') . '">
+                    ' . $imgMenu . '
+                </a>
+            </nav>';
+        }
+        
+        
         $html = <<<END
  <html>
 	<head>
@@ -255,47 +354,7 @@ class VueParticipant {
 	</head>
     
 	<body>
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-              <a class="navbar-brand" href="#">My Wish List</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-               <form class="form-inline my-2 my-md-0">
-                  <input class="form-control" type="text" placeholder="Rechercher">
-                </form> 
-              <div class="collapse navbar-collapse" id="navbarsExample04">
-                <ul class="navbar-nav mr-auto">
-                  <li class="nav-item active">
-                    <a class="nav-link" href="#">Mes listes <span class="sr-only">(current)</span></a>
-                  </li>
-                  <li class="nav-item active">
-                    <a class="nav-link" href="#">Découvrir <span class="sr-only">(current)</span></a>
-                  </li>
-                  <li class="nav-item active">
-                    <a class="nav-link" href="#">Autres <span class="sr-only">(current)</span></a>
-                  </li>
-                <li class="nav-item active" id="compte">
-                    <a class="nav-link" href="#">Mon compte <span class="sr-only">(current)</span></a>
-                  </li>
-                </ul>
-                </div>
-                <a class="nav-item " href="#">
-                    $imgMenu
-                </a>
-            </nav>
-            <div class="container">
-                <div class="row">
-                <form method="post" action="">
-                        <div  class="col col-lg-4"> 
-                            <button type="submit" class="btn btn-primary compte" name="deconnexion">Se déconnecter</button>
-                        </div>
-                    </form>
-                    <div class="col col-l-4">
-                        <a href="#">
-                            <button class="btn btn-primary compte" >Mon compte</button></a>
-                    </div>
-                </div>
-            </div>
+            $navBar
             $content
     </body>
 

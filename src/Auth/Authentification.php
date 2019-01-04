@@ -39,12 +39,14 @@ class Authentification{
     }
 
     static function authentificate($user,$pass){
-        session_start();
+        
         if(!filter_var($user,FILTER_VALIDATE_EMAIL)){
             throw new \Exception("mailInvalide");
         }
+        
         $var=m\Membre::select('mdp','comp')->where('email','=',$user)->first();
-        if(!(isset($var) && password_verify($_POST['pass'] . $var->comp,$var->mdp))){
+        
+        if(!(isset($var) && password_verify($_POST['mdp'] . $var->comp,$var->mdp))){
             throw new \Exception("AuthException");
         }
     }
@@ -52,15 +54,19 @@ class Authentification{
     static function loadProfil($mail){
         //session_start();
         $profil = m\Membre::where('email',"=",$mail)->first();
+        
+        // Inutile :
         $_SESSION['connect'] = "oui";
+        
         $_SESSION['profil']['Email']=$mail;
         $_SESSION['profil']['Nom']=$profil->Nom;
         $_SESSION['profil']['Prenom']=$profil->Prénom;
         $_SESSION['profil']['Pseudo']=$profil->Pseudo;
+        $_SESSION['idUser'] = $profil->idUser;
     }
 	
 	public static function isLogged(){
-		return isset($_SESSION['profil']['mail']);
+		return isset($_SESSION['idUser']);
 	}
     
     public static function isCreator($token){
@@ -79,6 +85,16 @@ class Authentification{
         }
         
         
+    }
+    
+    public static function getIdUser(){
+        $res = NULL;
+        
+        if(isset($_SESSION['idUser'])){
+            $res = $_SESSION['idUser'];
+        }
+        
+        return $res;
     }
 
 	public static function deconnexion(){

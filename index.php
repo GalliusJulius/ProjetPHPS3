@@ -21,17 +21,17 @@ $app->post('/',function(){
     $app = \Slim\Slim::getInstance();
     $gest = new c\ControleurConnexion();
     //Si on veux se connecter
-    if(isset($_POST['connexion'])){
-        try{    
-            a\Authentification::authentificate($_POST['mail'],$_POST['pass']); a\Authentification::loadProfil($_POST['mail']);
-            $app->redirect($_SERVER['SCRIPT_NAME'].'/Accueil');
-        }
-         catch(Exception $e){
-             $gest->erreur="ER_CONNEXION";
-             $gest->recupererVue("connexion");
-        }
-    }   
-});
+    //if(isset($_POST['connexion'])){
+    try{    
+        a\Authentification::authentificate($_POST['mail'],$_POST['pass']); a\Authentification::loadProfil($_POST['mail']);
+        $app->redirect($_SERVER['SCRIPT_NAME'].'/Accueil');
+    }
+     catch(Exception $e){
+         $gest->erreur="ER_CONNEXION";
+         $gest->recupererVue("connexion");
+    }
+    //}   
+})->name('connexionPost');
 
 //Routage pour l'inscription
 $app->get('/inscription',function(){
@@ -42,24 +42,27 @@ $app->get('/inscription',function(){
 $app->post('/inscription',function(){
     $app = \Slim\Slim::getInstance();
     $gest = new c\ControleurConnexion();
-    if(isset($_POST['inscription'])){
-        try{
-            a\Authentification::createUser($_POST['email'],$_POST['mdp'],$_POST['mdpc'],$_POST['nom'],$_POST['prenom'],$_POST['pseudo']); 
-            a\Authentification::authentificate($_POST['email'],$_POST['mdp']);
-            a\Authentification::loadProfil($_POST['email']);
-            $app->redirect($app->urlFor('accueil'));
-        }
-        catch(Exception $e){
-            if($e->getMessage()=="mail"){ 
-                $gest->erreur="ER_INSCRIPTION2";
-            }
-            else if($e->getMessage()=="mdp"){
-                $gest->erreur="ER_INSCRIPTION1";
-            }
-        }
-        $gest->recupererVue("inscription");
+    //if(isset($_POST['inscription'])){
+    try{
+        a\Authentification::createUser($_POST['email'], $_POST['mdp'], $_POST['mdpc'], $_POST['nom'], $_POST['prenom'], $_POST['pseudo']);
+        
+        a\Authentification::authentificate($_POST['email'],$_POST['mdp']);
+        
+        a\Authentification::loadProfil($_POST['email']);
+        
+        $app->redirect($app->urlFor('accueil'));
     }
-});
+    catch(Exception $e){
+        if($e->getMessage()=="mail"){ 
+            $gest->erreur="ER_INSCRIPTION2";
+        }
+        else if($e->getMessage()=="mdp"){
+            $gest->erreur="ER_INSCRIPTION1";
+        }
+    }
+    $gest->recupererVue("inscription");
+    //}
+})->name('insriptionPost');
 
 //Routage dans l'accueil
 $app->get('/Accueil',function(){
@@ -109,6 +112,12 @@ $app->get('/liste/:share/partager', function($share){
     $cont->afficherListeInvite($share);
 })->name('listeShare');
 
+$app->post('/liste/:share/partager/reserver/:idItem', function($share, $idItem){
+    $cont = new c\ContAffichageListe();
+    $cont->reserverItem($share, $idItem);
+})->name('reserver');
+
+
 $app->get('/item/:id', function($id){
     $cont = new c\ContAffichageListe();
     $cont->afficherItemListe($id);
@@ -116,8 +125,13 @@ $app->get('/item/:id', function($id){
 
 $app->get('/liste', function(){
     $cont = new c\ContAffichageListe();
-    $cont->afficherListes();
+    $cont->afficherListesUtilisateurs();
 })->name('liste');
+
+$app->get('/liste_public', function(){
+    $cont = new c\ContAffichageListe();
+    $cont->afficherListesPublic();
+})->name('listePublic');
 
 $app->get('/test/:id', function($id)  {
   $contItem = new c\ContItem();

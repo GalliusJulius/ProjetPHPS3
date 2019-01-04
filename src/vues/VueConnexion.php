@@ -30,13 +30,13 @@ class VueConnexion{
         switch($this->typepage){
             case "connexion":{
                 $contenu = $this->connexion();
-                $style="<link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>
+                $style="<link rel='stylesheet'  href='src/css/bootstrap.min.css'/>
                 <link rel='stylesheet'  href='src/css/Generique.css'/>  ";
                 break;
             }
             case "inscription":{
-                $style="<link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>
-                <link rel='stylesheet'  href='../src/css/Generique.css'/>";
+                $style="<link rel='stylesheet'  href='src/css/bootstrap.min.css'/>
+                <link rel='stylesheet'  href='src/css/Generique.css'/>";
                 $contenu = $this->inscription();
                 break;
             }
@@ -70,8 +70,10 @@ END;
     public function inscription(){
         $app = \Slim\Slim::getInstance();
         $lienConnec = $app->urlFor('connexion');
+        $inscription = $app->urlFor('insriptionPost');
+        
         $html = <<<END
-        <form method="post" action="">
+        <form method="POST" action="$inscription">
                          <p>
                                     <input type="text" name="prenom" class="form-control" aria-describedby="emailHelp" placeholder="Prénom" required/>
                                 </p>
@@ -105,8 +107,10 @@ END;
     public function connexion(){
         $app = \Slim\Slim::getInstance();
         $lien=$app->urlFor('Inscription');
+        $connexion = $app->urlFor('connexionPost');
+            
         $html = <<<END
-         <form class="form-signin" method="post" action="">
+         <form class="form-signin" method="POST" action="$connexion">
                              <p>
                                     <input type="email" name="mail" class="form-control" id="mail" aria-describedby="emailHelp" placeholder="Votre adresse mail" required/>
                                 </p>
