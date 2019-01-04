@@ -105,9 +105,9 @@ $app->get('/MesListes',function(){
 })->name('mesListes');
 
 $app->post('/MesListes',function(){
-    $cont = new c\ContAffichageListe();
-    $cont->afficherMesListes();
-})->name('mesListes');
+    $cont = new c\ControleurCompte();
+    $cont->ajouterListe($_POST['token']);
+});
 
 $app->get('/liste/:token', function($token){
     $cont = new c\ContAffichageListe();

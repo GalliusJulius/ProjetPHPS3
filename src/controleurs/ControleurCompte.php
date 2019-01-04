@@ -58,4 +58,22 @@ class ControleurCompte{
         $gest->seDeconnecter();
         
     }
+    
+    public function ajouterListe($token){
+        session_start();
+        $verif=m\Liste::where("token","=",$token)->count();
+        if($verif!=0){
+            $verif2 = m\Membre::where("email","=",$_SESSION['profil']['Email'])->first()->liste()->where("token","=",$token)->count();
+            if($verif2==0){
+                echo("Il faut ajouter");
+            }
+            else{
+                echo("Deja ajouté!");
+            }
+            
+        }
+        else{
+            echo("Liste inconnu");
+        }
+    }
 }
