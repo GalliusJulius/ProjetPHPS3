@@ -42,8 +42,8 @@ $app->get('/inscription',function(){
 $app->post('/inscription',function(){
     $app = \Slim\Slim::getInstance();
     $gest = new c\ControleurConnexion();
-    //if(isset($_POST['inscription'])){
-    #try{
+    if(isset($_POST['inscription'])){
+    try{
         a\Authentification::createUser($_POST['email'], $_POST['mdp'], $_POST['mdpc'], $_POST['nom'], $_POST['prenom'], $_POST['pseudo']);
         
         a\Authentification::authentificate($_POST['email'],$_POST['mdp']);
@@ -61,7 +61,7 @@ $app->post('/inscription',function(){
         }
     }
     $gest->recupererVue("inscription");
-    //}
+    }
 })->name('insriptionPost');
 
 //Routage dans l'accueil
