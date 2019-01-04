@@ -99,10 +99,20 @@ $app->post('/SupprimerCompte',function(){
     $acc->recupererVue("confSupp");
 });
 
+$app->get('/MesListes',function(){
+    $cont = new c\ContAffichageListe();
+    $cont->afficherMesListes();
+})->name('mesListes');
+
+$app->post('/MesListes',function(){
+    $cont = new c\ContAffichageListe();
+    $cont->afficherMesListes();
+})->name('mesListes');
+
 $app->get('/liste/:token', function($token){
     $cont = new c\ContAffichageListe();
     $cont->afficherListe($token);
-});
+})->name('liste');
 
 $app->get('/item/:id', function($id){
     $cont = new c\ContAffichageListe();

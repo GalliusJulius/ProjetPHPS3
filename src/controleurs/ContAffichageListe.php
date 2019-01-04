@@ -5,8 +5,7 @@ namespace wishlist\controleurs;
 require_once 'vendor/autoload.php';
 
 use \Illuminate\Database\Capsule\Manager as DB;
-use \wishlist\models\Item as Item;
-use \wishlist\models\Liste as Liste;
+use \wishlist\models as m;
 use \wishlist\vues\VueParticipant as VueParticipant;
 
 class ContAffichageListe {
@@ -16,7 +15,7 @@ class ContAffichageListe {
     
     public function afficherListes(){
         
-        $listes = Liste::get();
+        $listes = m\Liste::get();
         
         $vue = new VueParticipant(array('liste' => $listes));
         $vue->render(1);
@@ -24,7 +23,7 @@ class ContAffichageListe {
 
     public function afficherListe($token){
         
-        $listes = Liste::where('token', 'like', $token)->get();
+        $listes = m\Liste::where('token', 'like', $token)->get();
         
         $vue = new VueParticipant(array('liste' => $listes));
         $vue->render(2);
@@ -32,7 +31,7 @@ class ContAffichageListe {
     
     public function afficherItemListe($id) {
         
-        $item = Item::where('id', '=', $id)->first();
+        $item = m\Item::where('id', '=', $id)->first();
         
         $vue = new VueParticipant(array('item' => $item));
         $vue->render(3);
@@ -40,7 +39,7 @@ class ContAffichageListe {
     
     public function afficherReservationItem($id){
         
-        $item = Item::where('id', '=', $id)->first();
+        $item = m\Item::where('id', '=', $id)->first();
         
         $vue = new VueParticipant(array('item' => $item));
         $vue->render(4);
@@ -49,6 +48,13 @@ class ContAffichageListe {
     public function reserverItem($id){
         $app = \Slim\Slim::getInstance();
         $app->response->redirect($app->urlFor('itemListe', array('id' => $id)));
+    }
+    
+    public function afficherMesListes(){
+        session_start();
+        $tab = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->get();
+        $vue = new \wishlist\vues\VueAccueil("mesListes","",$tab);
+        $vue->render();
     }
 
 }
