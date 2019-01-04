@@ -31,12 +31,7 @@ class VueParticipant {
     
     
     private function affichageListes() {
-        $link = "<link rel='stylesheet'  href='./src/css/bootstrap.min.css'/>
-        <link rel='stylesheet'  href='./src/css/itemsListes.css'/>
-        <link rel='stylesheet' href='./src/css/principale.css'>";
-        $script = '<script src="./src/js/details.js"></script>
-        <script src="./src/js/bootstrap.min.js"></script>';
-        $imgMenu = '<img src="./src/img/profil.png" width="30" height="30" alt="">';
+        $path = './';
         
         $html = '<section><ul class="listes">';
         
@@ -54,17 +49,12 @@ class VueParticipant {
         
         $html .= '</ul></section>';
         
-        return array('html' => $html, 'link' => $link, 'script' => $script, 'imgMenu' => $imgMenu);
+        return array('html' => $html, 'path' => $path);
     }
     
     
     private function affichageListeCrea() {
-        $link = "<link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>
-        <link rel='stylesheet'  href='../src/css/itemsListes.css'/>
-        <link rel='stylesheet' href='../src/css/principale.css'>";
-        $script = '<script src="../src/js/details.js"></script>
-        <script src="../src/js/bootstrap.min.js"></script>';
-        $imgMenu = '<img src="../src/img/profil.png" width="30" height="30" alt="">';
+        $path = '../';
         
         $html = '<section><ul class="listes">';
         $cpt = 1;
@@ -102,24 +92,14 @@ class VueParticipant {
         
         $html .= '</ul></section>';
         
-        return array('html' => $html, 'link' => $link, 'script' => $script, 'imgMenu' => $imgMenu);
+        return array('html' => $html, 'path' => $path);
     }
     
     private function affichageListeInvite($n) { // TODO page de réservation ( + modif. sur la BDD)
         if($n == 0){
-          $link = "<link rel='stylesheet'  href='../../src/css/bootstrap.min.css'/>
-        <link rel='stylesheet'  href='../../src/css/itemsListes.css'/>
-        <link rel='stylesheet' href='../../src/css/principale.css'>";
-            $script = '<script src="../../src/js/details.js"></script>
-        <script src="../../src/js/bootstrap.min.js"></script>';
-            $imgMenu = '<img src="../../src/img/profil.png" width="30" height="30" alt="">';
+            $path = '../../';
         } else{
-            $link = "<link rel='stylesheet'  href='../../../src/css/bootstrap.min.css'/>
-        <link rel='stylesheet'  href='../../../src/css/itemsListes.css'/>
-        <link rel='stylesheet' href='../../../src/css/principale.css'>";
-            $script = '<script src="../../../src/js/details.js"></script>
-        <script src="../../../src/js/bootstrap.min.js"></script>';
-            $imgMenu = '<img src="../../../src/img/profil.png" width="30" height="30" alt="">';
+            $path = '../../../';
         }
         
         
@@ -212,31 +192,7 @@ class VueParticipant {
         
         $html .= '</ul></section>';
         
-        return array('html' => $html, 'link' => $link, 'script' => $script, 'imgMenu' => $imgMenu);
-    }
-    
-    
-    private function affichageItem() {
-        $link = "<link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>";
-        $script = '<script src="../src/js/bootstrap.min.js"></script>';
-        $imgMenu = '<img src="../src/img/profil.png" width="30" height="30" alt="">';
-        
-        $html = '<p>' . $this->item->nom . ' - ' . $this->item->description . ' - ' . $this->item->img . ' - ' . $this->item->tarif . '</p>';
-        
-        return array('html' => $html, 'link' => $link, 'script' => $script, 'imgMenu' => $imgMenu);
-    }
-    
-    private function afficherReservationItem(){
-        $link = "<link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>";
-        $script = '<script src="../src/js/bootstrap.min.js"></script>';
-        $imgMenu = '<img src="../src/img/profil.png" width="30" height="30" alt="">';
-        
-        $html = $this->affichageItem();
-        $html .= "<form method='POST' action='" . $this->app->urlFor('reserverItem', array('id' => $this->item->id)) . "'>";
-        $html .= "<button type='submit'>Valider</button>";
-        $html .= "</form>";
-
-        return array('html' => $html, 'link' => $link, 'script' => $script, 'imgMenu' => $imgMenu);
+        return array('html' => $html, 'path' => $path);
     }
     
     
@@ -254,18 +210,18 @@ class VueParticipant {
         } else if($code == LISTE_INV){
             $res = $this->affichageListeInvite(1);
             
-        } else if($code == ITEM){
-            $res = $this->affichageItem();
-            
-        } else if($code == RESERVER){
-            $res = $this->afficherReservationItem();
-            
         }
         
         $content = $res['html'];
-        $link = $res['link'];
-        $script = $res['script'];
-        $imgMenu = $res['imgMenu'];
+        $path = $res['path'];
+        $head = '
+        <title>Listes des items</title>
+          <link rel="stylesheet"  href="' . $path . 'src/css/bootstrap.min.css"/>
+          <link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>
+          <link rel="stylesheet" href="' . $path . 'src/css/principale.css">
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+          <script src="' . $path . 'src/js/details.js"></script>
+          <script src="' . $path . 'src/js/bootstrap.min.js"></script>';
         
         if(Auth::isLogged()){
             $navBar = '
@@ -294,7 +250,7 @@ class VueParticipant {
                 </ul>
                 </div>
                 <a class="nav-item " href="#">
-                    ' . $imgMenu . '
+                    <img src="' . $path . 'src/img/profil.png" width="30" height="30" alt="">
                 </a>
             </nav>
             <div class="container">
@@ -337,7 +293,7 @@ class VueParticipant {
                 </ul>
                 </div>
                 <a class="nav-item " href="' . $this->app->urlFor('connexion') . '">
-                    ' . $imgMenu . '
+                    <img src="' . $path . 'src/img/profil.png" width="30" height="30" alt="">
                 </a>
             </nav>';
         }
@@ -347,10 +303,7 @@ class VueParticipant {
  <html>
 	<head>
         <meta charset="utf-8">
-	      <title>Listes des items</title>
-          $link
-          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-          $script
+	      $head
 	</head>
     
 	<body>
