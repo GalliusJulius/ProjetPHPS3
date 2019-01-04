@@ -51,16 +51,16 @@ $app->post('/inscription',function(){
         a\Authentification::loadProfil($_POST['email']);
         
         $app->redirect($app->urlFor('accueil'));
-   # }
-    #catch(Exception $e){
-     #   if($e->getMessage()=="mail"){ 
-      #      $gest->erreur="ER_INSCRIPTION2";
-    #    }
-    #    else if($e->getMessage()=="mdp"){
-    #        $gest->erreur="ER_INSCRIPTION1";
-    #    }
-    #}
-    #$gest->recupererVue("inscription");
+    }
+   catch(Exception $e){
+       if($e->getMessage()=="mail"){ 
+          $gest->erreur="ER_INSCRIPTION2";
+        }
+        else if($e->getMessage()=="mdp"){
+            $gest->erreur="ER_INSCRIPTION1";
+        }
+    }
+    $gest->recupererVue("inscription");
     //}
 })->name('insriptionPost');
 
