@@ -101,12 +101,13 @@ $app->post('/SupprimerCompte',function(){
 
 $app->get('/MesListes',function(){
     $cont = new c\ContAffichageListe();
-    $cont->afficherMesListes();
+    $cont->afficherMesListes("");
 })->name('mesListes');
 
 $app->post('/MesListes',function(){
-    $cont = new c\ControleurCompte();
-    $cont->ajouterListe($_POST['token']);
+    $cont = new c\ContAffichageListe();
+    $err = $cont->ajouterListe($_POST['token']);
+    $cont->afficherMesListes($err);
 });
 
 $app->get('/liste/:token', function($token){

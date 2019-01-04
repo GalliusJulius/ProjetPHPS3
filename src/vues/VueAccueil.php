@@ -233,6 +233,7 @@ END;
                 <input type="text" name="token" class="form-control" placeholder="Token liste">
                 <button type="submit" class="btn btn-primary" name="ajout" value="add">Ajouter</button>
             </form>
+            <p class="">$this->messageErreur</p>
             </div>
         </div>
         </div>

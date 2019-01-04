@@ -50,14 +50,36 @@ class ContAffichageListe {
         $app->response->redirect($app->urlFor('itemListe', array('id' => $id)));
     }
     
-    public function afficherMesListes(){
-        session_start();
+    public function afficherMesListes($err){
+         if(!isset($_SESSION)) 
+        { 
+            session_start(); 
+        } 
         $tab = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->get();
-        $vue = new \wishlist\vues\VueAccueil("mesListes","",$tab);
+        $vue = new \wishlist\vues\VueAccueil("mesListes",$err,$tab);
         $vue->render();
+    }
+    
+    public function ajouterListe($token){
+        session_start();
+        $erreur="";
+        $verif=m\Liste::where("token","=",$token)->count();
+        if($verif!=0){
+            $verif2 = m\Membre::where("email","=",$_SESSION['profil']['Email'])->first()->liste()->where("token","=",$token)->count();
+            if($verif2==0){
+                $liste = m\Liste::where("token","=",$token)->first();
+                m\Membre::where("email","=",$_SESSION['profil']['Email'])->first()->liste()->attach($liste->no);
+                $erreur = "Ajouté";
+            }
+            else{
+                $erreur = "Deja ajouté!";
+            }
+            
+        }
+        else{
+            $erreur = "Liste inconnu";
+        }
+        return $erreur;
     }
 
 }
-
-
- ?>
