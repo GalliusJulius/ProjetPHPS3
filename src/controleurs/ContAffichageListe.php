@@ -9,11 +9,12 @@ use \wishlist\models\Item;
 use \wishlist\models\Liste;
 use \wishlist\models\Reservation;
 use \wishlist\models\Membre;
-use \wishlist\vues\VueParticipant;
+use \wishlist\vues\VueAffichageListe;
 use \wishlist\Auth\Authentification as Auth;
 
 
 const LISTES = 1.0;
+const LISTES_CREA = 1.1;
 const LISTE_CREA = 2.0;
 const LISTE_CO = 2.1;
 const LISTE_INV = 2.2;
@@ -29,7 +30,7 @@ class ContAffichageListe {
     public function afficherListesPublic(){
         $listes = Liste::where('public', '=', '1')->get();
         
-        $vue = new VueParticipant(array('liste' => $listes));
+        $vue = new VueAffichageListe(array('liste' => $listes));
         $vue->render(LISTES);
     }
     
@@ -41,8 +42,8 @@ class ContAffichageListe {
             $m = Membre::where('idUser', '=', $userId)->first();
             $listes = $m->listes()->get();
             
-            $vue = new VueParticipant(array('liste' => $listes));
-            $vue->render(LISTES);
+            $vue = new VueAffichageListe(array('liste' => $listes));
+            $vue->render(LISTES_CREA);
         } else{
             $app = \Slim\Slim::getInstance();
             $app->response->redirect($app->urlFor('listePublic'));
@@ -51,7 +52,7 @@ class ContAffichageListe {
 
     public function afficherListe($token){
         $liste = Liste::where('token', 'like', $token)->first();
-        $vue = new VueParticipant(array('liste' => $liste));
+        $vue = new VueAffichageListe(array('liste' => $liste));
         
         if(Auth::isCreator($token)){ // si l'utilisateur est créateur
             $vue->render(LISTE_CREA);
@@ -63,7 +64,7 @@ class ContAffichageListe {
     
     public function afficherListeInvite($share){
         $listes = Liste::where('share', 'like', $share)->first();
-        $vue = new VueParticipant(array('liste' => $listes));
+        $vue = new VueAffichageListe(array('liste' => $listes));
         
         if(Auth::isLogged()){ // si l'utilisateur est connecté
             $vue->render(LISTE_CO);
@@ -76,7 +77,7 @@ class ContAffichageListe {
         
         $item = Item::where('id', '=', $id)->first();
         
-        $vue = new VueParticipant(array('item' => $item));
+        $vue = new VueAffichageListe(array('item' => $item));
         $vue->render(ITEM);
     }
     
@@ -84,7 +85,7 @@ class ContAffichageListe {
         
         $item = Item::where('id', '=', $id)->first();
         
-        $vue = new VueParticipant(array('item' => $item));
+        $vue = new VueAffichageListe(array('item' => $item));
         $vue->render(RESERVER);
     }
     

@@ -6,6 +6,7 @@ use \wishlist\Auth\Authentification as Auth;
 use \wishlist\models\Membre;
 
 const LISTES = 1.0;
+const LISTES_CREA = 1.1;
 const LISTE_CREA = 2.0;
 const LISTE_CO = 2.1;
 const LISTE_INV = 2.2;
@@ -13,7 +14,7 @@ const ITEM = 3.0;
 const RESERVER = 4.0;
 
 
-class VueParticipant {
+class VueAffichageListe {
     
     private $liste, $item, $app;
     
@@ -29,6 +30,32 @@ class VueParticipant {
         $this->app = \Slim\Slim::getInstance();
     }
     
+    
+    private function affichageListesCrea() {
+        $path = './';
+        
+        $html = '<section><ul class="listes">';
+        
+        foreach($this->liste as $l){
+            
+            if(isset($l)){
+                $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><p class="date">' . $l->expiration . '</p>';
+                $html .= '<form method="GET" action="' . $this->app->urlFor('listeCrea', array('token' => $l->token)) . '">';
+                $html .= '<button class="btn btn-primary">Détails</button>';
+                $html .= '<p>Nombre de réservations : ' . count($l->reservations()->get()) . '</p>';
+                $html .= "</form>";
+                $html .= '</li>';
+            }
+        }
+        
+        $html .= '<form method="GET" action="#">'; // TODO mettre route **TRISTAN**
+        $html .= '<button class="btn btn-primary">Ajouter une liste</button>';
+        $html .= '</form>';
+        
+        $html .= '</ul></section>';
+        
+        return array('html' => $html, 'path' => $path);
+    }
     
     private function affichageListes() {
         $path = './';
@@ -56,7 +83,7 @@ class VueParticipant {
     private function affichageListeCrea() {
         $path = '../';
         
-        $html = '<section><ul class="listes">';
+        $html = '<section class="listes">';
         $cpt = 1;
         
         
@@ -65,17 +92,38 @@ class VueParticipant {
         if(isset($l)){
             $items = $l->items()->get();
 
-            $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
+            $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
 
             foreach($items as $i){
-                $html .= '<div class="col col-l-3">';
+                $reservs = $i->reservations()->get();
+                
+                if(count($reservs) > 0){
+                    $html .= '<div class="reserve col col-l-3">';
+                } else{
+                    $html .= '<div class="col col-l-3">';
+                }
                 $html .= '<p class="nom"><h4>' . $i->nom . '</h4></p><img src="../src/img/' . $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
-                $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
-                $html .= '<form method="GET" action="' . $this->app->urlFor('itemListe', array('id' => $i->id)) . '">'; // TODO changer route
-                $html .= '<button class="btn btn-primary">Modifier</button>';
-                $html .= '</form>';
+                
+                
+                if(count($reservs) > 0){
+                    
+                    $html .= '<p>Cet item a été réservé !</p>';
+                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
+                    $html .= '<button class="message btn btn-primary h' . $cpt . '">Voir le(s) message(s)</button>';
+                    
+                } else{
+                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
+                    $html .= '<form method="GET" action="#">'; // TODO mettre route **TRISTAN**
+                    $html .= '<button class="btn btn-primary">Modifier</button>';
+                    $html .= '</form>';
+                
+                    $html .= '<form method="GET" action="#">'; // TODO mettre route **TRISTAN**
+                    $html .= '<button class="btn btn-primary">Supprimer</button>';
+                    $html .= '</form>';
+                }
+                
 
-                $html .= '<section class="hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
+                $html .= '<section class="details hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
                 $html .= '<p class="hidden desc">' . $i->descr . '</p>';
 
                 if($i->url != null or $i->url != ""){
@@ -84,13 +132,45 @@ class VueParticipant {
                     $html .= '<p class="hidden">Aucune URL associé !</p>';
                 }
 
-                $html .= '</section></div>';
+                $html .= '</section>';
+                
+                
+                if(count($reservs) > 0){
+                    $html .= '<section class="message hidden hide' . $cpt . '">';
+                    
+                    if(count($reservs) == 1){
+                        $html .= '<h6>Message :</h6>';
+                    } else{
+                        $html .= '<h6>Messages :</h6>';
+                    }
+                    
+                    $html .= '<ul class="message">';
+
+                    foreach($reservs as $r){
+                        $html .= '<li>' . $r->message . '</li>';
+                    }
+
+                    $html .= '</ul><section>';
+                    
+                }
+                
+                $html .= '</div>';
+                
+                
                 $cpt++;
             }
-            $html .= '</div><p class="date">' . $l->expiration . '</p></li>';
+            
+            $html .= '</div>';
+                
         }
         
-        $html .= '</ul></section>';
+        $html .= '<form method="GET" action="#">'; // TODO mettre route **TRISTAN**
+        $html .= '<button class="btn btn-primary">Ajouter un item</button>';
+        $html .= '</form>';
+            
+        $html .= '<p class="date">Date d\'échéance :</p><p class="date">' . $l->expiration . '</p>';
+        
+        $html .= '</section>';
         
         return array('html' => $html, 'path' => $path);
     }
@@ -114,24 +194,33 @@ class VueParticipant {
             $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
 
             foreach($items as $i){
-                $html .= '<div class="col col-l-3">';
+                
+                $reservs = $i->reservations()->get();
+                
+                if(count($reservs) > 0){
+                    $html .= '<div class="reserve col col-l-3">';
+                } else{
+                    $html .= '<div class="col col-l-3">';
+                }
+                
                 $html .= '<p class="nom"><h4>' . $i->nom;
+                
                 if($n == 0){
                     $html .= '</h4></p><img src="../../src/img/';
                 } else{
                     $html .= '</h4></p><img src="../../../src/img/';
                 }
+                
                 $html .= $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
 
                 $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
-
-                $reservs = $i->reservations()->get();
+                
 
                 if(count($reservs) > 0){
 
                     $html .= '<button disabled class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
 
-                    $html .= '<p>Cette item a déjà été réservée par :</p>';
+                    $html .= '<p>Cette item a déjà été réservé par :</p>';
                     $html .= '<ul class="reserv">';
 
                     foreach($reservs as $r){
@@ -198,7 +287,10 @@ class VueParticipant {
     
     public function render($code) {
         
-        if($code == LISTES){
+        if($code == LISTES_CREA){
+            $res = $this->affichageListesCrea();
+            
+        } elseif($code == LISTES){
             $res = $this->affichageListes();
             
         } else if($code == LISTE_CREA){
@@ -220,7 +312,7 @@ class VueParticipant {
           <link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>
           <link rel="stylesheet" href="' . $path . 'src/css/principale.css">
           <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-          <script src="' . $path . 'src/js/details.js"></script>
+          <script src="' . $path . 'src/js/itemsListes.js"></script>
           <script src="' . $path . 'src/js/bootstrap.min.js"></script>';
         
         if(Auth::isLogged()){
@@ -242,7 +334,7 @@ class VueParticipant {
                     <a class="nav-link" href="' . $this->app->urlFor('listePublic') . '">Les listes du moment <span class="sr-only">(current)</span></a>
                   </li>
                   <li class="nav-item active">
-                    <a class="nav-link" href="#">Autres <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="#">Vos contacts <span class="sr-only">(current)</span></a>
                   </li>
                 <li class="nav-item active" id="compte">
                     <a class="nav-link" href="' . $this->app->urlFor('Compte') . '">Mon compte <span class="sr-only">(current)</span></a>

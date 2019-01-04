@@ -1,12 +1,24 @@
 
-var process = (function () {
+var sectionHidden = (function () {
     window.addEventListener("load", () => {
         
-        $("button.details").on("click", (event) => afficher(event));
+        $("button.details").on("click", (event) => afficherDetails(event));
+        $("button.message").on("click", (event) => afficherMessage(event));
 
-        function afficher(evt){
+        function afficherDetails(evt){
             let i = $(evt.target).attr("class").split(' ')[3][1];
-            let e = $("section.hide" + i);
+            let e = $("section.details.hide" + i);
+            
+            if(e.css("display") == "none"){
+                e.slideDown("fast");
+           } else{
+               e.slideUp("fast");
+           }
+        }
+        
+        function afficherMessage(evt){
+            let i = $(evt.target).attr("class").split(' ')[3][1];
+            let e = $("section.message.hide" + i);
             
             if(e.css("display") == "none"){
                 e.slideDown("fast");

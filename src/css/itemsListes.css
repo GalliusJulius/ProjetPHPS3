@@ -2,10 +2,6 @@ body{
     background-color: rgba(57, 62, 70, 0.05);/*rgba(255, 244, 224, 0.5);*/
 }
 
-ul.listes{
-    list-style-type: none;
-}
-
 div.items{
     margin: 2% 4% 2% 4%;
 }
@@ -15,8 +11,11 @@ div.items > div.col{
     /*margin: auto;*/
 }
 
-
 ul.listes > li{
+    list-style-type: none;
+}
+
+section.listes, section.listes > ul > li, ul.listes > li{
     text-align: center;
     padding-top: 1rem;
     padding-bottom: 1rem;
@@ -87,7 +86,7 @@ section.hidden{
     display: none;
 }
 
-li [class*="col-"] {
+li [class*="col-"], div.items > div.col{
     padding-top: 1rem;
     padding-bottom: 1rem;
     background-color: rgba(52, 62, 70, .15);
@@ -95,6 +94,9 @@ li [class*="col-"] {
     border-radius: 15px;
 }
 
+div.items > div.reserve{
+    background-color: rgba(52, 62, 70, .25);
+}
 
 div.modal textarea{
     display: block;
@@ -135,8 +137,19 @@ ul.reserv > li{
 }
 
 
+section.message{
+    margin-top: 10%;
+}
+
+ul.message{
+    padding-left: 0%;
+    list-style-type: none;
+    border: 1px solid rgba(52, 62, 70, 0.2);
+}
+
+
 @media (max-width: 1200px) {
-    ul.listes > li{
+    section.listes, section.listes > ul > li, ul.listes > li{
         margin: 2% 5% 2% 5%;
     }
     
