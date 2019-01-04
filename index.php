@@ -10,7 +10,7 @@ $info= parse_ini_file('src/conf/conf.ini');
 $db->addConnection($info);
 $db->setAsGlobal();
 $db->bootEloquent();
-
+session_start();
 //Routage pour la connexion
 $app->get('/',function(){
     $gest = new c\ControleurConnexion();
@@ -43,7 +43,7 @@ $app->post('/inscription',function(){
     $app = \Slim\Slim::getInstance();
     $gest = new c\ControleurConnexion();
     //if(isset($_POST['inscription'])){
-    try{
+    #try{
         a\Authentification::createUser($_POST['email'], $_POST['mdp'], $_POST['mdpc'], $_POST['nom'], $_POST['prenom'], $_POST['pseudo']);
         
         a\Authentification::authentificate($_POST['email'],$_POST['mdp']);
@@ -51,16 +51,16 @@ $app->post('/inscription',function(){
         a\Authentification::loadProfil($_POST['email']);
         
         $app->redirect($app->urlFor('accueil'));
-    }
-    catch(Exception $e){
-        if($e->getMessage()=="mail"){ 
-            $gest->erreur="ER_INSCRIPTION2";
-        }
-        else if($e->getMessage()=="mdp"){
-            $gest->erreur="ER_INSCRIPTION1";
-        }
-    }
-    $gest->recupererVue("inscription");
+   # }
+    #catch(Exception $e){
+     #   if($e->getMessage()=="mail"){ 
+      #      $gest->erreur="ER_INSCRIPTION2";
+    #    }
+    #    else if($e->getMessage()=="mdp"){
+    #        $gest->erreur="ER_INSCRIPTION1";
+    #    }
+    #}
+    #$gest->recupererVue("inscription");
     //}
 })->name('insriptionPost');
 
@@ -88,6 +88,7 @@ $app->get('/Compte',function(){
 $app->post('/Compte',function(){
    $acc = new c\ControleurCompte();
    $acc->miseAjour();
+    a\Authentification::loadProfil($_SESSION['profil']['Email']);
    $acc->recupererVue("compte");
 });
 
@@ -116,10 +117,8 @@ $app->post('/MesListes',function(){
 $app->get('/liste/:token', function($token){
     $cont = new c\ContAffichageListe();
     $cont->afficherListe($token);
-<<<<<<< HEAD
-})->name('liste');
-=======
 })->name('listeCrea');
+
 // Revoir route
 $app->get('/liste/:share/partager', function($share){
     $cont = new c\ContAffichageListe();
@@ -130,8 +129,6 @@ $app->post('/liste/:share/partager/reserver/:idItem', function($share, $idItem){
     $cont = new c\ContAffichageListe();
     $cont->reserverItem($share, $idItem);
 })->name('reserver');
-
->>>>>>> d9bf8e3dbfceee7945ada72b0565c0f11d44dee1
 
 $app->get('/item/:id', function($id){
     $cont = new c\ContAffichageListe();

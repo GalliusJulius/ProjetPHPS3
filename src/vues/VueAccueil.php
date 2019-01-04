@@ -60,8 +60,8 @@ class VueAccueil{
     <link rel="icon" href="../../../favicon.ico">
 
     <title>Navbar Template for Bootstrap</title>
-    <link rel="stylesheet" href="./src/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./src/css/principale.css">
+    <link rel="stylesheet" href="../src/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../src/css/principale.css">
     $style
   </head>
 
@@ -222,7 +222,7 @@ END;
         $i=0;
         $app = \Slim\Slim::getInstance();
         foreach($this->tableau as $val){
-            $lien = $app->urlFor('liste',['token'=>$val->token]);
+            $lien = $app->urlFor('listeCrea',['token'=>$val->token]);
             $i++;
             $html = $html . "<div>" . "<h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div>"; 
         }

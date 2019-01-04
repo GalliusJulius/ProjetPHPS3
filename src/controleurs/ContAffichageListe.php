@@ -22,8 +22,7 @@ const RESERVER = 4.0;
 class ContAffichageListe {
 
     public function __construct(){}
-    
-    
+
     public function afficherListesPublic(){
         $listes = m\Liste::where('public', '=', '1')->get();
         
@@ -111,17 +110,12 @@ class ContAffichageListe {
     }
     
     public function afficherMesListes($err){
-         if(!isset($_SESSION)) 
-        { 
-            session_start(); 
-        } 
         $tab = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->get();
         $vue = new \wishlist\vues\VueAccueil("mesListes",$err,$tab);
         $vue->render();
     }
     
     public function ajouterListe($token){
-        session_start();
         $erreur="";
         $verif=m\Liste::where("token","=",$token)->count();
         if($verif!=0){

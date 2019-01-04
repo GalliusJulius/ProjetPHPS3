@@ -2,7 +2,6 @@
 namespace wishlist\Auth;
 use \wishlist\models as m;
 
-session_start();
 
 class Authentification{
 
@@ -50,13 +49,11 @@ class Authentification{
         //session_start();
         $profil = m\Membre::where('email',"=",$mail)->first();
         
-        // Inutile :
-        $_SESSION['connect'] = "oui";
-        
         $_SESSION['profil']['Email']=$mail;
         $_SESSION['profil']['Nom']=$profil->Nom;
         $_SESSION['profil']['Prenom']=$profil->Prénom;
         $_SESSION['profil']['Pseudo']=$profil->Pseudo;
+        
         $_SESSION['idUser'] = $profil->idUser;
     }
 	
@@ -66,7 +63,7 @@ class Authentification{
     
     public static function isCreator($token){
         if(self::isLogged()){
-            $m = m\Membre::where('email', 'like', $_SESSION['profil']['mail'])->first();
+            $m = m\Membre::where('email', 'like', $_SESSION['profil']['Email'])->first();
             $res = $m->listes()->where('token', 'like', $token)->first();
             
             if($res != false){

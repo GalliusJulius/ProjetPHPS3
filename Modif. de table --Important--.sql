@@ -43,6 +43,53 @@ ALTER TABLE liste ADD public BOOLEAN NOT NULL;
 ALTER TABLE membres ADD Pseudo varchar(25);
 ALTER TABLE membres ADD comp varchar(32) NOT NULL;
 
+**Mise à jour (Victor)
+
+remettre la colonne comp de membre en 255 (va bloquer la création de compte sinon)
+
+table de laison entre les liste et membre : 
+
+-- phpMyAdmin SQL Dump
+-- version 4.8.3
+-- https://www.phpmyadmin.net/
+--
+-- Hôte : 127.0.0.1:3306
+-- Généré le :  ven. 04 jan. 2019 à 23:37
+-- Version du serveur :  5.7.23
+-- Version de PHP :  7.2.10
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de données :  `morelier1u`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `liste_membres`
+--
+
+DROP TABLE IF EXISTS `liste_membres`;
+CREATE TABLE IF NOT EXISTS `liste_membres` (
+  `liste_no` int(255) NOT NULL,
+  `membres_id` int(255) NOT NULL,
+  PRIMARY KEY (`liste_no`,`membres_id`),
+  KEY `fkMembre` (`membres_id`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+Il n'y a pas de modèles à créer (voir sur la doc eloquent les pivots et les relations many to many pour plus d'infos)
+
+
 
 
 

@@ -15,7 +15,6 @@ class ControleurCompte{
     }
     
     public function miseAjour(){
-        session_start();
         $this->erreur="";
         $perso = m\Membre::where("email","=",$_SESSION['profil']['Email'])->first();
         if(isset($_POST['Nom']) && $_POST['Nom'] != ""){
@@ -45,14 +44,9 @@ class ControleurCompte{
             }
         }
         $perso->save();
-        a\Authentification::loadProfil($_SESSION['profil']['Email']);
     }
     
     public function supprimerCompte(){
-        if(!isset($_SESSION)) 
-        { 
-            session_start(); 
-        } 
         $ligneSuppr = m\Membre::where("email","=",$_SESSION['profil']['Email'])->delete();
         $gest = new c\ControleurConnexion();
         $gest->seDeconnecter();
