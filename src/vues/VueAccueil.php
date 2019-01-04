@@ -47,6 +47,8 @@ class VueAccueil{
         $lienAccueil = $app->urlFor('accueil');
         $lienCompte = $app->urlFor('Compte');
         $lienMesListes = $app->urlFor('mesListes');
+        $lienListes = $app->urlFor('liste');
+        $lienListesPublic = $app->urlFor('listePublic');
         $html = <<< END
         <!doctype html>
 <html lang="en">
@@ -55,11 +57,11 @@ class VueAccueil{
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../../../favicon.ico">
+    <link rel="icon" href="../../../favicon.ico">
 
     <title>Navbar Template for Bootstrap</title>
-    <link rel="stylesheet" href="../src/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../src/css/principale.css">
+    <link rel="stylesheet" href="./src/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./src/css/principale.css">
     $style
   </head>
 
@@ -76,9 +78,13 @@ class VueAccueil{
                 <ul class="navbar-nav mr-auto">
                   <li class="nav-item active">
                     <a class="nav-link" href=$lienMesListes>Mes listes <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                    <a class="nav-link" href="$lienListes">Mes listes b<span class="sr-only">(current)</span></a>
+                    </li>
                   </li>
                   <li class="nav-item active">
-                    <a class="nav-link" href="#">Découvrir <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="$lienListesPublic">Les listes du moment <span class="sr-only">(current)</span></a>
                   </li>
                   <li class="nav-item active">
                     <a class="nav-link" href="#">Autres <span class="sr-only">(current)</span></a>

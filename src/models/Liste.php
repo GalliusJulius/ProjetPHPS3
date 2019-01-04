@@ -22,4 +22,8 @@ class Liste extends Model{
     public function membres() {
         return $this->belongsToMany('\wishlist\models\Membre','liste_membres','no','liste_no');
     }
+    
+  public function reservations() {
+    return $this->hasMany('\wishlist\models\Reservation','idListe');
+  }
 }

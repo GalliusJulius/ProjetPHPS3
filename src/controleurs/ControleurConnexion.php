@@ -12,6 +12,9 @@ class ControleurConnexion{
     }
     
     public function seDeconnecter(){
+        // Je verrais plsu un truc du genre :
+        //a::deconnexion();
+        
         if(!isset($_SESSION)) 
         { 
             session_start(); 

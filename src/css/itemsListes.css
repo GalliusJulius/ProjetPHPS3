@@ -1,0 +1,159 @@
+body{
+    background-color: rgba(57, 62, 70, 0.05);/*rgba(255, 244, 224, 0.5);*/
+}
+
+div.items{
+    margin: 2% 4% 2% 4%;
+}
+
+div.items > div.col{
+    margin: 0.5% 0.5% 0.5% 0.5%;
+    /*margin: auto;*/
+}
+
+ul.listes > li{
+    list-style-type: none;
+}
+
+section.listes, section.listes > ul > li, ul.listes > li{
+    text-align: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    background-color: #00BBDE;/*rgba(248, 181, 0, 1); /*rgba(52, 62, 70, .15);*/
+    border: 1px solid rgba(57, 62, 70, 0.3);
+    margin: 2% 15% 2% 15%;
+    border-radius: 50px;
+}
+
+img{
+    width: 200px;
+    height: 200px;
+}
+
+
+p.titre{
+    font-size: 2em;
+    font-weight: 800;
+}
+
+p.desc{
+    font-size: 1.2em;
+    text-align: justify;
+    border: 0.5px solid rgba(57, 62, 70, 0.2);
+    margin: 0% 20% 0% 20%;
+    padding: 1% 1% 1% 1%;
+}
+
+p.date{
+    font-size: 0.8em;
+    font-weight: 800;
+    text-align: right;
+    margin-right: 5%;
+}
+
+p.tarif{
+    font-size: 1em;
+    font-weight: 800;
+    text-align: right;
+    margin-top: 5%;
+}
+
+p.nom{
+    font-size: 1.75em;
+    font-weight: 700; 
+}
+
+button.btn{
+    background-color: #FC3C3C;
+}
+
+button.btn:hover, button.btn:disabled{
+    background-color: rgba(255, 20, 20, 0.75);
+}
+
+
+
+h6.hidden{
+    margin-bottom: 5%;
+}
+
+p.hidden{
+    font-size: 0.85em;
+    margin: 5% 3% 0% 3%;
+}
+
+section.hidden{
+    display: none;
+}
+
+li [class*="col-"], div.items > div.col{
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    background-color: rgba(52, 62, 70, .15);
+    border: 1px solid rgba(52, 62, 70, 0.2);
+    border-radius: 15px;
+}
+
+div.items > div.reserve{
+    background-color: rgba(52, 62, 70, .25);
+}
+
+div.modal textarea{
+    display: block;
+    margin: auto;
+    margin-bottom: 5%;
+    resize: both;
+}
+
+div.modal div.form{
+    background-color: rgba(196, 196, 196, 0.5);
+    margin-bottom: 0%;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 3%;
+    border-radius: 20px;
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+
+div.modal{
+    display: none;
+    background-color: rgba(57, 62, 70, 0.9);
+    font-size: 1.5em;
+    margin-bottom: 0%;
+}
+
+ul.reserv{
+    margin-bottom: 10%;
+    list-style-type: none;
+    padding-left: 0%;
+    padding-bottom: 5%;
+    border-bottom: 1px solid rgba(52, 62, 70, 0.2);
+}
+
+ul.reserv > li{
+    text-align: center;
+    font-weight: 700;
+}
+
+
+section.message{
+    margin-top: 10%;
+}
+
+ul.message{
+    padding-left: 0%;
+    list-style-type: none;
+    border: 1px solid rgba(52, 62, 70, 0.2);
+}
+
+
+@media (max-width: 1200px) {
+    section.listes, section.listes > ul > li, ul.listes > li{
+        margin: 2% 5% 2% 5%;
+    }
+    
+    p.desc{
+        margin: 2% 5% 2% 5%;
+    }
+}
