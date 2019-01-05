@@ -73,8 +73,13 @@ button.btn:hover, button.btn:disabled{
 
 
 
-h6.hidden{
+.hidden > h6{
     margin-bottom: 5%;
+}
+
+.partager > h6{
+    margin-bottom: 3%;
+    margin-top: 3%;
 }
 
 p.hidden{
@@ -98,14 +103,14 @@ div.items > div.reserve{
     background-color: rgba(52, 62, 70, .25);
 }
 
-div.modal textarea{
+.modal textarea{
     display: block;
     margin: auto;
     margin-bottom: 5%;
     resize: both;
 }
 
-div.modal div.form{
+.modal div.form{
     background-color: rgba(196, 196, 196, 0.5);
     margin-bottom: 0%;
     margin-left: 15%;
@@ -116,24 +121,42 @@ div.modal div.form{
     padding-bottom: 3%;
 }
 
-div.modal{
+.modal{
     display: none;
     background-color: rgba(57, 62, 70, 0.9);
     font-size: 1.5em;
     margin-bottom: 0%;
 }
 
-ul.reserv{
+.modal.partager h6{
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-bottom: 10%;
+}
+
+.modal.partager p{
+    font-size: 1em;
+    font-weight: 400;
+    margin-bottom: 10%;
+}
+
+div.modal.partager div.form{
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+div.reserv{
     margin-bottom: 10%;
     list-style-type: none;
     padding-left: 0%;
     padding-bottom: 5%;
     border-bottom: 1px solid rgba(52, 62, 70, 0.2);
-}
-
-ul.reserv > li{
     text-align: center;
     font-weight: 700;
+}
+
+div.reserv > p:first-child{
+    font-weight: 400;
 }
 
 
@@ -141,10 +164,22 @@ section.message{
     margin-top: 10%;
 }
 
-ul.message{
-    padding-left: 0%;
-    list-style-type: none;
+p.message{
     border: 1px solid rgba(52, 62, 70, 0.2);
+}
+
+
+div.partager input{
+    width: 100%;
+    text-align: center;
+    display: block;
+    margin-bottom: 5%;
+    font-size: 1em;
+}
+
+div.partager .fermer{
+    font-size: 1em;
+    text-align: center;
 }
 
 

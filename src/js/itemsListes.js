@@ -30,6 +30,7 @@ var sectionHidden = (function () {
     });
 })();
 
+
 var fenReserver = (function(){
 	window.addEventListener("load", () => {
         
@@ -39,16 +40,38 @@ var fenReserver = (function(){
 		
 		function popup(evt){
             let i = $(evt.target).attr("class").split(' ')[3][1];
-            let e = $("div.modal.h" + i);
+            let e = $("div.reserver.modal.h" + i);
             
 			e.fadeTo("slow",1);
 		}
 		
 		function clear(evt){
             let i = $(evt.target).attr("class").split(' ')[3][1];
-            let e = $("div.modal.h" + i);
+            let e = $("div.reserver.modal.h" + i);
             
 			e.fadeOut("slow");
 		}
 	});
 })();
+
+
+var fenParatager = (function(){
+	window.addEventListener("load", () => {
+        
+		$("button.partager").on("click", (event) => popup(event));
+		$("button.fermer").on("click", (event) => clear(event));
+		
+		function popup(evt){
+            let e = $("div.partager.modal.hide");
+            
+			e.fadeTo("slow",1);
+		}
+		
+		function clear(evt){
+            let e = $("div.partager.modal.hide");
+            
+			e.fadeOut("slow");
+		}
+	});
+})();
+

@@ -95,9 +95,9 @@ class VueAffichageListe {
             $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
 
             foreach($items as $i){
-                $reservs = $i->reservations()->get();
+                $reserv = $i->reservations()->first();
                 
-                if(count($reservs) > 0){
+                if(isset($reserv)){
                     $html .= '<div class="reserve col col-l-3">';
                 } else{
                     $html .= '<div class="col col-l-3">';
@@ -105,7 +105,7 @@ class VueAffichageListe {
                 $html .= '<p class="nom"><h4>' . $i->nom . '</h4></p><img src="../src/img/' . $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
                 
                 
-                if(count($reservs) > 0){
+                if(isset($reserv)){
                     
                     $html .= '<p>Cet item a été réservé !</p>';
                     $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
@@ -135,22 +135,11 @@ class VueAffichageListe {
                 $html .= '</section>';
                 
                 
-                if(count($reservs) > 0){
+                if(isset($reserv)){
                     $html .= '<section class="message hidden hide' . $cpt . '">';
                     
-                    if(count($reservs) == 1){
-                        $html .= '<h6>Message :</h6>';
-                    } else{
-                        $html .= '<h6>Messages :</h6>';
-                    }
-                    
-                    $html .= '<ul class="message">';
-
-                    foreach($reservs as $r){
-                        $html .= '<li>' . $r->message . '</li>';
-                    }
-
-                    $html .= '</ul><section>';
+                    $html .= '<h6>Messages :</h6>';
+                    $html .= '<p class="message">' . $reserv->message . '</p>';
                     
                 }
                 
@@ -161,29 +150,35 @@ class VueAffichageListe {
             }
             
             $html .= '</div>';
+            $html .= '<p class="date">Date d\'échéance :</p><p class="date">' . $l->expiration . '</p>';
                 
         }
         
         $html .= '<form method="GET" action="#">'; // TODO mettre route **TRISTAN**
         $html .= '<button class="btn btn-primary">Ajouter un item</button>';
         $html .= '</form>';
-            
-        $html .= '<p class="date">Date d\'échéance :</p><p class="date">' . $l->expiration . '</p>';
+        
+        $html .= '<button class="partager btn btn-primary">Partager</button>';
+        if(isset($l)){
+            $html .= '<div class="partager hidden hide modal">';
+            $html .= '<div class="form">';
+            $html .= '<h6>Lien de paratage :</h6>';
+            $html .= '<p>Le lien de partage vous permet de partager votre liste à qui vous souhaitez, même des personnes qui ne sont pas inscrites sur le site.</p>';
+            $html .= '<input type="text" name="lien" value="' . $_SERVER['HTTP_HOST'] . $this->app->urlFor('listeShare', array('share' => $l->share)) . '" disabled>';
+            $html .= '<button class="fermer btn btn-primary">Fermer</button>';
+            $html .= '</div>';
+            $html .= '</div>';
+        }
         
         $html .= '</section>';
         
         return array('html' => $html, 'path' => $path);
     }
     
-    private function affichageListeInvite($n) { // TODO page de réservation ( + modif. sur la BDD)
-        if($n == 0){
-            $path = '../../';
-        } else{
-            $path = '../../../';
-        }
+    private function affichageListeInvite($n) {
+        $path = '../../';
         
-        
-        $html = '<section><ul class="listes">';
+        $html = '<section class="listes">';
         $cpt = 1;
         
         $l = $this->liste;
@@ -191,13 +186,13 @@ class VueAffichageListe {
         if(isset($l)){
             $items = $l->items()->get();
             
-            $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
+            $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
 
             foreach($items as $i){
                 
-                $reservs = $i->reservations()->get();
+                $reserv = $i->reservations()->first();
                 
-                if(count($reservs) > 0){
+                if(isset($reserv)){
                     $html .= '<div class="reserve col col-l-3">';
                 } else{
                     $html .= '<div class="col col-l-3">';
@@ -205,35 +200,27 @@ class VueAffichageListe {
                 
                 $html .= '<p class="nom"><h4>' . $i->nom;
                 
-                if($n == 0){
-                    $html .= '</h4></p><img src="../../src/img/';
-                } else{
-                    $html .= '</h4></p><img src="../../../src/img/';
-                }
+                $html .= '</h4></p><img src="' . $path . 'src/img/';
                 
                 $html .= $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
 
                 $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
                 
 
-                if(count($reservs) > 0){
+                if(isset($reserv)){
 
                     $html .= '<button disabled class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
-
-                    $html .= '<p>Cette item a déjà été réservé par :</p>';
-                    $html .= '<ul class="reserv">';
-
-                    foreach($reservs as $r){
-                        $html .= '<li>' . $r->prénom . ' ' . $r->nom . '</li>';
-                    }
-
-                    $html .= '</ul>';
-
+                    
+                    $html .= '<div class="reserv">';
+                    $html .= '<p>Cet item a déjà été réservé par :</p>';
+                    $html .= '<p>' . $reserv->prénom . ' ' . $reserv->nom . '</p>';
+                    $html .= '</div>';
+                    
                 } else{
 
                     $html .= '<button class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
 
-                    $html .= '<div class="modal h' . $cpt . '"><div class="form">';
+                    $html .= '<div class="reserver modal h' . $cpt . '"><div class="form">';
                     $html .= '<form id="Reserv" method="POST" action="' . $this->app->urlFor('reserver', array('share' => $l->share, 'idItem' => $i->id)) . '">';
                     $html .= '<p>Nom de l\'item à reserver : </p><input type="text" name="nomItem" value="' . $i->nom . '" disabled>';
                     $html .= '<p>Prix de réservation : </p><input type="text" name="prix" value="' . $i->tarif . '" disabled>';
@@ -262,7 +249,7 @@ class VueAffichageListe {
 
                 }
 
-                $html .= '<section class="hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
+                $html .= '<section class="details hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
                 $html .= '<p class="hidden desc">' . $i->descr . '</p>';
 
                 if($i->url != null or $i->url != ""){
@@ -276,10 +263,12 @@ class VueAffichageListe {
                 $html .= '</div>';
                 $cpt++;
             }
-            $html .= '</div><p class="date">' . $l->expiration . '</p></li>';
+            
+            $html .= '</div>';
+            $html .= '<p class="date">Date d\'échéance :</p><p class="date">' . $l->expiration . '</p>';
         }
         
-        $html .= '</ul></section>';
+        $html .= '</section>';
         
         return array('html' => $html, 'path' => $path);
     }
@@ -306,6 +295,7 @@ class VueAffichageListe {
         
         $content = $res['html'];
         $path = $res['path'];
+        
         $head = '
         <title>Listes des items</title>
           <link rel="stylesheet"  href="' . $path . 'src/css/bootstrap.min.css"/>

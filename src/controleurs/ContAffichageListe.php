@@ -73,22 +73,6 @@ class ContAffichageListe {
         }
     }
     
-    public function afficherItemListe($id) {
-        
-        $item = Item::where('id', '=', $id)->first();
-        
-        $vue = new VueAffichageListe(array('item' => $item));
-        $vue->render(ITEM);
-    }
-    
-    public function afficherReservationItem($id){
-        
-        $item = Item::where('id', '=', $id)->first();
-        
-        $vue = new VueAffichageListe(array('item' => $item));
-        $vue->render(RESERVER);
-    }
-    
     public function reserverItem($share, $idItem){
         $app = \Slim\Slim::getInstance();
         
