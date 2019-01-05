@@ -10,7 +10,7 @@ $info= parse_ini_file('src/conf/conf.ini');
 $db->addConnection($info);
 $db->setAsGlobal();
 $db->bootEloquent();
-
+session_start();
 //Routage pour la connexion
 $app->get('/',function(){
     $gest = new c\ControleurConnexion();
@@ -42,7 +42,7 @@ $app->get('/inscription',function(){
 $app->post('/inscription',function(){
     $app = \Slim\Slim::getInstance();
     $gest = new c\ControleurConnexion();
-    //if(isset($_POST['inscription'])){
+    if(isset($_POST['inscription'])){
     try{
         a\Authentification::createUser($_POST['email'], $_POST['mdp'], $_POST['mdpc'], $_POST['nom'], $_POST['prenom'], $_POST['pseudo']);
         
@@ -52,16 +52,16 @@ $app->post('/inscription',function(){
         
         $app->redirect($app->urlFor('accueil'));
     }
-    catch(Exception $e){
-        if($e->getMessage()=="mail"){ 
-            $gest->erreur="ER_INSCRIPTION2";
+   catch(Exception $e){
+       if($e->getMessage()=="mail"){ 
+          $gest->erreur="ER_INSCRIPTION2";
         }
         else if($e->getMessage()=="mdp"){
             $gest->erreur="ER_INSCRIPTION1";
         }
     }
     $gest->recupererVue("inscription");
-    //}
+    }
 })->name('insriptionPost');
 
 //Routage dans l'accueil
@@ -88,6 +88,7 @@ $app->get('/Compte',function(){
 $app->post('/Compte',function(){
    $acc = new c\ControleurCompte();
    $acc->miseAjour();
+    a\Authentification::loadProfil($_SESSION['profil']['Email']);
    $acc->recupererVue("compte");
 });
 
@@ -102,10 +103,22 @@ $app->post('/SupprimerCompte',function(){
     $acc->recupererVue("confSupp");
 });
 
+$app->get('/MesListes',function(){
+    $cont = new c\ContAffichageListe();
+    $cont->afficherMesListes("");
+})->name('mesListes');
+
+$app->post('/MesListes',function(){
+    $cont = new c\ContAffichageListe();
+    $err = $cont->ajouterListe($_POST['token']);
+    $cont->afficherMesListes($err);
+});
+
 $app->get('/liste/:token', function($token){
     $cont = new c\ContAffichageListe();
     $cont->afficherListe($token);
 })->name('listeCrea');
+
 // Revoir route
 $app->get('/liste/:share/partager', function($share){
     $cont = new c\ContAffichageListe();
@@ -116,7 +129,6 @@ $app->post('/liste/:share/partager/reserver/:idItem', function($share, $idItem){
     $cont = new c\ContAffichageListe();
     $cont->reserverItem($share, $idItem);
 })->name('reserver');
-
 
 $app->get('/item/:id', function($id){
     $cont = new c\ContAffichageListe();

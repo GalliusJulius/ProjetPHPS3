@@ -18,6 +18,10 @@ nav img {
     margin-right: 20%;
 }
 
+.container{
+    margin-top: 2em;
+}
+
 @media (max-width: 768px) {
     .navbar-brand{
         display: none;

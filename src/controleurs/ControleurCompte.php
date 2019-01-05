@@ -15,14 +15,13 @@ class ControleurCompte{
     }
     
     public function miseAjour(){
-        session_start();
         $this->erreur="";
         $perso = m\Membre::where("email","=",$_SESSION['profil']['Email'])->first();
         if(isset($_POST['Nom']) && $_POST['Nom'] != ""){
            $perso->Nom= $_POST['Nom'];
         }
         if(isset($_POST['Prenom']) && $_POST['Prenom'] != ""){
-           $perso->Prénom= $_POST['Prenom'];
+           $perso->Prenom= $_POST['Prenom'];
         }
         if(isset($_POST['Pseudo']) && $_POST['Pseudo'] != ""  && filter_var($_POST['Pseudo'],FILTER_SANITIZE_STRING)){
            $perso->Pseudo= $_POST['Pseudo'];
@@ -45,17 +44,13 @@ class ControleurCompte{
             }
         }
         $perso->save();
-        a\Authentification::loadProfil($_SESSION['profil']['Email']);
     }
     
     public function supprimerCompte(){
-        if(!isset($_SESSION)) 
-        { 
-            session_start(); 
-        } 
         $ligneSuppr = m\Membre::where("email","=",$_SESSION['profil']['Email'])->delete();
         $gest = new c\ControleurConnexion();
         $gest->seDeconnecter();
         
     }
+    
 }

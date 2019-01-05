@@ -2,7 +2,6 @@
 namespace wishlist\Auth;
 use \wishlist\models as m;
 
-session_start();
 
 class Authentification{
 
@@ -17,7 +16,7 @@ class Authentification{
                         $insert = new m\Membre();
                         $insert->email=$mail;
                         $insert->Nom=$nom;
-                        $insert->Prénom=$prenom;
+                        $insert->Prenom=$prenom;
                         $insert->Pseudo=$pseudo;
                         $token = openssl_random_pseudo_bytes(32);
                         $token = bin2hex($token);
@@ -28,10 +27,6 @@ class Authentification{
                     else{
                         throw new \Exception("mdp");
                     }
-                #}
-                #else{
-                    #echo("pas bon");
-                #}
             }
         else{
             throw new \Exception("mail");
@@ -45,8 +40,7 @@ class Authentification{
         }
         
         $var=m\Membre::select('mdp','comp')->where('email','=',$user)->first();
-        
-        if(!(isset($var) && password_verify($_POST['mdp'] . $var->comp,$var->mdp))){
+        if(!(isset($var) && password_verify($pass . $var->comp,$var->mdp))){
             throw new \Exception("AuthException");
         }
     }
@@ -55,13 +49,11 @@ class Authentification{
         //session_start();
         $profil = m\Membre::where('email',"=",$mail)->first();
         
-        // Inutile :
-        $_SESSION['connect'] = "oui";
-        
         $_SESSION['profil']['Email']=$mail;
         $_SESSION['profil']['Nom']=$profil->Nom;
-        $_SESSION['profil']['Prenom']=$profil->Prénom;
+        $_SESSION['profil']['Prenom']=$profil->Prenom;
         $_SESSION['profil']['Pseudo']=$profil->Pseudo;
+        
         $_SESSION['idUser'] = $profil->idUser;
     }
 	
@@ -71,7 +63,7 @@ class Authentification{
     
     public static function isCreator($token){
         if(self::isLogged()){
-            $m = m\Membre::where('email', 'like', $_SESSION['profil']['mail'])->first();
+            $m = m\Membre::where('email', 'like', $_SESSION['profil']['Email'])->first();
             $res = $m->listes()->where('token', 'like', $token)->first();
             
             if($res != false){

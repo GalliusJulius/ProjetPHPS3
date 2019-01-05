@@ -1,6 +1,7 @@
 <?php
 namespace wishlist\models;
 use \Illuminate\Database\Eloquent\Model as Model;
+use \wishlist\models as m;
 
 class Membre extends Model{
     protected $table='membres';
@@ -9,6 +10,10 @@ class Membre extends Model{
     public $incrementing = false;
     // A changer (à supprimer) : par un id
     protected $fillable = ['email'];
+                            
+   public function liste() {
+    return $this->belongsToMany('\wishlist\models\Liste','liste_membres','membres_id','liste_no');
+   }
     
 
     public function listes() {
@@ -18,4 +23,5 @@ class Membre extends Model{
     public function reservations() {
         return $this->hasMany('\wishlist\models\Reservation','idUser');
     }
+    
 }

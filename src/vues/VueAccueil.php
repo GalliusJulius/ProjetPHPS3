@@ -4,11 +4,12 @@ namespace wishlist\vues;
 class VueAccueil{
     private $typePage;
     private $messageErreur;
-
+    private $tableau;
     
-    public function __construct($type,$erreur){
+    public function __construct($type,$erreur,$tab=array()){
         $this->typePage=$type;
         $this->messageErreur=$erreur;
+        $this->tableau = $tab;
     }
     
     public function render(){
@@ -36,14 +37,18 @@ class VueAccueil{
                 $contenu = $this->confSupp();
                 break;
             }
+            case "mesListes":{
+                $contenu = $this->mesListes();
+                break;
+            }
             
                 
         }
         $lienAccueil = $app->urlFor('accueil');
         $lienCompte = $app->urlFor('Compte');
+        $lienMesListes = $app->urlFor('mesListes');
         $lienListes = $app->urlFor('liste');
         $lienListesPublic = $app->urlFor('listePublic');
-        
         $html = <<< END
         <!doctype html>
 <html lang="en">
@@ -55,14 +60,14 @@ class VueAccueil{
     <link rel="icon" href="../../../favicon.ico">
 
     <title>Navbar Template for Bootstrap</title>
-    <link rel="stylesheet" href="./src/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./src/css/principale.css">
+    <link rel="stylesheet" href="../src/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../src/css/principale.css">
     $style
   </head>
 
   <body>
             <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-              <a class="navbar-brand" href="$lienAccueil">My Wish List</a>
+              <a class="navbar-brand" href="$lienAccueil">MyWishList</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
@@ -72,7 +77,11 @@ class VueAccueil{
               <div class="collapse navbar-collapse" id="navbarsExample04">
                 <ul class="navbar-nav mr-auto">
                   <li class="nav-item active">
-                    <a class="nav-link" href="$lienListes">Mes listes <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href=$lienMesListes>Mes listes <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                    <a class="nav-link" href="$lienListes">Mes listes b<span class="sr-only">(current)</span></a>
+                    </li>
                   </li>
                   <li class="nav-item active">
                     <a class="nav-link" href="$lienListesPublic">Les listes du moment <span class="sr-only">(current)</span></a>
@@ -103,12 +112,17 @@ END;
     }
     
     public function supprimerCompte(){
+        $app = \Slim\Slim::getInstance();
+        $lienAccueil = $app->urlFor('accueil');
         $cont = <<< END
         <div class="row justify-content-md-center">
             <div class="col col-lg-7 justify-content-md-center">
                 <h1>Supprimer son compte</h1>
                 <p>Vous êtes sur le point de supprimer votre compte, si vous confirmez cette suppression toutes vos informations personnelles, listes et toutes informations que notre application possède sur vous sera définitivement supprimé. En cliquant sur le bouton ci-dessus vous l'acceptez, cette action est définitive.</p>
                 <form method="post" action="">
+                            <a href=$lienAccueil>
+                                <label class="btn btn-secondary">Annuler</label>
+                            </a>
                              <a href="">
                                 <button type="submit" class="btn btn-primary" name="suppression">Supprimer votre compte</button>
                               </a>
@@ -172,7 +186,7 @@ END;
 END;
         foreach($_SESSION['profil'] as $key=>$val){
             $temp = <<<END
-            <p>$key actuel : $val<input type="text" name="$key" class="form-control" placeholder="Nouveau $key"></p>
+            <p>$key actuel : $val</p><input type="text" name="$key" class="form-control" placeholder="Nouveau $key">
 END;
              $html = $html . $temp;
         }
@@ -183,11 +197,11 @@ END;
                                 <input type="password" name="mdpc" class="form-control" placeholder="Confirmation">
                                 </p>
                             </div>
+                            $this->messageErreur
                             <a href=$lienAccueil>
                                 <label class="btn btn-secondary">Annuler</label>
                             </a>
                                 <button type="submit" class="btn btn-primary" name="valider" value="validation">Effectuer les modifications</button>
-                                $this->messageErreur
                             <a href=$lienSupp>
                                 <label class="btn btn-danger">Supprimer le compte</label>
                             </a>
@@ -199,4 +213,40 @@ END;
         return $html;
         
     }
+    
+    public function mesListes(){
+        $html = <<<END
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-9 justify-content-md-center">
+END;
+        $i=0;
+        $app = \Slim\Slim::getInstance();
+        foreach($this->tableau as $val){
+            $lien = $app->urlFor('listeCrea',['token'=>$val->token]);
+            $i++;
+            $html = $html . "<div>" . "<h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div>"; 
+        }
+        if($i==0){
+            $html = $html . "<h1> vous n'avez pas encore de listes, vous pouvez en créer une !</h1>";  
+        }
+        $fin = <<<END
+        <div class="row justify-content-md-center">
+        <div class="col col-lg-6 justify-content-md-center">
+        <p>Ajouter la liste d'un de vos amis? Remplissez le token de sa liste dans le champ prévu et cliquez sur ok</p>
+         </div>
+         <div class="col col-lg-6 justify-content-md-center">
+            <form method="post" class="text-center">
+                <input type="text" name="token" class="form-control" placeholder="Token liste">
+                <button type="submit" class="btn btn-primary" name="ajout" value="add">Ajouter</button>
+            </form>
+            <p class="">$this->messageErreur</p>
+            </div>
+        </div>
+        </div>
+        </div>
+END;
+        $html= $html . $fin;
+        return $html;
+    }
+    
 }
