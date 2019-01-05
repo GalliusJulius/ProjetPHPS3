@@ -34,28 +34,28 @@ class ContAffichageListe {
         $listes = m\Liste::get();
         $userId = Auth::getIdUser();
         
-        if(isset($userId)){
+        //if(isset($userId)){
             $m = m\Membre::where('idUser', '=', $userId)->first();
             $listes = $m->listes()->get();
             
             $vue = new VueAffichageListe(array('liste' => $listes));
             $vue->render(LISTES_CREA);
-        } else{
+        /*} else{
             $app = \Slim\Slim::getInstance();
             $app->response->redirect($app->urlFor('listePublic'));
-        }
+        }*/
     }
 
     public function afficherListe($token){
         $liste = m\Liste::where('token', 'like', $token)->first();
         $vue = new VueAffichageListe(array('liste' => $liste));
         $listes = m\Liste::where('token', 'like', $token)->get();
-        if(Auth::isCreator($token)){ // si l'utilisateur est créateur
-            $vue->render(LISTE_CREA);
-        } else{ // sinon redirection vers l'affichage des invités
+        //if(Auth::isCreator($token)){ // si l'utilisateur est créateur
+        $vue->render(LISTE_CREA);
+        /*} else{ // sinon redirection vers l'affichage des invités
             $app = \Slim\Slim::getInstance();
             $app->response->redirect($app->urlFor('listeShare', array('share' => $liste->share)));
-        }
+        }*/
     }
     
     public function afficherListeInvite($share){
