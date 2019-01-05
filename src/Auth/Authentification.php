@@ -93,4 +93,5 @@ class Authentification{
 		$_SESSION=[];
         session_destroy();
 	}
+    
 }

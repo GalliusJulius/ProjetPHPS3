@@ -24,7 +24,7 @@ $app->post('/',function(){
     //if(isset($_POST['connexion'])){
     try{    
         a\Authentification::authentificate($_POST['mail'],$_POST['pass']); a\Authentification::loadProfil($_POST['mail']);
-        $app->redirect($_SERVER['SCRIPT_NAME'].'/Accueil');
+        $app->redirect($app->urlFor('Accueil'));
     }
      catch(Exception $e){
          $gest->erreur="ER_CONNEXION";
