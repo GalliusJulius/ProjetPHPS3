@@ -12,9 +12,8 @@ class Membre extends Model{
     protected $fillable = ['email'];
                             
    public function liste() {
-    return $this->belongsToMany('\wishlist\models\Liste','liste_membres','membres_id','liste_no');
+       return $this->belongsToMany('\wishlist\models\Liste','liste_membres','membres_id','liste_no');
    }
-    
 
     public function listes() {
         return $this->hasMany('\wishlist\models\Liste','user_id');

@@ -26,8 +26,8 @@ class VueConnexion{
         }
         
         $contenu ="<h1>Errer de contenu</h1>";
-        $style="<link rel='stylesheet'  href='../src/css/bootstrap.min.css'/>
-                <link rel='stylesheet'  href='../src/css/Generique.css'/>";
+        $style="<link rel='stylesheet'  href='./src/css/bootstrap.min.css'/>
+                <link rel='stylesheet'  href='./src/css/Generique.css'/>";
         switch($this->typepage){
             case "connexion":{
                 $contenu = $this->connexion();

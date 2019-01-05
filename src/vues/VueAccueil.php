@@ -26,7 +26,7 @@ class VueAccueil{
                     $this->messageErreur="<p class=\"erreur\">$this->messageErreur</p>";
                 }
                 $contenu = $this->monCompte();
-                $style = "<link rel=\"stylesheet\" href=\"../src/css/monCompte.css\">"; 
+                $style = "<link rel=\"stylesheet\" href=\"./src/css/monCompte.css\">"; 
                 break;
             }
             case "suppCompte":{
@@ -49,6 +49,7 @@ class VueAccueil{
         $lienMesListes = $app->urlFor('mesListes');
         $lienListes = $app->urlFor('liste');
         $lienListesPublic = $app->urlFor('listePublic');
+        
         $html = <<< END
         <!doctype html>
 <html lang="en">
@@ -60,8 +61,8 @@ class VueAccueil{
     <link rel="icon" href="../../../favicon.ico">
 
     <title>Navbar Template for Bootstrap</title>
-    <link rel="stylesheet" href="../src/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../src/css/principale.css">
+    <link rel="stylesheet" href="./src/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./src/css/principale.css">
     $style
   </head>
 
@@ -95,7 +96,7 @@ class VueAccueil{
                 </ul>
                 </div>
                 <a class="nav-item " href=$lienCompte>
-                    <img src="../src/img/profil.png" width="30" height="30" alt="">
+                    <img src="./src/img/profil.png" width="30" height="30" alt="">
                 </a>
             </nav>
             
@@ -104,7 +105,7 @@ class VueAccueil{
             </div>
             
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-            <script src="../src/js/bootstrap.min.js"></script>
+            <script src="./src/js/bootstrap.min.js"></script>
         </body> 
      </html>
 END;
