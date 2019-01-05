@@ -51,7 +51,7 @@ class Authentification{
         
         $_SESSION['profil']['Email']=$mail;
         $_SESSION['profil']['Nom']=$profil->Nom;
-        $_SESSION['profil']['Prenom']=$profil->Prénom;
+        $_SESSION['profil']['Prenom']=$profil->Prenom;
         $_SESSION['profil']['Pseudo']=$profil->Pseudo;
         
         $_SESSION['idUser'] = $profil->idUser;

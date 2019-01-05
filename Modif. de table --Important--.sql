@@ -1,11 +1,11 @@
 -- Création de la table :
 
-CREATE TABLE `php_td`.`reservation` ( `idReserv` INT(10000) NOT NULL AUTO_INCREMENT , `idItem` INT(10000) NOT NULL , `idListe` INT(10000) NOT NULL , `idUser` INT(10000) NOT NULL , `message` VARCHAR(1000) NULL DEFAULT NULL , PRIMARY KEY (`idReserv`)) ENGINE = MyISAM;
+CREATE TABLE `reservation` ( `idReserv` INT(255) NOT NULL AUTO_INCREMENT , `idItem` INT(255) NOT NULL , `idListe` INT(255) NOT NULL , `idUser` INT(255) NOT NULL , `message` VARCHAR(1000) NULL DEFAULT NULL , PRIMARY KEY (`idReserv`)) ENGINE = MyISAM;
 
 
 -- Modification de la table membre à faire (ajout d'un id) :
 
-DELETE FROM `membres` WHERE `membres`.`email` = \'root@local.fr\';
+DELETE FROM `membres`;
 -- Et supprimer tout autre données de la table -- 
 
 ALTER TABLE `membres` CHANGE `email` `idUser` INT(255) NOT NULL AUTO_INCREMENT;
@@ -40,8 +40,8 @@ ALTER TABLE liste ADD public BOOLEAN NOT NULL;
 
 -- Changer des valeurs dans cette nouvelle colonne (par défaut à 0 --> false)
 
-ALTER TABLE membres ADD Pseudo varchar(25);
-ALTER TABLE membres ADD comp varchar(32) NOT NULL;
+ALTER TABLE membres ADD Pseudo varchar(255);
+ALTER TABLE membres ADD comp varchar(255) NOT NULL;
 
 **Mise à jour (Victor)
 
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `liste_membres` (
   KEY `fkMembre` (`membres_id`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-Il n'y a pas de modèles à créer (voir sur la doc eloquent les pivots et les relations many to many pour plus d'infos)
+-- Il n'y a pas de modèles à créer (voir sur la doc eloquent les pivots et les relations many to many pour plus d'infos)
 
 
 
