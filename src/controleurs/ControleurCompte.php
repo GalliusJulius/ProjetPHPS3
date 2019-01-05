@@ -21,7 +21,7 @@ class ControleurCompte{
            $perso->Nom= $_POST['Nom'];
         }
         if(isset($_POST['Prenom']) && $_POST['Prenom'] != ""){
-           $perso->Prénom= $_POST['Prenom'];
+           $perso->Prenom= $_POST['Prenom'];
         }
         if(isset($_POST['Pseudo']) && $_POST['Pseudo'] != ""  && filter_var($_POST['Pseudo'],FILTER_SANITIZE_STRING)){
            $perso->Pseudo= $_POST['Pseudo'];

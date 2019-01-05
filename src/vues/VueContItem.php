@@ -42,12 +42,11 @@ END;
          <meta charset='utf-8' />
          <link rel='stylesheet' href='../src/css/bootstrap.min.css' />
          <link rel='stylesheet' href='../src/css/grid.css' />
-         <script src='../src/css/snowstorm.js' ></script>
         </head>
       <body>
      <div class="row">
          <div class="col-md-2">
-             <img src="../img/$img" class="rounded float-left img-fluid img-thumbnail" height="100%" width="100%" alt="">
+             <img src="../src/img/$img" class="rounded float-left img-fluid img-thumbnail" height="100%" width="100%" alt="">
          </div>
         <div class="col-md-6">
              $nom
@@ -83,12 +82,11 @@ END;
          <meta charset='utf-8' />
          <link rel='stylesheet' href='../../src/css/bootstrap.min.css' />
          <link rel='stylesheet' href='../../src/css/grid.css' />
-         <script src='../src/css/snowstorm.js' ></script>
         </head>
       <body>
       <div class="row">
           <div class="col-md-2">
-              <img src="../../img/$img" class="rounded float-left img-fluid img-thumbnail" height="100%" width="100%" alt="">
+              <img src="../../src/img/$img" class="rounded float-left img-fluid img-thumbnail" height="100%" width="100%" alt="">
           </div>
          <div class="col-md-6">
          <form method="post" action="/Projet/projet/test/$id">

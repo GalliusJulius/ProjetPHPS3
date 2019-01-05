@@ -4,18 +4,10 @@ namespace wishlist\controleurs;
 
 require_once 'vendor/autoload.php';
 
-use \Illuminate\Database\Capsule\Manager as DB;
 use \wishlist\models as m;
 use \wishlist\vues as v;
 
 class ContItem {
-
-  private $db;
-
-  public function __construct(){
-    //$this->db = $connexion;
-  }
-
 
   public function afficherItem($id){
     $i = \wishlist\models\Item::where("id","=",$id)->first();
