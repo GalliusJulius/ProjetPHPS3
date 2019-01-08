@@ -127,7 +127,7 @@ class VueAffichageListe {
                 $html .= '<p class="hidden desc">' . $i->descr . '</p>';
 
                 if($i->url != null or $i->url != ""){
-                    $html .= '<a class="hidden" target="_blank" href="' . $i->url . '>Produit disponible ici !</a>';
+                    $html .= '<a class="hidden" target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
                 } else{
                     $html .= '<p class="hidden">Aucune URL associé !</p>';
                 }
@@ -252,8 +252,8 @@ class VueAffichageListe {
                 $html .= '<section class="details hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
                 $html .= '<p class="hidden desc">' . $i->descr . '</p>';
 
-                if($i->url != null or $i->url != ""){
-                    $html .= '<a class="hidden" target="_blank" href="' . $i->url . '>Produit disponible ici !</a>';
+                if($i->url != null and $i->url != ""){
+                    $html .= '<a class="hidden" target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
                 } else{
                     $html .= '<p class="hidden">Aucune URL associé !</p>';
                 }
