@@ -15,28 +15,28 @@ const RESERVER = 4.0;
 
 
 class VueAffichageListe {
-    
+
     private $liste, $item, $app;
-    
+
     public function __construct($tab) {
         if(isset($tab['liste'])){
             $this->liste = $tab['liste'];
         }
-        
+
         if(isset($tab['item'])){
             $this->item = $tab['item'];
         }
-        
+
         $this->app = \Slim\Slim::getInstance();
     }
-    
+
     private function affichageListesCrea() {
         $path = './';
-        
+
         $html = '<section><ul class="listes">';
-        
+
         foreach($this->liste as $l){
-            
+
             if(isset($l)){
                 $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><p class="date">' . $l->expiration . '</p>';
                 $html .= '<form method="GET" action="' . $this->app->urlFor('listeCrea', array('token' => $l->token)) . '">';
@@ -46,23 +46,23 @@ class VueAffichageListe {
                 $html .= '</li>';
             }
         }
-        
+
         $html .= '<form method="GET" action="#">'; // TODO mettre route **TRISTAN**
         $html .= '<button class="btn btn-primary">Ajouter une liste</button>';
         $html .= '</form>';
-        
+
         $html .= '</ul></section>';
-        
+
         return array('html' => $html, 'path' => $path);
     }
-    
+
     private function affichageListes() {
         $path = './';
-        
+
         $html = '<section><ul class="listes">';
-        
+
         foreach($this->liste as $l){
-            
+
             if(isset($l)){
                 $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><p class="date">' . $l->expiration . '</p>';
                 $html .= '<form method="GET" action="' . $this->app->urlFor('listeCrea', array('token' => $l->token)) . '">';
@@ -72,21 +72,21 @@ class VueAffichageListe {
                 $html .= '</li>';
             }
         }
-        
+
         $html .= '</ul></section>';
-        
+
         return array('html' => $html, 'path' => $path);
     }
-    
+
     private function affichageListeCrea() {
         $path = '../';
-        
+
         $html = '<section class="listes">';
         $cpt = 1;
-        
-        
+
+
         $l = $this->liste;
-            
+
         if(isset($l)){
             $items = $l->items()->get();
 
@@ -94,32 +94,32 @@ class VueAffichageListe {
 
             foreach($items as $i){
                 $reserv = $i->reservations()->first();
-                
+
                 if(isset($reserv)){
                     $html .= '<div class="reserve col col-l-3">';
                 } else{
                     $html .= '<div class="col col-l-3">';
                 }
                 $html .= '<p class="nom"><h4>' . $i->nom . '</h4></p><img src="../src/img/' . $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
-                
-                
+
+
                 if(isset($reserv)){
-                    
+
                     $html .= '<p>Cet item a été réservé !</p>';
                     $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
                     $html .= '<button class="message btn btn-primary h' . $cpt . '">Voir le(s) message(s)</button>';
-                    
+
                 } else{
                     $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
-                    $html .= '<form method="GET" action= "' . $this->app->urlFor('modifierItem', array('id' => $i->id,'token' => $l->token)) . '">'; 
+                    $html .= '<form method="GET" action= "' . $this->app->urlFor('modifierItem', array('id' => $i->id,'token' => $l->token)) . '">';
                     $html .= '<button class="btn btn-primary">Modifier</button>';
                     $html .= '</form>';
-                
-                    $html .= '<form method="GET" action= "' . $this->app->urlFor('supprimer', array('id' => $i->id,'token' => $l->token)) . '">'; 
+
+                    $html .= '<form method="GET" action= "' . $this->app->urlFor('supprimer', array('id' => $i->id,'token' => $l->token)) . '">';
                     $html .= '<button class="btn btn-primary">Supprimer</button>';
                     $html .= '</form>';
                 }
-                
+
 
                 $html .= '<section class="details hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
                 $html .= '<p class="hidden desc">' . $i->descr . '</p>';
@@ -131,31 +131,31 @@ class VueAffichageListe {
                 }
 
                 $html .= '</section>';
-                
-                
+
+
                 if(isset($reserv)){
                     $html .= '<section class="message hidden hide' . $cpt . '">';
-                    
+
                     $html .= '<h6>Messages :</h6>';
                     $html .= '<p class="message">' . $reserv->message . '</p>';
-                    
+
                 }
-                
+
                 $html .= '</div>';
-                
-                
+
+
                 $cpt++;
             }
-            
+
             $html .= '</div>';
             $html .= '<p class="date">Date d\'échéance :</p><p class="date">' . $l->expiration . '</p>';
-                
+
         }
-        
-        $html .= '<form method="GET"  action= "' . $this->app->urlFor('ajouterItem', array('token' => $l->token)) . '">'; 
+
+        $html .= '<form method="GET"  action= "' . $this->app->urlFor('ajouterItem', array('token' => $l->token)) . '">';
         $html .= '<button class="btn btn-primary">Ajouter un item</button>';
         $html .= '</form>';
-        
+
         $html .= '<button class="partager btn btn-primary">Partager</button>';
         if(isset($l)){
             $html .= '<div class="partager hidden hide modal">';
@@ -167,53 +167,53 @@ class VueAffichageListe {
             $html .= '</div>';
             $html .= '</div>';
         }
-        
+
         $html .= '</section>';
-        
+
         return array('html' => $html, 'path' => $path);
     }
-    
+
     private function affichageListeInvite($n) {
         $path = '../../';
-        
+
         $html = '<section class="listes">';
         $cpt = 1;
-        
+
         $l = $this->liste;
 
         if(isset($l)){
             $items = $l->items()->get();
-            
+
             $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
 
             foreach($items as $i){
-                
+
                 $reserv = $i->reservations()->first();
-                
+
                 if(isset($reserv)){
                     $html .= '<div class="reserve col col-l-3">';
                 } else{
                     $html .= '<div class="col col-l-3">';
                 }
-                
+
                 $html .= '<p class="nom"><h4>' . $i->nom;
-                
+
                 $html .= '</h4></p><img src="' . $path . 'src/img/';
-                
+
                 $html .= $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
 
                 $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
-                
+
 
                 if(isset($reserv)){
 
                     $html .= '<button disabled class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
-                    
+
                     $html .= '<div class="reserv">';
                     $html .= '<p>Cet item a déjà été réservé par :</p>';
                     $html .= '<p>' . $reserv->prénom . ' ' . $reserv->nom . '</p>';
                     $html .= '</div>';
-                    
+
                 } else{
 
                     $html .= '<button class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
@@ -225,7 +225,7 @@ class VueAffichageListe {
 
                     $n = ''; $p = '';
                     $idUser = Auth::getIdUser();
-                    
+
                     if(isset($idUser)){
                         $m = Membre::where('idUser', '=', $idUser)->first();
                         $n = $m->Nom;
@@ -233,7 +233,7 @@ class VueAffichageListe {
                     }
 
                     $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '">';
-                    $html .= '<p>Votre prénom : </p><input type="text" name="prénom" 
+                    $html .= '<p>Votre prénom : </p><input type="text" name="prénom"
                     value="' . $p . '">';
                     $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Reserv"></textarea>';
 
@@ -261,16 +261,16 @@ class VueAffichageListe {
                 $html .= '</div>';
                 $cpt++;
             }
-            
+
             $html .= '</div>';
             $html .= '<p class="date">Date d\'échéance :</p><p class="date">' . $l->expiration . '</p>';
         }
-        
+
         $html .= '</section>';
-        
+
         return array('html' => $html, 'path' => $path);
     }
-    
+
     private function ajouterItem() {
       $path = '../../';
       $html = '<section>';
@@ -303,13 +303,13 @@ class VueAffichageListe {
       $id=$i->id;
 
       $html .= '<div class="row"><div class="col-md-2">';
-      $html .= '<form method="POST" action="'.$id.'/$modifier_item">';
+      $html .= '<form method="POST" action="">';
       $html .= '<p><input type="text" name="nom" class="form-control" aria-describedby="emailHelp" placeholder="Nom" value="'.$i->nom.'" autofocus/></p>';
       $html .= '<p><textarea rows="5" cols="50" type="text" name="description" value="">'.$i->descr.'</textarea></p>:';
       //$html .= '<p><input type="text" name="description" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="'.$i->descr.'" /></p>';
       $html .= '<p><input type="number" name="tarif" class="form-control" aria-describedby="emailHelp" placeholder="Tarif" value="'.$i->tarif.'" /></p>';
       $html .= '<p><input type="text" name="url" class="form-control" aria-describedby="emailHelp" placeholder="lien utile" value="'.$i->url.'" /></p>';
-      $html .= '<p><button type="submit" class="btn btn-primary" name="valider_modif" value="modifier_item">Valider modification</button></p>';
+      $html .= '<p><button type="submit" class="btn btn-primary" name="valider_modif" value="modifier_itesm">Valider modification</button></p>';
       $html .= '</form>';
       $html .= '</div></div>';
 
@@ -318,33 +318,33 @@ class VueAffichageListe {
 
       return array('html' => $html, 'path' => $path);
     }
-    
+
     public function render($code) {
-        
+
         if($code == LISTES_CREA){
             $res = $this->affichageListesCrea();
-            
+
         } elseif($code == LISTES){
             $res = $this->affichageListes();
-            
+
         } else if($code == LISTE_CREA){
             $res = $this->affichageListeCrea();
-            
+
         } else if($code == LISTE_CO){
             $res = $this->affichageListeInvite(0);
-            
+
         } else if($code == LISTE_INV){
             $res = $this->affichageListeInvite(1);
-            
+
         }else if($code == 'ITEM_AJOUT'){ // Pour ajouter un item
             $res = $this->ajouterItem();
         }else if($code == 'MODIFIER'){ // Pour modifier un item
             $res = $this->modifierItem();
         }
-        
+
         $content = $res['html'];
         $path = $res['path'];
-        
+
         $head = '
         <title>Listes des items</title>
           <link rel="stylesheet"  href="' . $path . 'src/css/bootstrap.min.css"/>
@@ -353,7 +353,7 @@ class VueAffichageListe {
           <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
           <script src="' . $path . 'src/js/itemsListes.js"></script>
           <script src="' . $path . 'src/js/bootstrap.min.js"></script>';
-        
+
         if(Auth::isLogged()){
             $navBar = '
             <nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -363,7 +363,7 @@ class VueAffichageListe {
               </button>
                <form class="form-inline my-2 my-md-0">
                   <input class="form-control" type="text" placeholder="Rechercher">
-                </form> 
+                </form>
               <div class="collapse navbar-collapse" id="navbarsExample04">
                 <ul class="navbar-nav mr-auto">
                   <li class="nav-item active">
@@ -384,7 +384,7 @@ class VueAffichageListe {
             <div class="container">
                 <div class="row">
                 <form method="post" action="">
-                        <div  class="col col-lg-4"> 
+                        <div  class="col col-lg-4">
                             <button type="submit" class="btn btn-primary compte" name="deconnexion">Se déconnecter</button>
                         </div>
                     </form>
@@ -403,7 +403,7 @@ class VueAffichageListe {
               </button>
                <form class="form-inline my-2 my-md-0">
                   <input class="form-control" type="text" placeholder="Rechercher">
-                </form> 
+                </form>
               <div class="collapse navbar-collapse" id="navbarsExample04">
                 <ul class="navbar-nav mr-auto">
                   <li class="nav-item active">
@@ -425,15 +425,15 @@ class VueAffichageListe {
                 </a>
             </nav>';
         }
-        
-        
+
+
         $html = <<<END
  <html>
 	<head>
         <meta charset="utf-8">
 	      $head
 	</head>
-    
+
 	<body>
             $navBar
             $content
@@ -442,8 +442,8 @@ class VueAffichageListe {
     <footer></footer>
  </html>
 END;
-        
+
         echo $html;
     }
-    
+
 }
