@@ -162,7 +162,7 @@ class VueAffichageListe {
         if(isset($l)){
             $html .= '<div class="partager hidden hide modal">';
             $html .= '<div class="form">';
-            $html .= '<h6>Lien de paratage :</h6>';
+            $html .= '<h6>Lien de partage :</h6>';
             $html .= '<p>Le lien de partage vous permet de partager votre liste à qui vous souhaitez, même des personnes qui ne sont pas inscrites sur le site.</p>';
             $html .= '<input type="text" name="lien" value="' . $_SERVER['HTTP_HOST'] . $this->app->urlFor('listeShare', array('share' => $l->share)) . '" disabled>';
             $html .= '<button class="fermer btn btn-primary">Fermer</button>';
