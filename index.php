@@ -145,36 +145,29 @@ $app->get('/liste_public', function(){
     $cont->afficherListesPublic();
 })->name('listePublic');
 
-$app->get('/test/:id', function($id)  {
+$app->get('/liste/:token/ajouterItem', function($token) {
   $contItem = new c\ContItem();
-  $contItem->afficherItem($id);
-});
+  $contItem->ajouterItem($token);
+})->name('ajouterItem');
 
-$app->get('/item/ajouter/:n/:d', function($n,$d) {
+$app->post('/liste/:token/:ajouter_item', function($token) {
   $contItem = new c\ContItem();
-  $contItem->ajouterItem($n,$d);
-});
-
-$app->get('/item/supprimer/:id', function($id) {
-  $contItem = new c\ContItem();
-  $contItem->supprimerItem($id);
-});
-
-$app->post('/test/:id/modifier',function($id){
-  //if(isset($_POST['ajouter'])){
-    $contItem = new c\ContItem();
-    //$contItem->ajouterItem($n,$d);
-    $contItem->modifier($id);
-    //}
-});     
-
-$app->post('/test/:id', function($id)  {
-  if(isset($_POST['nom']) && isset($_POST['descr']) && isset($_POST['tarif'])){
-    $contItem = new c\ContItem();
-    $contItem->modifierItem($id,$_POST);
-    $contItem->afficherItem($id);
+  if(isset($_POST['valider'])){
+    $contItem->ajouter_item($token, $_POST['valider']);
   }
-});
+})->name('ajouter_item');
+
+$app->get('/liste/:token/modifier/:id',function($token, $id){
+  $contItem = new c\ContItem();
+  $contItem->modifier($token, $id);
+})->name('modifierItem');
+
+$app->post('/liste/:token/modifier/:id/:modifier_ite',function($token,$id){
+  $contItem = new c\ContItem();
+  if(isset($_POST['valider_modif'])){
+    $contItem->modifierItem($token, $id);
+  }
+})->name('modifier_item');
 
 
 $app->run();
