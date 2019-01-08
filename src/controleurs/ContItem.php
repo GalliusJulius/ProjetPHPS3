@@ -54,13 +54,15 @@ class ContItem {
     $app = \Slim\Slim::getInstance();
     $app->redirect($app->urlFor('listeCrea',array('token' => $token)));
   }
-
-  public function supprimerItem($id){
-    $i = \wishlist\models\Item::where("id","=",$id)->first();
+  
+  public function supprimerItem($token, $id){
+    $i = m\Item::where("id","=",$id)->first();
     $i->delete();
+
+    $app = \Slim\Slim::getInstance();
+    $app->redirect($app->urlFor('listeCrea',array('token' => $token)));
   }
-
-
+  
 }
 
 

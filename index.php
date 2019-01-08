@@ -22,7 +22,7 @@ $app->post('/',function(){
     $gest = new c\ControleurConnexion();
     //Si on veux se connecter
     //if(isset($_POST['connexion'])){
-    try{    
+    try{
         a\Authentification::authentificate($_POST['mail'],$_POST['pass']); a\Authentification::loadProfil($_POST['mail']);
         $app->redirect($app->urlFor('Accueil'));
     }
@@ -30,7 +30,7 @@ $app->post('/',function(){
          $gest->erreur="ER_CONNEXION";
          $gest->recupererVue("connexion");
     }
-    //}   
+    //}
 })->name('connexionPost');
 
 //Routage pour l'inscription
@@ -45,15 +45,15 @@ $app->post('/inscription',function(){
     if(isset($_POST['inscription'])){
     try{
         a\Authentification::createUser($_POST['email'], $_POST['mdp'], $_POST['mdpc'], $_POST['nom'], $_POST['prenom'], $_POST['pseudo']);
-        
+
         a\Authentification::authentificate($_POST['email'],$_POST['mdp']);
-        
+
         a\Authentification::loadProfil($_POST['email']);
-        
+
         $app->redirect($app->urlFor('accueil'));
     }
    catch(Exception $e){
-       if($e->getMessage()=="mail"){ 
+       if($e->getMessage()=="mail"){
           $gest->erreur="ER_INSCRIPTION2";
         }
         else if($e->getMessage()=="mdp"){
@@ -92,6 +92,7 @@ $app->post('/Compte',function(){
    $acc->recupererVue("compte");
 });
 
+//routage dans la confirmation de la suppression
 $app->get('/SupprimerCompte',function(){
     $acc = new c\ControleurCompte();
     $acc->recupererVue("suppCompte");
@@ -103,16 +104,29 @@ $app->post('/SupprimerCompte',function(){
     $acc->recupererVue("confSupp");
 });
 
+//routage dans le gestionnaire de listes
 $app->get('/MesListes',function(){
     $cont = new c\ContAffichageListe();
     $cont->afficherMesListes("");
 })->name('mesListes');
 
 $app->post('/MesListes',function(){
-    $cont = new c\ContAffichageListe();
-    $err = $cont->ajouterListe($_POST['token']);
-    $cont->afficherMesListes($err);
+    if(isset($_POST['suppression']) && $_POST['suppression']!=""){
+        $cont = new c\ContAffichageListe();
+        $cont->supprimerListeShare($_POST['suppression']);
+        $cont->afficherMesListes("");
+    }
+    else{
+        $cont = new c\ContAffichageListe();
+        $err = $cont->ajouterListe($_POST['token']);
+        $cont->afficherMesListes($err);
+    }
 });
+
+$app->get('/Createurs',function(){
+    $cont = new c\ControleurCompte();
+    $cont->afficherCreateurs();
+})->name('createur');
 
 $app->get('/liste/:token', function($token){
     $cont = new c\ContAffichageListe();
@@ -134,11 +148,6 @@ $app->get('/item/:id', function($id){
     $cont = new c\ContAffichageListe();
     $cont->afficherItemListe($id);
 })->name('itemListe');
-
-$app->get('/liste', function(){
-    $cont = new c\ContAffichageListe();
-    $cont->afficherListesUtilisateurs();
-})->name('liste');
 
 $app->get('/liste_public', function(){
     $cont = new c\ContAffichageListe();
@@ -162,12 +171,16 @@ $app->get('/liste/:token/modifier/:id',function($token, $id){
   $contItem->modifier($token, $id);
 })->name('modifierItem');
 
-$app->post('/liste/:token/modifier/:id/:modifier_ite',function($token,$id){
+$app->post('/liste/:token/modifier/:id',function($token,$id){
   $contItem = new c\ContItem();
   if(isset($_POST['valider_modif'])){
     $contItem->modifierItem($token, $id);
   }
 })->name('modifier_item');
 
+$app->get('/liste/:token/:id/supprimer', function($token, $id) {
+  $contItem = new c\ContItem();
+  $contItem->supprimerItem($token, $id);
+})->name('supprimer');
 
 $app->run();

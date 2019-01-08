@@ -2,7 +2,7 @@
 namespace wishlist\controleurs;
 use \wishlist\vues as v;
 use \wishlist\models as m;
-use \wishlist\Auth as a;
+use \wishlist\Auth\Authentification as Auth;
 use \wishlist\controleurs as c;
 
 class ControleurCompte{
@@ -51,6 +51,22 @@ class ControleurCompte{
         $gest = new c\ControleurConnexion();
         $gest->seDeconnecter();
         
+    }
+    
+    public function afficherCreateurs(){
+        $createur = m\Membre::get();
+        $res = array();
+        $i=0;
+        foreach($createur as $val){
+            $nb = m\Liste::where('user_id','=',Auth::getIdUser())->count();
+            if($nb!=0){
+                $res[$i][]=$val;
+                $res[$i][]=$nb;
+                $i++;
+            }
+        }
+        $v = new v\VueAccueil("createurs","",$res);
+        $v->render();
     }
     
 }

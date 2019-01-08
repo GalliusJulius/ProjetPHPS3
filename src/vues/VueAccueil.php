@@ -41,15 +41,17 @@ class VueAccueil{
                 $contenu = $this->mesListes();
                 break;
             }
-            
+            case "createurs":{
+                $contenu = $this->createurs();
+                break;
+            }
                 
         }
         $lienAccueil = $app->urlFor('accueil');
         $lienCompte = $app->urlFor('Compte');
         $lienMesListes = $app->urlFor('mesListes');
-        $lienListes = $app->urlFor('liste');
         $lienListesPublic = $app->urlFor('listePublic');
-        
+        $lienCreateur = $app->urlFor('createur');
         $html = <<< END
         <!doctype html>
 <html lang="en">
@@ -80,15 +82,12 @@ class VueAccueil{
                   <li class="nav-item active">
                     <a class="nav-link" href=$lienMesListes>Mes listes <span class="sr-only">(current)</span></a>
                     </li>
-                    <li class="nav-item active">
-                    <a class="nav-link" href="$lienListes">Mes listes b<span class="sr-only">(current)</span></a>
-                    </li>
                   </li>
                   <li class="nav-item active">
-                    <a class="nav-link" href="$lienListesPublic">Les listes du moment <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href=$lienListesPublic>Les listes du moment <span class="sr-only">(current)</span></a>
                   </li>
                   <li class="nav-item active">
-                    <a class="nav-link" href="#">Autres <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href=$lienCreateur>Listes créateurs<span class="sr-only">(current)</span></a>
                   </li>
                 <li class="nav-item active" id="compte">
                     <a class="nav-link" href=$lienCompte>Mon compte <span class="sr-only">(current)</span></a>
@@ -219,18 +218,39 @@ END;
         $html = <<<END
         <div class="row justify-content-md-center">
             <div class="col col-lg-9 justify-content-md-center">
+            <h1>Les listes que vous avez créé:</h1>
 END;
         $i=0;
         $app = \Slim\Slim::getInstance();
-        foreach($this->tableau as $val){
+        foreach($this->tableau[0] as $val){
             $lien = $app->urlFor('listeCrea',['token'=>$val->token]);
             $i++;
-            $html = $html . "<div>" . "<h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div>"; 
+            $html .= "<div>" . "<h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div>"; 
         }
         if($i==0){
-            $html = $html . "<h1> vous n'avez pas encore de listes, vous pouvez en créer une !</h1>";  
+            $html .= "<h3> vous n'avez pas encore créé de listes!</h3>";  
         }
-        $fin = <<<END
+        $html .= <<<END
+        <div class="row">
+            <div class="col col-lg-6">
+                <p>Vous voulez créer une liste?</p> 
+            </div>
+            <div class="col col-lg-6">
+            <button class="btn btn-primary col col-lg-6">Créer listes</button>
+            </div>
+        </div>
+        <h1>Les listes qu'on vous a partagé :</h1>
+END;
+        $i=0;
+        foreach($this->tableau[1] as $val){
+            $lien = $app->urlFor('listeCrea',['token'=>$val->token]);
+            $i++;
+            $html .= "<div class =\"row\">" . "<div class =\"col col-lg-10\"><h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div><div class =\"col col-lg-2\"><form method=\"post\"><button type=\"submit\" class=\"btn btn-danger\" name=\"suppression\" value=$val->token>Supprimer</button></form></div></div>"; 
+        }
+        if($i==0){
+            $html .= "<h3> vous n'avez pas encore ajouté de listes de vos amis, vous pouvez en créer une !</h3>";  
+        }
+        $html .= <<<END
         <div class="row justify-content-md-center">
         <div class="col col-lg-6 justify-content-md-center">
         <p>Ajouter la liste d'un de vos amis? Remplissez le token de sa liste dans le champ prévu et cliquez sur ok</p>
@@ -246,8 +266,16 @@ END;
         </div>
         </div>
 END;
-        $html= $html . $fin;
         return $html;
     }
     
+    public function createurs(){
+        $contenu = "<div class=\"row\">";
+        foreach($this->tableau as $val){
+            $personne =$val[0];
+            $contenu .= "<div class=\"col-lg-6\"><h2>$personne->Pseudo</h2><p>Ce créateur n'a pas de messages d'humeurs</p><p>Il a créé : $val[1] liste(s)</div>";
+        }
+        $contenu .="</div>";
+        return $contenu;
+    }
 }
