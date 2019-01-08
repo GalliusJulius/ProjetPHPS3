@@ -92,6 +92,7 @@ $app->post('/Compte',function(){
    $acc->recupererVue("compte");
 });
 
+//routage dans la confirmation de la suppression
 $app->get('/SupprimerCompte',function(){
     $acc = new c\ControleurCompte();
     $acc->recupererVue("suppCompte");
@@ -103,16 +104,29 @@ $app->post('/SupprimerCompte',function(){
     $acc->recupererVue("confSupp");
 });
 
+//routage dans le gestionnaire de listes
 $app->get('/MesListes',function(){
     $cont = new c\ContAffichageListe();
     $cont->afficherMesListes("");
 })->name('mesListes');
 
 $app->post('/MesListes',function(){
-    $cont = new c\ContAffichageListe();
-    $err = $cont->ajouterListe($_POST['token']);
-    $cont->afficherMesListes($err);
+    if(isset($_POST['suppression']) && $_POST['suppression']!=""){
+        $cont = new c\ContAffichageListe();
+        $cont->supprimerListeShare($_POST['suppression']);
+        $cont->afficherMesListes("");
+    }
+    else{
+        $cont = new c\ContAffichageListe();
+        $err = $cont->ajouterListe($_POST['token']);
+        $cont->afficherMesListes($err);
+    }
 });
+
+$app->get('/Createurs',function(){
+    $cont = new c\ControleurCompte();
+    $cont->afficherCreateurs();
+})->name('createur');
 
 $app->get('/liste/:token', function($token){
     $cont = new c\ContAffichageListe();
@@ -134,11 +148,6 @@ $app->get('/item/:id', function($id){
     $cont = new c\ContAffichageListe();
     $cont->afficherItemListe($id);
 })->name('itemListe');
-
-$app->get('/liste', function(){
-    $cont = new c\ContAffichageListe();
-    $cont->afficherListesUtilisateurs();
-})->name('liste');
 
 $app->get('/liste_public', function(){
     $cont = new c\ContAffichageListe();

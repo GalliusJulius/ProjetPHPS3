@@ -273,7 +273,6 @@ class VueAffichageListe {
         return array('html' => $html, 'path' => $path);
     }
     
-    
     public function render($code) {
         
         if($code == LISTES_CREA){
@@ -317,9 +316,6 @@ class VueAffichageListe {
                 </form> 
               <div class="collapse navbar-collapse" id="navbarsExample04">
                 <ul class="navbar-nav mr-auto">
-                  <li class="nav-item active">
-                    <a class="nav-link" href="' . $this->app->urlFor('liste') . '">Mes listes <span class="sr-only">(current)</span></a>
-                  </li>
                   <li class="nav-item active">
                     <a class="nav-link" href="' . $this->app->urlFor('listePublic') . '">Les listes du moment <span class="sr-only">(current)</span></a>
                   </li>
@@ -399,4 +395,5 @@ END;
         
         echo $html;
     }
+    
 }

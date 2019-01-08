@@ -93,8 +93,12 @@ class ContAffichageListe {
     }
     
     public function afficherMesListes($err){
-        $tab = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->get();
-        $vue = new \wishlist\vues\VueAccueil("mesListes",$err,$tab);
+        $userId = Auth::getIdUser();
+        $fabrique = m\Liste::where('user_id',"=",$userId)->get();
+        #on cherche les listes qui n'ont pas été crée par user mais a accès dessus
+        $listes = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->get();
+        $fusion = array($fabrique,$listes);
+        $vue = new \wishlist\vues\VueAccueil("mesListes",$err,$fusion);
         $vue->render();
     }
     
@@ -103,6 +107,7 @@ class ContAffichageListe {
         $verif=m\Liste::where("token","=",$token)->count();
         if($verif!=0){
             $verif2 = m\Membre::where("email","=",$_SESSION['profil']['Email'])->first()->liste()->where("token","=",$token)->count();
+            $verif2+= m\Liste::where("token","=",$token)->where('user_id',"=",Auth::getIdUser())->count();
             if($verif2==0){
                 $liste = m\Liste::where("token","=",$token)->first();
                 m\Membre::where("email","=",$_SESSION['profil']['Email'])->first()->liste()->attach($liste->no);
@@ -117,6 +122,11 @@ class ContAffichageListe {
             $erreur = "Liste inconnu";
         }
         return $erreur;
+    }
+    
+    public function supprimerListeShare($token){
+        $liste = m\Liste::where("token","=",$token)->first();
+        m\Membre::where("email","=",$_SESSION['profil']['Email'])->first()->liste()->detach($liste);
     }
 
 }

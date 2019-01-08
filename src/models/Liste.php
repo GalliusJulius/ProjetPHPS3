@@ -9,11 +9,10 @@ class Liste extends Model{
   protected $table = 'liste';
   protected $primaryKey = 'no';
   public $timestamps = false;
-
-
-  public function items() {
-    return $this->hasMany('\wishlist\models\Item','liste_id');
-  }
+    
+    public function items() {
+        return $this->hasMany('\wishlist\models\Item','liste_id');
+    }
     
     public function __toString(){
         return "<h2>$this->titre</h2> : <p>$this->description </p> <p> expire le : $this->expiration </p>"; 
@@ -26,4 +25,5 @@ class Liste extends Model{
   public function reservations() {
     return $this->hasMany('\wishlist\models\Reservation','idListe');
   }
+    
 }
