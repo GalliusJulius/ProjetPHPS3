@@ -22,7 +22,7 @@ $app->post('/',function(){
     $gest = new c\ControleurConnexion();
     //Si on veux se connecter
     //if(isset($_POST['connexion'])){
-    try{    
+    try{
         a\Authentification::authentificate($_POST['mail'],$_POST['pass']); a\Authentification::loadProfil($_POST['mail']);
         $app->redirect($app->urlFor('Accueil'));
     }
@@ -30,7 +30,7 @@ $app->post('/',function(){
          $gest->erreur="ER_CONNEXION";
          $gest->recupererVue("connexion");
     }
-    //}   
+    //}
 })->name('connexionPost');
 
 //Routage pour l'inscription
@@ -45,15 +45,15 @@ $app->post('/inscription',function(){
     if(isset($_POST['inscription'])){
     try{
         a\Authentification::createUser($_POST['email'], $_POST['mdp'], $_POST['mdpc'], $_POST['nom'], $_POST['prenom'], $_POST['pseudo']);
-        
+
         a\Authentification::authentificate($_POST['email'],$_POST['mdp']);
-        
+
         a\Authentification::loadProfil($_POST['email']);
-        
+
         $app->redirect($app->urlFor('accueil'));
     }
    catch(Exception $e){
-       if($e->getMessage()=="mail"){ 
+       if($e->getMessage()=="mail"){
           $gest->erreur="ER_INSCRIPTION2";
         }
         else if($e->getMessage()=="mdp"){
@@ -171,12 +171,16 @@ $app->get('/liste/:token/modifier/:id',function($token, $id){
   $contItem->modifier($token, $id);
 })->name('modifierItem');
 
-$app->post('/liste/:token/modifier/:id/:modifier_ite',function($token,$id){
+$app->post('/liste/:token/modifier/:id',function($token,$id){
   $contItem = new c\ContItem();
   if(isset($_POST['valider_modif'])){
     $contItem->modifierItem($token, $id);
   }
 })->name('modifier_item');
 
+$app->get('/liste/:token/:id/supprimer', function($token, $id) {
+  $contItem = new c\ContItem();
+  $contItem->supprimerItem($token, $id);
+})->name('supprimer');
 
 $app->run();

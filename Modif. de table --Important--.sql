@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `liste_membres` (
 
 -- Création de la table des relations entre les personnes : --
 
-CREATE TABLE `php_td`.`relation` ( `idUser1` INT NOT NULL , `idUser2` INT NOT NULL ) ENGINE = MyISAM;
+CREATE TABLE `php_td`.`Relation` ( `idUser1` INT(255) NOT NULL, `idUser2` INT(255) NOT NULL, PRIMARY KEY (`idUser1`, `idUser2`)) ENGINE = MyISAM;
 
 
 -- Création de la table des cagnottes : --
@@ -102,7 +102,7 @@ CREATE TABLE `php_td`.`Cagnotte` ( `idCagnotte` INT(255) NOT NULL AUTO_INCREMENT
 
 --Création de la table des particpations à une cagnotte : --
 
-CREATE TABLE `php_td`.`participation` ( `idParticip` INT(255) NOT NULL AUTO_INCREMENT , `idcagnotte` INT(255) NOT NULL , `iduser` INT(255) NULL DEFAULT NULL , `message` VARCHAR(255) NOT NULL , `nom` VARCHAR(255) NOT NULL , `prénom` VARCHAR(255) NOT NULL , `montant` INT(255) NOT NULL , PRIMARY KEY (`idParticip`)) ENGINE = MyISAM;
+CREATE TABLE `php_td`.`participation` ( `idParticip` INT(255) NOT NULL AUTO_INCREMENT , `idCagnotte` INT(255) NOT NULL , `idUser` INT(255) NULL DEFAULT NULL , `message` VARCHAR(255) NOT NULL , `nom` VARCHAR(255) NOT NULL , `prenom` VARCHAR(255) NOT NULL , `montant` INT(255) NOT NULL , PRIMARY KEY (`idParticip`)) ENGINE = MyISAM;
 
 
 
