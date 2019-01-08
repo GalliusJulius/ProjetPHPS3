@@ -273,6 +273,54 @@ class VueAffichageListe {
         return array('html' => $html, 'path' => $path);
     }
     
+	  private function ajouterItem() {
+      $path = '../../';
+      $html = '<section>';
+      $ajouter_item = $this->app->urlFor('ajouter_item');
+
+  //    $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><p class="date">' . $l->expiration . '</p>';
+    //  $html .= '<form method="GET" action="' . $this->app->urlFor('ajouterItem', array('token' => $l->token)) . '">';
+    //  $html .= '<button class="btn btn-primary">Détails</button>';
+    //  $html .= "</form>";
+      $html .= '<div class="row"><div class="col-md-2">';
+      $html .= '<form method="POST" action="$ajouter_item">';
+      $html .= '<p><input type="text" name="nom" class="form-control" aria-describedby="emailHelp" placeholder="Nom" required autofocus/></p>';
+      $html .= '<p><input type="text" name="description" class="form-control" aria-describedby="emailHelp" placeholder="Description" required/></p>';
+      $html .= '<p><input type="number" name="tarif" class="form-control" aria-describedby="emailHelp" placeholder="Tarif" required/></p>';
+      $html .= '<p><input type="text" name="url" class="form-control" aria-describedby="emailHelp" placeholder="lien utile"/></p>';
+      $html .= '<p><button type="submit" class="btn btn-primary" name="valider" value="ajouter_item">Valider</button></p>';
+      $html .= '</form>';
+      $html .= '</div></div>';
+
+      $html .= '</section>';
+
+      return array('html' => $html, 'path' => $path);
+    }
+
+    private function modifierItem() {
+      $path = '../../../';
+      $html = '<section>';
+      $i = $this->item;
+      $modifier_item = $this->app->urlFor('modifier_item');
+      $id=$i->id;
+
+      $html .= '<div class="row"><div class="col-md-2">';
+      $html .= '<form method="POST" action="'.$id.'/$modifier_item">';
+      $html .= '<p><input type="text" name="nom" class="form-control" aria-describedby="emailHelp" placeholder="Nom" value="'.$i->nom.'" autofocus/></p>';
+      $html .= '<p><textarea rows="5" cols="50" type="text" name="description" value="">'.$i->descr.'</textarea></p>:';
+      //$html .= '<p><input type="text" name="description" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="'.$i->descr.'" /></p>';
+      $html .= '<p><input type="number" name="tarif" class="form-control" aria-describedby="emailHelp" placeholder="Tarif" value="'.$i->tarif.'" /></p>';
+      $html .= '<p><input type="text" name="url" class="form-control" aria-describedby="emailHelp" placeholder="lien utile" value="'.$i->url.'" /></p>';
+      $html .= '<p><button type="submit" class="btn btn-primary" name="valider_modif" value="modifier_item">Valider modification</button></p>';
+      $html .= '</form>';
+      $html .= '</div></div>';
+
+
+      $html .= '</section>';
+
+      return array('html' => $html, 'path' => $path);
+    }
+    
     public function render($code) {
         
         if($code == LISTES_CREA){
@@ -290,6 +338,10 @@ class VueAffichageListe {
         } else if($code == LISTE_INV){
             $res = $this->affichageListeInvite(1);
             
+        }else if($code == 'ITEM_AJOUT'){ // Pour ajouter un item
+            $res = $this->ajouterItem();
+        }else if($code == 'MODIFIER'){ // Pour modifier un item
+            $res = $this->modifierItem();
         }
         
         $content = $res['html'];
