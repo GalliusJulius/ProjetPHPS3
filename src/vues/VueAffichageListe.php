@@ -30,7 +30,6 @@ class VueAffichageListe {
         $this->app = \Slim\Slim::getInstance();
     }
     
-    
     private function affichageListesCrea() {
         $path = './';
         
@@ -78,7 +77,6 @@ class VueAffichageListe {
         
         return array('html' => $html, 'path' => $path);
     }
-    
     
     private function affichageListeCrea() {
         $path = '../';
@@ -273,7 +271,7 @@ class VueAffichageListe {
         return array('html' => $html, 'path' => $path);
     }
     
-	  private function ajouterItem() {
+    private function ajouterItem() {
       $path = '../../';
       $html = '<section>';
       $ajouter_item = $this->app->urlFor('ajouter_item');

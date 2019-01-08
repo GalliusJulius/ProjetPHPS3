@@ -56,11 +56,13 @@ class ControleurCompte{
     public function afficherCreateurs(){
         $createur = m\Membre::get();
         $res = array();
+        $i=0;
         foreach($createur as $val){
             $nb = m\Liste::where('user_id','=',Auth::getIdUser())->count();
             if($nb!=0){
-                $res[][]=$val;
-                $res[][]=$nb;
+                $res[$i][]=$val;
+                $res[$i][]=$nb;
+                $i++;
             }
         }
         $v = new v\VueAccueil("createurs","",$res);

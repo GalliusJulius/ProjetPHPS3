@@ -270,6 +270,12 @@ END;
     }
     
     public function createurs(){
-        var_dump($this->tableau);
+        $contenu = "<div class=\"row\">";
+        foreach($this->tableau as $val){
+            $personne =$val[0];
+            $contenu .= "<div class=\"col-lg-6\"><h2>$personne->Pseudo</h2><p>Ce créateur n'a pas de messages d'humeurs</p><p>Il a créé : $val[1] liste(s)</div>";
+        }
+        $contenu .="</div>";
+        return $contenu;
     }
 }
