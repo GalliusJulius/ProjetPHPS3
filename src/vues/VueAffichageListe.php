@@ -115,7 +115,7 @@ class VueAffichageListe {
                     $html .= '<button class="btn btn-primary">Modifier</button>';
                     $html .= '</form>';
                 
-                    $html .= '<form method="GET" action="#">'; // TODO mettre route **TRISTAN**
+                    $html .= '<form method="GET" action= "' . $this->app->urlFor('supprimer', array('id' => $i->id,'token' => $l->token)) . '">'; 
                     $html .= '<button class="btn btn-primary">Supprimer</button>';
                     $html .= '</form>';
                 }

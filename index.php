@@ -178,5 +178,9 @@ $app->post('/liste/:token/modifier/:id/:modifier_ite',function($token,$id){
   }
 })->name('modifier_item');
 
+$app->get('/liste/:token/:id/supprimer', function($token, $id) {
+  $contItem = new c\ContItem();
+  $contItem->supprimerItem($token, $id);
+})->name('supprimer');
 
 $app->run();
