@@ -3,6 +3,12 @@
     margin: 0px;
 }
 
+body{
+    width: 100%;
+    height: 100%;
+    background-color: #393E46;
+}
+
 .text-center{
     height: 100%;
     align-items: center;
@@ -20,10 +26,32 @@
 
 .text-muted{
     font-style: italic;
+    color: white!important;
 }
 
-.text-muted:hover{
+a{
+    color: white;
+}
+
+a:hover{
+    font-weight: bold;
+    transition-duration: 0.2s
+}
+
+a:hover{
     text-decoration: none;
+}
+
+img{
+    padding: 0.3em;
+    border: 2px solid white;
+    border-radius: 5px;
+}
+
+h1{
+    font-size: 2em;
+    margin-bottom: 0.6em;
+    color:white;
 }
 
 form{

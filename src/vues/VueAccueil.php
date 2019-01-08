@@ -81,8 +81,7 @@ class VueAccueil{
                 <ul class="navbar-nav mr-auto">
                   <li class="nav-item active">
                     <a class="nav-link" href=$lienMesListes>Mes listes <span class="sr-only">(current)</span></a>
-                    </li>
-                  </li>
+                </li>
                   <li class="nav-item active">
                     <a class="nav-link" href=$lienListesPublic>Les listes du moment <span class="sr-only">(current)</span></a>
                   </li>
@@ -161,9 +160,7 @@ END;
                 <div class="row">
                 <form method="post" action="">
                         <div  class="col col-lg-4"> 
-                            <a href="">
                                 <button type="submit" class="btn btn-primary" name="deconnexion">Se déconnecter</button>
-                            </a>
                         </div>
                     </form>
                 </div>
@@ -240,15 +237,16 @@ END;
             </div>
         </div>
         <h1>Les listes qu'on vous a partagé :</h1>
+        <div class =\"row\">
 END;
         $i=0;
         foreach($this->tableau[1] as $val){
             $lien = $app->urlFor('listeCrea',['token'=>$val->token]);
             $i++;
-            $html .= "<div class =\"row\">" . "<div class =\"col col-lg-10\"><h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div><div class =\"col col-lg-2\"><form method=\"post\"><button type=\"submit\" class=\"btn btn-danger\" name=\"suppression\" value=$val->token>Supprimer</button></form></div></div>"; 
+            $html .=  "<div class =\"col-lg-8\"><h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div><div class =\"col-lg-2\"><form method=\"post\"><button type=\"submit\" class=\"btn btn-danger\" name=\"suppression\" value=$val->token>Supprimer</button></form></div>"; 
         }
         if($i==0){
-            $html .= "<h3> vous n'avez pas encore ajouté de listes de vos amis, vous pouvez en créer une !</h3>";  
+            $html .= "</div><h3> vous n'avez pas encore ajouté de listes de vos amis, vous pouvez en créer une !</h3>";  
         }
         $html .= <<<END
         <div class="row justify-content-md-center">
