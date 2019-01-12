@@ -34,9 +34,9 @@ var sectionHidden = (function () {
 var fenReserver = (function(){
 	window.addEventListener("load", () => {
         
-		$(".reserver").on("click", (event) => popup(event));
-		$(".confirmer").on("click", (event) => clear(event));
-        $(".annuler").on("click", (event) => clear(event));
+		$("button.reserver").on("click", (event) => popup(event));
+		//$("button.confirmerR").on("click", (event) => clear(event));
+        $("button.annulerR").on("click", (event) => clear(event));
 		
 		function popup(evt){
             let i = $(evt.target).attr("class").split(' ')[3][1];
@@ -74,4 +74,29 @@ var fenParatager = (function(){
 		}
 	});
 })();
+
+
+var fenCagnotte = (function(){
+	window.addEventListener("load", () => {
+        
+		$("button.cagnotte").on("click", (event) => popup(event));
+		//$("button.confirmerC").on("click", (event) => clear(event));
+        $("button.annulerC").on("click", (event) => clear(event));
+		
+		function popup(evt){
+            let i = $(evt.target).attr("class").split(' ')[3][1];
+            let e = $("div.cagnotte.modal.h" + i);
+            
+			e.fadeTo("slow",1);
+		}
+		
+		function clear(evt){
+            let i = $(evt.target).attr("class").split(' ')[3][1];
+            let e = $("div.cagnotte.modal.h" + i);
+            
+			e.fadeOut("slow");
+		}
+	});
+})();
+
 

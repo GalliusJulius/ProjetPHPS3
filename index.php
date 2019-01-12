@@ -144,10 +144,20 @@ $app->post('/liste/:share/partager/reserver/:idItem', function($share, $idItem){
     $cont->reserverItem($share, $idItem);
 })->name('reserver');
 
-$app->get('/item/:id', function($id){
+/*$app->get('/item/:id', function($id){
     $cont = new c\ContAffichageListe();
     $cont->afficherItemListe($id);
-})->name('itemListe');
+})->name('itemListe');*/
+
+$app->post('/item/:id/cagnotte', function($id){
+    $cont = new c\ContCagnotte();
+    $cont->creerCagnotte($id);
+})->name('creerCagnotte');
+
+$app->post('/item/:id/cagnotte/participer', function($id){
+    $cont = new c\ContCagnotte();
+    $cont->participerCagnotte($id);
+})->name('participerCagnotte');
 
 $app->get('/liste_public', function(){
     $cont = new c\ContAffichageListe();

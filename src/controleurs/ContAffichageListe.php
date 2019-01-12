@@ -70,8 +70,8 @@ class ContAffichageListe {
     public function reserverItem($share, $idItem){
         $app = \Slim\Slim::getInstance();
         
-        if(isset($_POST["nom"]) and isset($_POST["nom"]) and isset($_POST["message"])){
-            $r = new Reservation();
+        if(isset($_POST["nom"]) and isset($_POST["prénom"]) and isset($_POST["message"])){
+            $r = new m\Reservation();
             $r->prénom = $_POST["prénom"];
             $r->nom = $_POST["nom"];
             $r->message = $_POST["message"];
@@ -87,9 +87,13 @@ class ContAffichageListe {
             }
             
             $r->save();
+            
+            $app->response->redirect($app->urlFor('listeShare', array('share' => $share)));
+        } else{
+            // Afficher un avertissement
         }
         
-        $app->response->redirect($app->urlFor('listeShare', array('share' => $share)));
+        
     }
     
     public function afficherMesListes($err){

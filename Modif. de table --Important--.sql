@@ -96,15 +96,16 @@ CREATE TABLE IF NOT EXISTS `liste_membres` (
 CREATE TABLE `php_td`.`Relation` ( `idUser1` INT(255) NOT NULL, `idUser2` INT(255) NOT NULL, PRIMARY KEY (`idUser1`, `idUser2`)) ENGINE = MyISAM;
 
 
--- Création de la table des cagnottes : --
-
-CREATE TABLE `php_td`.`Cagnotte` ( `idCagnotte` INT(255) NOT NULL AUTO_INCREMENT , `idListe` INT(255) NOT NULL , `idItem` INT(255) NOT NULL , PRIMARY KEY (`idCagnotte`)) ENGINE = MyISAM;
+-- Modification de la table Item : --
+ALTER TABLE item ADD cagnotte boolean NOT NULL;
+ALTER TABLE `item` CHANGE `cagnotte` `cagnotte` BOOLEAN NULL DEFAULT NULL;
 
 --Création de la table des particpations à une cagnotte : --
 
 CREATE TABLE `php_td`.`participation` ( `idParticip` INT(255) NOT NULL AUTO_INCREMENT , `idCagnotte` INT(255) NOT NULL , `idUser` INT(255) NULL DEFAULT NULL , `message` VARCHAR(255) NOT NULL , `nom` VARCHAR(255) NOT NULL , `prenom` VARCHAR(255) NOT NULL , `montant` INT(255) NOT NULL , PRIMARY KEY (`idParticip`)) ENGINE = MyISAM;
 
 
-
+ALTER TABLE `participation` CHANGE `idCagnotte` `idItem` INT(255) NOT NULL;
+ALTER TABLE participation ADD FOREIGN KEY fItem(idItem) REFERENCES item(idItem) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 

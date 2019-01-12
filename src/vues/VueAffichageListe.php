@@ -41,7 +41,7 @@ class VueAffichageListe {
                 $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><p class="date">' . $l->expiration . '</p>';
                 $html .= '<form method="GET" action="' . $this->app->urlFor('listeCrea', array('token' => $l->token)) . '">';
                 $html .= '<button class="btn btn-primary">Détails</button>';
-                $html .= '<p>Nombre de réservations : ' . count($l->reservations()->get()) . '</p>';
+                $html .= '<p>Nombre de réservations : ' . count($l->reservation()->get()) . '</p>';
                 $html .= "</form>";
                 $html .= '</li>';
             }
@@ -67,7 +67,7 @@ class VueAffichageListe {
                 $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><p class="date">' . $l->expiration . '</p>';
                 $html .= '<form method="GET" action="' . $this->app->urlFor('listeCrea', array('token' => $l->token)) . '">';
                 $html .= '<button class="btn btn-primary">Détails</button>';
-                $html .= '<p>Nombre de réservations : ' . count($l->reservations()->get()) . '</p>';
+                $html .= '<p>Nombre de réservations : ' . count($l->reservation()->get()) . '</p>';
                 $html .= "</form>";
                 $html .= '</li>';
             }
@@ -93,9 +93,9 @@ class VueAffichageListe {
             $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
 
             foreach($items as $i){
-                $reserv = $i->reservations()->first();
+                $reserv = $i->reservation()->first();
 
-                if(isset($reserv)){
+                if(isset($reserv) and ($i->cagnotte == 0)){
                     $html .= '<div class="reserve col col-l-3">';
                 } else{
                     $html .= '<div class="col col-l-3">';
@@ -107,8 +107,21 @@ class VueAffichageListe {
 
                     $html .= '<p>Cet item a été réservé !</p>';
                     $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
-                    $html .= '<button class="message btn btn-primary h' . $cpt . '">Voir le(s) message(s)</button>';
+                    $html .= '<button class="message btn btn-primary h' . $cpt . '">Voir le message</button>';
 
+                } elseif($i->cagnotte == 0){
+                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
+                    $html .= '<form method="GET" action= "' . $this->app->urlFor('modifierItem', array('id' => $i->id,'token' => $l->token)) . '">';
+                    $html .= '<button class="btn btn-primary">Modifier</button>';
+                    $html .= '</form>';
+
+                    $html .= '<form method="GET" action= "' . $this->app->urlFor('supprimer', array('id' => $i->id,'token' => $l->token)) . '">';
+                    $html .= '<button class="btn btn-primary">Supprimer</button>';
+                    $html .= '</form>';
+                    
+                    $html .= '<form method="POST" action= "' . $this->app->urlFor('creerCagnotte', array('id' => $i->id)) . '">';
+                    $html .= '<button class="btn btn-primary">Créer une cagnotte</button>';
+                    $html .= '</form>';
                 } else{
                     $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
                     $html .= '<form method="GET" action= "' . $this->app->urlFor('modifierItem', array('id' => $i->id,'token' => $l->token)) . '">';
@@ -188,40 +201,29 @@ class VueAffichageListe {
 
             foreach($items as $i){
 
-                $reserv = $i->reservations()->first();
-
-                if(isset($reserv)){
-                    $html .= '<div class="reserve col col-l-3">';
-                } else{
+                
+                
+                if($i->cagnotte == 1){
+                    
                     $html .= '<div class="col col-l-3">';
-                }
 
-                $html .= '<p class="nom"><h4>' . $i->nom;
+                    $html .= '<p class="nom"><h4>' . $i->nom;
 
-                $html .= '</h4></p><img src="' . $path . 'src/img/';
+                    $html .= '</h4></p><img src="' . $path . 'src/img/';
 
-                $html .= $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
+                    $html .= $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
 
-                $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
+                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
 
 
-                if(isset($reserv)){
+                    
+                    
+                    $html .= '<button class="btn btn-primary cagnotte h' . $cpt . '">Participer à la cagnotte</button>';
 
-                    $html .= '<button disabled class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
-
-                    $html .= '<div class="reserv">';
-                    $html .= '<p>Cet item a déjà été réservé par :</p>';
-                    $html .= '<p>' . $reserv->prénom . ' ' . $reserv->nom . '</p>';
-                    $html .= '</div>';
-
-                } else{
-
-                    $html .= '<button class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
-
-                    $html .= '<div class="reserver modal h' . $cpt . '"><div class="form">';
-                    $html .= '<form id="Reserv" method="POST" action="' . $this->app->urlFor('reserver', array('share' => $l->share, 'idItem' => $i->id)) . '">';
-                    $html .= '<p>Nom de l\'item à reserver : </p><input type="text" name="nomItem" value="' . $i->nom . '" disabled>';
-                    $html .= '<p>Prix de réservation : </p><input type="text" name="prix" value="' . $i->tarif . '" disabled>';
+                    $html .= '<div class="cagnotte modal h' . $cpt . '"><div class="form">';
+                    $html .= '<form id="Cagn" method="POST" action="' . $this->app->urlFor('participerCagnotte', array('id' => $i->id)) . '">';
+                    $html .= '<p>Nom de l\'item auquel vous participer : </p><input type="text" name="nomItem" value="' . $i->nom . '" disabled>';
+                    $html .= '<p>Montant de participation : </p><input type="text" name="montant" value="" required>';
 
                     $n = ''; $p = '';
                     $idUser = Auth::getIdUser();
@@ -232,34 +234,110 @@ class VueAffichageListe {
                         $p = $m->Prénom;
                     }
 
-                    $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '">';
+                    
+                    $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '" required>';
                     $html .= '<p>Votre prénom : </p><input type="text" name="prénom"
-                    value="' . $p . '">';
-                    $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Reserv"></textarea>';
+                    value="' . $p . '" required>';
+                    $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Cagn"></textarea>';
 
-                    $html .= '<button type="submit" class="btn btn-primary confirmer h' . $cpt . '">Réserver</button>';
+                    $html .= '<button type="submit" class="btn btn-primary confirmerC h' . $cpt . '">Participer</button>';
 
                     $html .= '</form>';
-                    $html .= '<button class="btn btn-primary annuler h' . $cpt . '">Annuler</button>';
+                    $html .= '<button class="btn btn-primary annulerC h' . $cpt . '">Annuler</button>';
 
                     $html .= '</div>';
                     $html .= '</div>';
+                    
+                    
+                    $html .= '<section class="details hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
+                    $html .= '<p class="hidden desc">' . $i->descr . '</p>';
 
-                }
+                    if($i->url != null and $i->url != ""){
+                        $html .= '<a class="hidden" target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
+                    } else{
+                        $html .= '<p class="hidden">Aucune URL associé !</p>';
+                    }
+                    $html .= '</section>';
 
-                $html .= '<section class="details hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
-                $html .= '<p class="hidden desc">' . $i->descr . '</p>';
 
-                if($i->url != null and $i->url != ""){
-                    $html .= '<a class="hidden" target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
+                    $html .= '</div>';
+                    
                 } else{
-                    $html .= '<p class="hidden">Aucune URL associé !</p>';
+                    $reserv = $i->reservation()->first();
+                    
+                    if(isset($reserv)){
+                        $html .= '<div class="reserve col col-l-3">';
+                    } else{
+                        $html .= '<div class="col col-l-3">';
+                    }
+
+                    $html .= '<p class="nom"><h4>' . $i->nom;
+
+                    $html .= '</h4></p><img src="' . $path . 'src/img/';
+
+                    $html .= $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
+
+                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
+
+
+                    if(isset($reserv)){
+
+                        $html .= '<button disabled class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
+
+                        $html .= '<div class="reserv">';
+                        $html .= '<p>Cet item a déjà été réservé par :</p>';
+                        $html .= '<p>' . $reserv->prénom . ' ' . $reserv->nom . '</p>';
+                        $html .= '</div>';
+
+                    } else{
+
+                        $html .= '<button class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
+
+                        $html .= '<div class="reserver modal h' . $cpt . '"><div class="form">';
+                        $html .= '<form id="Reserv" method="POST" action="' . $this->app->urlFor('reserver', array('share' => $l->share, 'idItem' => $i->id)) . '">';
+                        $html .= '<p>Nom de l\'item à reserver : </p><input type="text" name="nomItem" value="' . $i->nom . '" disabled>';
+                        $html .= '<p>Prix de réservation : </p><input type="text" name="prix" value="' . $i->tarif . '" disabled required>';
+
+                        $n = ''; $p = '';
+                        $idUser = Auth::getIdUser();
+
+                        if(isset($idUser)){
+                            $m = Membre::where('idUser', '=', $idUser)->first();
+                            $n = $m->Nom;
+                            $p = $m->Prénom;
+                        }
+
+                        $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '" required>';
+                        $html .= '<p>Votre prénom : </p><input type="text" name="prénom"
+                        value="' . $p . '" required>';
+                        $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Reserv"></textarea>';
+
+                        $html .= '<button type="submit" class="btn btn-primary confirmerR h' . $cpt . '">Réserver</button>';
+
+                        $html .= '</form>';
+                        $html .= '<button class="btn btn-primary annulerR h' . $cpt . '">Annuler</button>';
+
+                        $html .= '</div>';
+                        $html .= '</div>';
+
+                    }
+
+                    $html .= '<section class="details hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
+                    $html .= '<p class="hidden desc">' . $i->descr . '</p>';
+
+                    if($i->url != null and $i->url != ""){
+                        $html .= '<a class="hidden" target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
+                    } else{
+                        $html .= '<p class="hidden">Aucune URL associé !</p>';
+                    }
+                    $html .= '</section>';
+
+
+                    $html .= '</div>';
                 }
-                $html .= '</section>';
-
-
-                $html .= '</div>';
+                
                 $cpt++;
+                
             }
 
             $html .= '</div>';

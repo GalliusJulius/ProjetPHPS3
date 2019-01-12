@@ -14,8 +14,12 @@ class Item extends Model{
     return $this->belongsTo('\wishlist\models\Liste','liste_id');
   }
     
-  public function reservations() {
-    return $this->hasMany('\wishlist\models\Reservation','idItem');
+  public function reservation() {
+    return $this->belongsTo('\wishlist\models\Reservation','idItem');
+  }
+    
+  public function participations() {
+    return $this->hasMany('\wishlist\models\Participation','idItem');
   }
 
 }
