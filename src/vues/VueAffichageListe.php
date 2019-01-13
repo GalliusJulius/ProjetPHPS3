@@ -18,7 +18,7 @@ class VueAffichageListe {
 
     private $liste, $item, $app;
 
-    public function __construct($tab) {
+    public function __construct($tab = array()) {
         if(isset($tab['liste'])){
             $this->liste = $tab['liste'];
         }

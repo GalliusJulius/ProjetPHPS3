@@ -243,6 +243,7 @@ END;
         if($i==0){
             $html .= "<h3> vous n'avez pas encore créé de listes!</h3>";  
         }
+		$creerListe = $app->urlFor('creerListe');
         $html .= <<<END
         <div class="row">
             <div class="col col-lg-6">
