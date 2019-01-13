@@ -108,4 +108,6 @@ CREATE TABLE `php_td`.`participation` ( `idParticip` INT(255) NOT NULL AUTO_INCR
 ALTER TABLE `participation` CHANGE `idCagnotte` `idItem` INT(255) NOT NULL;
 ALTER TABLE participation ADD FOREIGN KEY fItem(idItem) REFERENCES item(idItem) ON DELETE NO ACTION ON UPDATE CASCADE;
 
+ALTER TABLE liste ADD COLUMN message VARCHAR(1000);
+
 

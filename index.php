@@ -191,10 +191,12 @@ $app->get('/liste/:token/modifier/:id',function($token, $id){
   $contItem->modifier($token, $id);
 })->name('modifierItem');
 
-$app->post('/liste/:token/modifier/:id',function($token,$id){
+$app->post('/liste/:token/modifier/:id/:modifier_item',function($token,$id){
   $contItem = new c\ContItem();
   if(isset($_POST['valider_modif'])){
     $contItem->modifierItem($token, $id);
+  } elseif(isset($_POST['supprimer_img'])) {
+      $contItem->supprimer_image($token, $id);
   }
 })->name('modifier_item');
 
@@ -202,5 +204,10 @@ $app->get('/liste/:token/:id/supprimer', function($token, $id) {
   $contItem = new c\ContItem();
   $contItem->supprimerItem($token, $id);
 })->name('supprimer');
+
+$app->post('/liste/:token/ajouter_message', function($token) {
+    $cont = new c\ContAffichageListe();
+    $cont->afficherMessageListe($token);  
+})->name('ajouterMessageListe');
 
 $app->run();
