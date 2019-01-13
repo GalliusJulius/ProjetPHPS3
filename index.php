@@ -123,6 +123,31 @@ $app->post('/MesListes',function(){
     }
 });
 
+$app->get('/MesListes/creerListe',function(){
+  $cont = new c\ContInstanceListe();
+  $cont->creerListe();
+})->name('creerListe');
+
+$app->post('/MesListes/creerListe',function(){
+  $cont = new c\ContInstanceListe();
+  $cont->creer_liste();
+})->name('creer_liste');
+
+$app->get('/MesListes/modifierListe/:token',function($token){
+  $cont = new c\ContInstanceListe();
+  $cont->modifierListe($token);
+})->name('modifierListe');
+
+$app->post('/MesListes/modifierListe/:token',function($token){
+  $cont = new c\ContInstanceListe();
+  $cont->modifier_liste($token);
+})->name('modifier_liste');
+
+$app->get('/MesListes/supprimerListe/:token',function($token){
+  $cont = new c\ContInstanceListe();
+  $cont->supprimer_liste($token);
+})->name('supprimer_liste');
+
 $app->get('/Createurs',function(){
     $cont = new c\ControleurCompte();
     $cont->afficherCreateurs();
