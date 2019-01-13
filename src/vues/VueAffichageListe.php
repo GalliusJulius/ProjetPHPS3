@@ -359,11 +359,13 @@ class VueAffichageListe {
     //  $html .= '<button class="btn btn-primary">Détails</button>';
     //  $html .= "</form>";
       $html .= '<div class="row"><div class="col-md-2">';
-      $html .= '<form method="POST" action="$ajouter_item">';
+      $html .= '<form method="post" action="$ajouter_item" enctype="multipart/form-data">';
       $html .= '<p><input type="text" name="nom" class="form-control" aria-describedby="emailHelp" placeholder="Nom" required autofocus/></p>';
       $html .= '<p><input type="text" name="description" class="form-control" aria-describedby="emailHelp" placeholder="Description" required/></p>';
       $html .= '<p><input type="number" name="tarif" class="form-control" aria-describedby="emailHelp" placeholder="Tarif" required/></p>';
       $html .= '<p><input type="text" name="url" class="form-control" aria-describedby="emailHelp" placeholder="lien utile"/></p>';
+      $html .= '<input type="hidden" name="MAX_FILE_SIZE" value="10485760" />';
+      $html .= '<p><input type="file" name="image" id="image" accept=".png, .jpg, .jpeg" /></p>';
       $html .= '<p><button type="submit" class="btn btn-primary" name="valider" value="ajouter_item">Valider</button></p>';
       $html .= '</form>';
       $html .= '</div></div>';
@@ -381,12 +383,14 @@ class VueAffichageListe {
       $id=$i->id;
 
       $html .= '<div class="row"><div class="col-md-2">';
-      $html .= '<form method="POST" action="">';
+      $html .= '<form method="POST" action="'.$id.'/$modifier_item" enctype="multipart/form-data">';
       $html .= '<p><input type="text" name="nom" class="form-control" aria-describedby="emailHelp" placeholder="Nom" value="'.$i->nom.'" autofocus/></p>';
       $html .= '<p><textarea rows="5" cols="50" type="text" name="description" value="">'.$i->descr.'</textarea></p>:';
       //$html .= '<p><input type="text" name="description" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="'.$i->descr.'" /></p>';
       $html .= '<p><input type="number" name="tarif" class="form-control" aria-describedby="emailHelp" placeholder="Tarif" value="'.$i->tarif.'" /></p>';
       $html .= '<p><input type="text" name="url" class="form-control" aria-describedby="emailHelp" placeholder="lien utile" value="'.$i->url.'" /></p>';
+      $html .= '<input type="hidden" name="MAX_FILE_SIZE" value="10485760"/>';
+      $html .= '<p><input type="file" name="image" id="image" accept=".png, .jpg, .jpeg" /></p>';
       $html .= '<p><button type="submit" class="btn btn-primary" name="valider_modif" value="modifier_itesm">Valider modification</button></p>';
       $html .= '</form>';
       $html .= '</div></div>';
