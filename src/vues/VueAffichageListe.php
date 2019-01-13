@@ -391,6 +391,7 @@ class VueAffichageListe {
       $html .= '<p><input type="text" name="url" class="form-control" aria-describedby="emailHelp" placeholder="lien utile" value="'.$i->url.'" /></p>';
       $html .= '<input type="hidden" name="MAX_FILE_SIZE" value="10485760"/>';
       $html .= '<p><input type="file" name="image" id="image" accept=".png, .jpg, .jpeg" /></p>';
+      $html .= '<p><button type="submit" class="btn btn-primary" name="supprimer_img" value="supprimer_image">Supprimer l\'image</button></p>';
       $html .= '<p><button type="submit" class="btn btn-primary" name="valider_modif" value="modifier_itesm">Valider modification</button></p>';
       $html .= '</form>';
       $html .= '</div></div>';

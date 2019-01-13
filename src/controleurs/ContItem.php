@@ -61,6 +61,17 @@ class ContItem {
     $app = \Slim\Slim::getInstance();
     $app->redirect($app->urlFor('listeCrea',array('token' => $token)));
   }
+    
+  public function supprimer_image($token, $id) {
+      $liste = m\Liste::where("token", "=", $token)->first();
+      $item = m\Item::where("id", "=", $id)->first();
+      if(isset($_POST['supprimer_img'])) {
+          $item->img = 'questionmark.png';
+      }
+      $item->save();
+      $app = \Slim\Slim::getInstance();
+      $app->redirect($app->urlFor('listeCrea', array('token' => $token)));
+  }
 
   // methode pour ajouter un item a la base
   public function ajouterItem($token){

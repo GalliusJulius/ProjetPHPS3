@@ -185,6 +185,8 @@ $app->post('/liste/:token/modifier/:id/:modifier_item',function($token,$id){
   $contItem = new c\ContItem();
   if(isset($_POST['valider_modif'])){
     $contItem->modifierItem($token, $id);
+  } elseif(isset($_POST['supprimer_img'])) {
+      $contItem->supprimer_image($token, $id);
   }
 })->name('modifier_item');
 
