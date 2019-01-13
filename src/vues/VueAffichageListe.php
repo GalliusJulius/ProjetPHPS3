@@ -243,12 +243,12 @@ class VueAffichageListe {
                     if(isset($idUser)){
                         $m = Membre::where('idUser', '=', $idUser)->first();
                         $n = $m->Nom;
-                        $p = $m->Prénom;
+                        $p = $m->Prenom;
                     }
 
                     
                     $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '" required>';
-                    $html .= '<p>Votre prénom : </p><input type="text" name="prénom"
+                    $html .= '<p>Votre prénom : </p><input type="text" name="prenom"
                     value="' . $p . '" required>';
                     $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Cagn"></textarea>';
 
@@ -298,7 +298,7 @@ class VueAffichageListe {
 
                         $html .= '<div class="reserv">';
                         $html .= '<p>Cet item a déjà été réservé par :</p>';
-                        $html .= '<p>' . $reserv->prénom . ' ' . $reserv->nom . '</p>';
+                        $html .= '<p>' . $reserv->prenom . ' ' . $reserv->nom . '</p>';
                         $html .= '</div>';
 
                     } else{
@@ -316,11 +316,11 @@ class VueAffichageListe {
                         if(isset($idUser)){
                             $m = Membre::where('idUser', '=', $idUser)->first();
                             $n = $m->Nom;
-                            $p = $m->Prénom;
+                            $p = $m->Prenom;
                         }
 
                         $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '" required>';
-                        $html .= '<p>Votre prénom : </p><input type="text" name="prénom"
+                        $html .= '<p>Votre prénom : </p><input type="text" name="prenom"
                         value="' . $p . '" required>';
                         $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Reserv"></textarea>';
 
