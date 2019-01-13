@@ -74,8 +74,8 @@ class ContAffichageListe {
             $r = new m\Reservation();
             $r->prenom = $_POST["prenom"];
             $r->nom = $_POST["nom"];
-            if(isset($_POST['message_resa'])) {
-                $r->message = $_POST['message_resa'];
+            if(isset($_POST['message'])) {
+                $r->message = $_POST['message'];
             }
             $l = m\Liste::where('share', 'like', $share)->first();
             $idListe = $l->no;
