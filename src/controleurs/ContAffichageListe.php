@@ -133,4 +133,11 @@ class ContAffichageListe {
         m\Membre::where("email","=",$_SESSION['profil']['Email'])->first()->liste()->detach($liste);
     }
 
+    public function afficherMessageListe($token) {
+        $liste = m\Liste::where("token", "=", $token);
+        $liste->message = $_POST['message_liste'];
+        $liste->save();
+        $app = \Slim\Slim::getInstance();
+        $app->redirect($app->urlFor('listeCrea', array('token' => $token)));
+    }
 }

@@ -90,7 +90,12 @@ class VueAffichageListe {
         if(isset($l)){
             $items = $l->items()->get();
 
-            $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
+            if(isset($l->message)) {
+                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p>';
+                $html .= '<br><p><i><b>Message du créateur :</b></i> ' . $l->message . '</p><div class="row items">';
+            } else {
+                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
+            }
 
             foreach($items as $i){
                 $reserv = $i->reservation()->first();
@@ -169,7 +174,14 @@ class VueAffichageListe {
         $html .= '<button class="btn btn-primary">Ajouter un item</button>';
         $html .= '</form>';
 
-        $html .= '<button class="partager btn btn-primary">Partager</button>';
+        $html .= '<p><button class="partager btn btn-primary">Partager</button></p>';
+        
+        $html .= '<form method="post" id="messageliste" action="' . $this->app->urlFor('ajouterMessageListe', array('token' => $l->token)) . '">';
+        $html .= '<div class="row justify-content-md-center"><div class="col-lg-5 justify-content-md-center">';
+        $html .= '<p><textarea class="form-control" rows="2" type="text" name="message_liste" placeholder="Message" value="" form="messageliste"></textarea></p></div></div>';
+        $html .= '<p><button type="submit" class="btn btn-primary" name="ajouter_message_liste">Ajouter un message</button></p>';
+        $html .= '</form>';
+        
         if(isset($l)){
             $html .= '<div class="partager hidden hide modal">';
             $html .= '<div class="form">';
@@ -429,7 +441,7 @@ class VueAffichageListe {
         $path = $res['path'];
 
         $head = '
-        <title>Listes des items</title>
+        <title>Liste des items</title>
           <link rel="stylesheet"  href="' . $path . 'src/css/bootstrap.min.css"/>
           <link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>
           <link rel="stylesheet" href="' . $path . 'src/css/principale.css">
