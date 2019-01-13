@@ -16,7 +16,7 @@ const RESERVER = 4.0;
 
 class VueAffichageListe {
 
-    private $liste, $item, $app;
+    private $liste, $item, $membre, $recherche, $erreur, $app;
 
     public function __construct($tab) {
         if(isset($tab['liste'])){
@@ -25,6 +25,18 @@ class VueAffichageListe {
 
         if(isset($tab['item'])){
             $this->item = $tab['item'];
+        }
+        
+        if(isset($tab['membre'])){
+            $this->membre = $tab['membre'];
+        }
+        
+        if(isset($tab['recherche'])){
+            $this->recherche = $tab['recherche'];
+        }
+        
+        if(isset($tab['erreur'])){
+            $this->erreur = $tab['erreur'];
         }
 
         $this->app = \Slim\Slim::getInstance();
@@ -67,7 +79,7 @@ class VueAffichageListe {
                 $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><p class="date">' . $l->expiration . '</p>';
                 $html .= '<form method="GET" action="' . $this->app->urlFor('listeCrea', array('token' => $l->token)) . '">';
                 $html .= '<button class="btn btn-primary">Détails</button>';
-                $html .= '<p>Nombre de réservations : ' . count($l->reservation()->get()) . '</p>';
+                $html .= '<p>Nombre de réservations : ' . count($l->reservations()->get()) . '</p>';
                 $html .= "</form>";
                 $html .= '</li>';
             }
@@ -348,6 +360,77 @@ class VueAffichageListe {
 
         return array('html' => $html, 'path' => $path);
     }
+    
+    private function recherche(){
+        $path = './';
+        $html = '<div class="row justify-content-md-center">';
+        $html .= '<form class="form-inline my-2 my-md-0" id="search" method="GET" action="' . $this->app->urlFor('rechercheAvancee') . '">';
+        $html .= '<div class="row col-md-12 justify-content-md-center">
+        <input class="form-control" type="text" name="search" placeholder="Terme recherché" value="' . $this->recherche . '">
+        </div>';
+        $html .= '<div class="col col-md-3">
+        <p>Option de filtre :</p>
+        <input type="radio" name="on" value="Listes"><label for="search">Listes</label>
+        <input type="radio" name="on" value="Créateurs"><label for="search">Créateurs</label>
+        <input type="radio" name="on" value="Membres"><label for="search">Membres</label>
+        <input type="radio" name="on" value="Les deux" checked><label for="search">Les deux</label>
+        </div>';
+        $html .= '<div class="col col-md-2">
+        <p>Filtre par date d\'échéance :</p>
+        <input type="date" name="date">
+        </div>';
+        $html .= '<div class="col col-md-3">
+        <input type="checkbox" name="deep" value="deep"><label for="search">Recherche profonde</label>
+        <p>Recherche le mot clé dans la description des listes et/ou infos utilisateurs.</p>
+        </div>';
+        $html .= '<div class="col col-md-2">
+        <p>Filtre par nombre de réservations :</p>
+        <input type="number" name="nbReserv">
+        <input type="radio" name="reserv" value="Minimum">
+        <label for="search">Au minimum</label>
+        <input type="radio" name="reserv" value="Maximum">
+        <label for="search">Au maximum</label>
+        <input type="radio" name="reserv" value="Exact" checked>
+        <label for="search">Exactement</label>
+        </div>';
+        $html .= '<div class="col col-md-2">
+        <p>Filtre par nombre d\'items :</p>
+        <input type="number" name="nbItem">
+        <input type="radio" name="item" value="Minimum">
+        <label for="search">Au minimum</label>
+        <input type="radio" name="item" value="Maximum">
+        <label for="search">Au maximum</label>
+        <input type="radio" name="item" value="Exact" checked>
+        <label for="search">Exactement</label>
+        </div>';
+        $html .= '<div class="row col-md-12 justify-content-md-center">
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+        </div>';
+        
+        $html .= '</form></div>';
+        $html .= '<section>';
+        
+        
+        if(isset($this->liste) and (count($this->liste) > 0)){
+            $html .= '<div><h3>Listes :</h3>';
+            foreach($this->liste as $l){
+                $html .= '<p>' . $l->titre . '</p>';
+            }
+            $html .= '</div>';
+        }
+        
+        if(isset($this->membre) and (count($this->membre) > 0)){
+            $html .= '<div><h3>Créateur :</h3>';
+            foreach($this->membre as $m){
+                $html .= '<p>' . $m->nom . ' ' . $m->prénom . '</p>';
+            }
+            $html .= '</div>';
+        }
+        
+        $html .= '</div></section>';
+        
+        return array('html' => $html, 'path' => $path);
+    }
 
     private function ajouterItem() {
       $path = '../../';
@@ -398,26 +481,31 @@ class VueAffichageListe {
     }
 
     public function render($code) {
-
+        
         if($code == LISTES_CREA){
             $res = $this->affichageListesCrea();
 
         } elseif($code == LISTES){
             $res = $this->affichageListes();
 
-        } else if($code == LISTE_CREA){
+        } elseif($code == LISTE_CREA){
             $res = $this->affichageListeCrea();
 
-        } else if($code == LISTE_CO){
+        } elseif($code == LISTE_CO){
             $res = $this->affichageListeInvite(0);
 
-        } else if($code == LISTE_INV){
+        } elseif($code == LISTE_INV){
             $res = $this->affichageListeInvite(1);
 
-        }else if($code == 'ITEM_AJOUT'){ // Pour ajouter un item
+        }elseif($code == 'ITEM_AJOUT'){ // Pour ajouter un item
             $res = $this->ajouterItem();
-        }else if($code == 'MODIFIER'){ // Pour modifier un item
+            
+        }elseif($code == 'MODIFIER'){ // Pour modifier un item
             $res = $this->modifierItem();
+            
+        } elseif($code == 'RECHERCHE'){
+            $res = $this->recherche();
+            
         }
 
         $content = $res['html'];
@@ -439,8 +527,8 @@ class VueAffichageListe {
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
-               <form class="form-inline my-2 my-md-0">
-                  <input class="form-control" type="text" placeholder="Rechercher">
+               <form class="form-inline my-2 my-md-0" method="GET" action="' . $this->app->urlFor('recherche') . '">
+                  <input class="form-control" type="text" name="search" placeholder="Rechercher">
                 </form>
               <div class="collapse navbar-collapse" id="navbarsExample04">
                 <ul class="navbar-nav mr-auto">
@@ -479,8 +567,8 @@ class VueAffichageListe {
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
-               <form class="form-inline my-2 my-md-0">
-                  <input class="form-control" type="text" placeholder="Rechercher">
+               <form class="form-inline my-2 my-md-0" method="GET" action="' . $this->app->urlFor('recherche') . '>
+                  <input class="form-control" type="text" placeholder="Rechercher" name="search">
                 </form>
               <div class="collapse navbar-collapse" id="navbarsExample04">
                 <ul class="navbar-nav mr-auto">

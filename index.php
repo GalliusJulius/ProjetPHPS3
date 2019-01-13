@@ -128,6 +128,16 @@ $app->get('/Createurs',function(){
     $cont->afficherCreateurs();
 })->name('createur');
 
+$app->get('/Recherche',function(){
+    $cont = new c\contRecherche();
+    $cont->afficherRecherche();
+})->name('recherche');
+
+$app->get('/RechercheAvancee',function(){
+    $cont = new c\contRecherche();
+    $cont->rechercherAvancee();
+})->name('rechercheAvancee');
+
 $app->get('/liste/:token', function($token){
     $cont = new c\ContAffichageListe();
     $cont->afficherListe($token);

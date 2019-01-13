@@ -100,3 +100,9 @@ var fenCagnotte = (function(){
 })();
 
 
+var affAvertissement = (function(){
+    window.addEventListener("load", () => {
+        $("div.avertissement").fadeOut("slow");
+    });
+})();
+

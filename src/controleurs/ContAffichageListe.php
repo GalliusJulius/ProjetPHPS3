@@ -6,7 +6,7 @@ require_once 'vendor/autoload.php';
 
 use \Illuminate\Database\Capsule\Manager as DB;
 use \wishlist\models as m;
-use \wishlist\vues\VueParticipant as VueParticipant;
+use \wishlist\vues\VueParticipant;
 use \wishlist\vues\VueAffichageListe;
 use \wishlist\Auth\Authentification as Auth;
 
