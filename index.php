@@ -123,6 +123,31 @@ $app->post('/MesListes',function(){
     }
 });
 
+$app->get('/MesListes/creerListe',function(){
+  $cont = new c\ContInstanceListe();
+  $cont->creerListe();
+})->name('creerListe');
+
+$app->post('/MesListes/creerListe',function(){
+  $cont = new c\ContInstanceListe();
+  $cont->creer_liste();
+})->name('creer_liste');
+
+$app->get('/MesListes/modifierListe/:token',function($token){
+  $cont = new c\ContInstanceListe();
+  $cont->modifierListe($token);
+})->name('modifierListe');
+
+$app->post('/MesListes/modifierListe/:token',function($token){
+  $cont = new c\ContInstanceListe();
+  $cont->modifier_liste($token);
+})->name('modifier_liste');
+
+$app->get('/MesListes/supprimerListe/:token',function($token){
+  $cont = new c\ContInstanceListe();
+  $cont->supprimer_liste($token);
+})->name('supprimer_liste');
+
 $app->get('/Createurs',function(){
     $cont = new c\ControleurCompte();
     $cont->afficherCreateurs();
@@ -191,7 +216,7 @@ $app->get('/liste/:token/modifier/:id',function($token, $id){
   $contItem->modifier($token, $id);
 })->name('modifierItem');
 
-$app->post('/liste/:token/modifier/:id/:modifier_item',function($token,$id){
+$app->post('/liste/:token/modifier/:id',function($token,$id){
   $contItem = new c\ContItem();
   if(isset($_POST['valider_modif'])){
     $contItem->modifierItem($token, $id);

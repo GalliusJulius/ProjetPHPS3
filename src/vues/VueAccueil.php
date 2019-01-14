@@ -214,30 +214,48 @@ END;
     public function mesListes(){
         $html = <<<END
         <div class="row justify-content-md-center">
-            <div class="col col-lg-9 justify-content-md-center">
+            <div class="col col-lg-12 justify-content-md-center">
             <h1>Les listes que vous avez créé:</h1>
 END;
         $i=0;
         $app = \Slim\Slim::getInstance();
         foreach($this->tableau[0] as $val){
-            $lien = $app->urlFor('listeCrea',['token'=>$val->token]);
+              $lien = $app->urlFor('listeCrea',['token'=>$val->token]);
             $i++;
-            $html .= "<div>" . "<h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div>"; 
+            $modifierListe = $app->urlFor('modifierListe', array('token' => $val->token));
+            $supprimerListe = $app->urlFor('supprimer_liste', array('token' => $val->token));
+            $html .= '<div class="row">';
+            $html .= '<div class="col col-lg-6 ">';
+            $html .= '<h2><b>'.$i.' : </b><a href = $lien  >'.$val->titre.'</a><h2>';
+            $html .= '</div>';
+            $html .= '<div class="col col-lg-3">';
+            $html .= '<form method="GET" action= "'.$modifierListe.'">';
+            $html .= '<button class="btn btn-primary col col-lg-6" value="modifierListe">Modifier liste</button>';
+            $html .= "</form>";
+            $html .= '</div>';
+            $html .= '<div class="col col-lg-3">';
+            $html .= '<form method="GET" action= "'.$supprimerListe.'" >';
+            $html .= '<button class="btn btn-primary col col-lg-6" value="supprimerListe">Supprimer liste</button>';
+            $html .= "</form>";
+            $html .= '</div>';
+            $html .= "</div>";
         }
         if($i==0){
             $html .= "<h3> vous n'avez pas encore créé de listes!</h3>";  
         }
+		$creerListe = $app->urlFor('creerListe');
         $html .= <<<END
         <div class="row">
             <div class="col col-lg-6">
-                <p>Vous voulez créer une liste?</p> 
+                <p>Vous voulez créer une liste?</p>
             </div>
             <div class="col col-lg-6">
-            <button class="btn btn-primary col col-lg-6">Créer listes</button>
+              <form method="GET" action= "$creerListe">
+                <button class="btn btn-primary col col-lg-3" value="creerListe">Créer listes</button>
+              </form>
             </div>
         </div>
         <h1>Les listes qu'on vous a partagé :</h1>
-        <div class =\"row\">
 END;
         $i=0;
         foreach($this->tableau[1] as $val){

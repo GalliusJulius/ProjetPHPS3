@@ -18,7 +18,7 @@ class VueAffichageListe {
 
     private $liste, $item, $membre, $recherche, $erreur, $app;
 
-    public function __construct($tab) {
+    public function __construct($tab = array()) {
         if(isset($tab['liste'])){
             $this->liste = $tab['liste'];
         }
@@ -102,11 +102,11 @@ class VueAffichageListe {
         if(isset($l)){
             $items = $l->items()->get();
 
-            if(isset($l->message)) {
+            if(!isset($l->message) or empty($l->message))  {
+                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
+            } else {
                 $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p>';
                 $html .= '<br><p><i><b>Message du créateur :</b></i> ' . $l->message . '</p><div class="row items">';
-            } else {
-                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
             }
 
             foreach($items as $i){
@@ -117,7 +117,14 @@ class VueAffichageListe {
                 } else{
                     $html .= '<div class="col col-l-3">';
                 }
-                $html .= '<p class="nom"><h4>' . $i->nom . '</h4></p><img src="../src/img/' . $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
+                
+                if(substr($i->img, 0, 4) == 'http') {
+                   $image_item = '<img src="' . $i->img . '">'; 
+                } else {
+                   $image_item = '<img src="' . '../src/img/' . $i->img . '">';
+                }
+                
+                $html .= '<p class="nom"><h4>' . $i->nom . '</h4></p>' . $image_item . '<p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
 
 
                 if(isset($reserv)){
@@ -222,9 +229,20 @@ class VueAffichageListe {
         if(isset($l)){
             $items = $l->items()->get();
 
-            $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
-
+            if(!isset($l->message) or empty($l->message))  {
+                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
+            } else {
+                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p>';
+                $html .= '<br><p><i><b>Message du créateur :</b></i> ' . $l->message . '</p><div class="row items">';
+            }
+            
             foreach($items as $i){
+
+                if(substr($i->img, 0, 4) == 'http') {
+                   $image_item = '<img src="' . $i->img . '">'; 
+                } else {
+                   $image_item = '<img src="' . '../src/img/' . $i->img . '">';
+                }
                 
                 if($i->cagnotte == 1){
                     
@@ -232,9 +250,9 @@ class VueAffichageListe {
 
                     $html .= '<p class="nom"><h4>' . $i->nom;
 
-                    $html .= '</h4></p><img src="' . $path . 'src/img/';
+                    $html .= '</h4></p>' . $image_item;
 
-                    $html .= $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
+                    $html .= '<p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
 
                     $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
 
@@ -265,7 +283,7 @@ class VueAffichageListe {
 
 
                         $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '" required>';
-                        $html .= '<p>Votre prénom : </p><input type="text" name="prénom"
+                        $html .= '<p>Votre prénom : </p><input type="text" name="prenom"
                         value="' . $p . '" required>';
                         $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Cagn"></textarea>';
 
@@ -303,9 +321,9 @@ class VueAffichageListe {
 
                     $html .= '<p class="nom"><h4>' . $i->nom;
 
-                    $html .= '</h4></p><img src="' . $path . 'src/img/';
+                    $html .= '</h4></p><img src="' . $image_item . '">';
 
-                    $html .= $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
+                    $html .= '<p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
 
                     $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
 
@@ -316,7 +334,7 @@ class VueAffichageListe {
 
                         $html .= '<div class="reserv">';
                         $html .= '<p>Cet item a déjà été réservé par :</p>';
-                        $html .= '<p>' . $reserv->prénom . ' ' . $reserv->nom . '</p>';
+                        $html .= '<p>' . $reserv->prenom . ' ' . $reserv->nom . '</p>';
                         $html .= '</div>';
 
                     } else{
@@ -334,13 +352,12 @@ class VueAffichageListe {
                         if(isset($idUser)){
                             $m = Membre::where('idUser', '=', $idUser)->first();
                             $n = $m->Nom;
-                            $p = $m->Prénom;
+                            $p = $m->Prenom;
                         }
 
                         $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '" required>';
-                        $html .= '<p>Votre prénom : </p><input type="text" name="prénom"
-                        value="' . $p . '" required>';
-                        $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value=""></textarea>';
+                        $html .= '<p>Votre prénom : </p><input type="text" name="prenom" value="' . $p . '" required>';
+                        $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Reserv"></textarea>';
 
                         $html .= '<button type="submit" class="btn btn-primary confirmerR h' . $cpt . '">Réserver</button>';
 
@@ -600,9 +617,10 @@ class VueAffichageListe {
       $html .= '<p><input type="text" name="nom" class="form-control" aria-describedby="emailHelp" placeholder="Nom" required autofocus/></p>';
       $html .= '<p><input type="text" name="description" class="form-control" aria-describedby="emailHelp" placeholder="Description" required/></p>';
       $html .= '<p><input type="number" name="tarif" class="form-control" aria-describedby="emailHelp" placeholder="Tarif" required/></p>';
-      $html .= '<p><input type="text" name="url" class="form-control" aria-describedby="emailHelp" placeholder="lien utile"/></p>';
+      $html .= '<p><input type="url" name="url" class="form-control" aria-describedby="emailHelp" placeholder="lien utile"/></p>';
       $html .= '<input type="hidden" name="MAX_FILE_SIZE" value="10485760" />';
       $html .= '<p><input type="file" name="image" id="image" accept=".png, .jpg, .jpeg" /></p>';
+      $html .= '<p><input type="text" name="image_url" class="form-control" placeholder="URL de l\'image"/></p>';
       $html .= '<p><button type="submit" class="btn btn-primary" name="valider" value="ajouter_item">Valider</button></p>';
       $html .= '</form>';
       $html .= '</div></div>';
@@ -620,14 +638,15 @@ class VueAffichageListe {
       $id=$i->id;
 
       $html .= '<div class="row"><div class="col-md-2">';
-      $html .= '<form method="POST" action="'.$id.'/$modifier_item" enctype="multipart/form-data">';
+      $html .= '<form method="POST" action="'.$id.'" enctype="multipart/form-data">';
       $html .= '<p><input type="text" name="nom" class="form-control" aria-describedby="emailHelp" placeholder="Nom" value="'.$i->nom.'" autofocus/></p>';
       $html .= '<p><textarea rows="5" cols="50" type="text" name="description" value="">'.$i->descr.'</textarea></p>:';
       //$html .= '<p><input type="text" name="description" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="'.$i->descr.'" /></p>';
       $html .= '<p><input type="number" name="tarif" class="form-control" aria-describedby="emailHelp" placeholder="Tarif" value="'.$i->tarif.'" /></p>';
-      $html .= '<p><input type="text" name="url" class="form-control" aria-describedby="emailHelp" placeholder="lien utile" value="'.$i->url.'" /></p>';
+      $html .= '<p><input type="url" name="url" class="form-control" aria-describedby="emailHelp" placeholder="lien utile" value="'.$i->url.'" /></p>';
       $html .= '<input type="hidden" name="MAX_FILE_SIZE" value="10485760"/>';
       $html .= '<p><input type="file" name="image" id="image" accept=".png, .jpg, .jpeg" /></p>';
+      $html .= '<p><input type="text" name="image_url" class="form-control" placeholder="URL de l\'image"/></p>';
       $html .= '<p><button type="submit" class="btn btn-primary" name="supprimer_img" value="supprimer_image">Supprimer l\'image</button></p>';
       $html .= '<p><button type="submit" class="btn btn-primary" name="valider_modif" value="modifier_itesm">Valider modification</button></p>';
       $html .= '</form>';
@@ -639,6 +658,49 @@ class VueAffichageListe {
       return array('html' => $html, 'path' => $path);
     }
 
+	  private function creerListe() {
+      $path = '../';
+      $html = '<section>';
+      $creer_liste = $this->app->urlFor('creer_liste');
+
+      $html .= '<div class="row"><div class="col-md-8">';
+      $html .= '<h1>Vous pouvez créer une liste ici</h1>';
+      $html .= '<h3>Veuillez saisir les informations de la liste :</h3>';
+      $html .= '<div class="row"><div class="col-md-5">';
+      $html .= '<form method="POST" action="">';
+      $html .= '<p><input type="text" name="titre" class="form-control" aria-describedby="emailHelp" placeholder="Titre" value="" required autofocus/></p>';
+      $html .= '<p><input type="text" name="descr" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="" required/></p>';
+      $html .= '<p><input type="date" name="date" class="form-control" aria-describedby="emailHelp" placeholder="Date d\'expiration" value="" required/></p>';
+      $html .= '<p><input type="checkbox" name="liste_publique" value="" required > Liste publique</p>'; 
+      $html .= '<p><button type="submit" class="btn btn-primary" name="creerUneListe" value="creer_Liste">Créer la liste</button></p>';
+      $html .= '</form>';
+      $html .= '</div></div></div>';
+      $html .= '</section>';
+
+      return array('html' => $html, 'path' => $path);
+    }
+
+    private function modifierListe() {
+      $path = '../../';
+      $html = '<section>';
+      $creer_liste = $this->app->urlFor('modifier_liste');
+      $li = $this->liste;
+
+      $html .= '<div class="row"><div class="col-md-8">';
+      $html .= '<h1>Vous pouvez modifier les information de la liste ici</h1>';
+      $html .= '<div class="row"><div class="col-md-5">';
+      $html .= '<form method="POST" action="">';
+      $html .= '<p><input type="text" name="titre" class="form-control" aria-describedby="emailHelp" placeholder="Titre" value="'.$li->titre.'" autofocus/></p>';
+      $html .= '<p><input type="text" name="descr" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="'.$li->description.'" /></p>';
+      $html .= '<p><input type="date" name="date" class="form-control" aria-describedby="emailHelp" placeholder="Date d\'expiration" value="'.$li->expiration.'" /></p>';
+      $html .= '<p><button type="submit" class="btn btn-primary" name="valider_modif" value="modifier_liste">Valider modification</button></p>';
+      $html .= '</form>';
+      $html .= '</div></div></div>';
+      $html .= '</section>';
+
+      return array('html' => $html, 'path' => $path);
+    }
+	
     public function render($code) {
         
         if($code == LISTES_CREA){
@@ -659,12 +721,18 @@ class VueAffichageListe {
         }elseif($code == 'ITEM_AJOUT'){ // Pour ajouter un item
             $res = $this->ajouterItem();
             
-        }elseif($code == 'MODIFIER'){ // Pour modifier un item
-            $res = $this->modifierItem();
-            
-        } elseif($code == 'RECHERCHE'){
+        }elseif($code == 'RECHERCHE'){
             $res = $this->recherche();
             
+        }else if($code == 'MODIFIER'){ // Pour modifier un item
+            $res = $this->modifierItem();
+
+        }else if($code == 'CREER_LISTE'){ // Pour creer une liste
+            $res = $this->creerListe();
+
+        }else if($code == 'MODIFIER_LISTE'){ // Pour modifier une liste
+            $res = $this->modifierListe();
+
         }
 
         $content = $res['html'];

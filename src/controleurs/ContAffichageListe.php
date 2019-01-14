@@ -70,15 +70,14 @@ class ContAffichageListe {
     public function reserverItem($share, $idItem){
         $app = \Slim\Slim::getInstance();
         
-        if(isset($_POST["nom"]) and isset($_POST["prénom"])){
+        if(isset($_POST["nom"]) and isset($_POST["prenom"])){
             $r = new m\Reservation();
-            $r->prénom = $_POST["prénom"];
+            $r->prenom = $_POST["prenom"];
             $r->nom = $_POST["nom"];
             
             if(isset($_POST["message"]) and ($_POST["message"] != '')){
                 $r->message = $_POST["message"];
             }
-            
             $l = m\Liste::where('share', 'like', $share)->first();
             $idListe = $l->no;
             
