@@ -95,4 +95,26 @@ class ControleurCompte{
             }
         }
     }
+    
+    public function ajouterAmi($id){
+        $ajout = new m\Amis();
+        $ajout->idDemande=Auth::getIdUser();
+        $ajout->idRecu=$id;
+        $ajout->save();
+    }
+    
+    public function affichageContacts(){
+        $liste = array();
+        $attente = m\Amis::where("idRecu","=",Auth::getIdUser())->where("statut","=","Attente")->get();
+        $amis = m\Amis::where(function($q){
+            $q->where("idRecu","=",Auth::getIdUser());
+        })->orWhere(function($q){
+            $q->where("idDemande","=",Auth::getIdUser());
+        });
+        $amis = $amis->where("statut","=","ok")->get();
+        $liste[] = $attente;
+        $liste[] = $amis;
+        $v = new v\VueAccueil("contact","",$liste);
+        $v->render();
+    }
 }

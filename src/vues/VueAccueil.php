@@ -51,6 +51,10 @@ class VueAccueil{
                 $path=".";
                 break;
             }
+            case "contact":{
+                $contenu=$this->contact();
+                break;
+            }
                 
         }
         $lienAccueil = $app->urlFor('accueil');
@@ -58,6 +62,7 @@ class VueAccueil{
         $lienMesListes = $app->urlFor('mesListes');
         $lienListesPublic = $app->urlFor('listePublic');
         $lienCreateur = $app->urlFor('createur');
+        $lienContact = $app->urlFor('contact');
         $html = <<< END
         <!doctype html>
 <html lang="en">
@@ -94,6 +99,9 @@ class VueAccueil{
                   <li class="nav-item active">
                     <a class="nav-link" href=$lienCreateur>Listes créateurs<span class="sr-only">(current)</span></a>
                   </li>
+                  <li class="nav-item active">
+                    <a class="nav-link" href=$lienContact>Contact <span class="sr-only">(current)</span></a>
+                </li>
                 <li class="nav-item active" id="compte">
                     <a class="nav-link" href=$lienCompte>Mon compte <span class="sr-only">(current)</span></a>
                   </li>
@@ -307,7 +315,7 @@ END;
         $btn = "";
         if(!isset($amis)){
             $btn = "<form method=\"POST\">
-                <button class=\"btn btn-primary\">Ajouter à sa liste d'ami</button>
+                <button name=\"add\" value=\"y\"class=\"btn btn-primary\">Ajouter à sa liste d'ami</button>
             </form>";
         }
         else{
@@ -346,6 +354,25 @@ END;
             $contenu .= "<div class=\"col-lg-6\"><h2>$personne->Pseudo</h2><p>Ce créateur n'a pas de messages d'humeurs</p><p>Il a créé : $val[1] liste(s)</div>";
         }
         $contenu .="</div>";
+        return $contenu;
+    }
+    
+    public function contact(){
+        $att = $this->tableau[0];
+        $amis = $this->tableau[1];
+        $contenu = "<h1>Demandes d'amis:</h1>";
+        foreach($att as $val){
+            $contenu .=  
+                "<p>$val->idDemande</p> 
+                <form method=\"POST\">
+                    <button name=\"ok\" class =\"btn btn-primary\"value=\"$val->idDemande\">Accepter</button>
+                    <button name=\"del\" class =\"btn btn-warning\"value=\"$val->idDemande\">Supprimer</button>
+                </form>";
+        }
+        $contenu .= "<h1>Mes amis</h1>";
+        foreach($amis as $val){
+            $contenu.="<p>$val->idDemande</p>";
+        }
         return $contenu;
     }
 }

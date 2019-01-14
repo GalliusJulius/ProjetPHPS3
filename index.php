@@ -91,9 +91,13 @@ $app->get('/utilisateur/:id',function($id){
 })->name('user');
 
 $app->post('/utilisateur/:id',function($id){
-    $acc = new c\ControleurCompte();
-    $acc->ajouterAmi($id);
-})->name('user');
+    $app = \Slim\Slim::getInstance();
+    if(isset($_POST['add'])&& $_POST['add']=='y'){
+        $acc = new c\ControleurCompte();
+        $acc->ajouterAmi($id);
+        $app->redirect($app->urlFor('user',array('id'=>$id)));
+    }
+});
 
 $app->post('/Compte',function(){
    $acc = new c\ControleurCompte();
@@ -101,6 +105,11 @@ $app->post('/Compte',function(){
     a\Authentification::loadProfil($_SESSION['profil']['Email']);
    $acc->recupererVue("compte");
 });
+
+$app->get('/Contact',function(){
+   $acc= new c\ControleurCompte();
+    $acc->affichageContacts();
+})->name('contact');
 
 //routage dans la confirmation de la suppression
 $app->get('/SupprimerCompte',function(){
