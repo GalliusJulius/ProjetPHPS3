@@ -1,7 +1,7 @@
 <?php
 namespace wishlist\vues;
 
-class VueAccueil{
+class VueWebSite{
     
     private $liste, $listePart, $item, $membre, $amis, $demande, $recherche, $erreur, $app;
     

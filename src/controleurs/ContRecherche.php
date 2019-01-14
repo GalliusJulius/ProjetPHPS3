@@ -10,7 +10,7 @@ use \wishlist\models\Liste;
 use \wishlist\models\Reservation;
 use \wishlist\models\Membre;
 use \wishlist\models\Participation;
-use \wishlist\vues\VueAffichageListe;
+use \wishlist\vues\VueWebSite;
 use \wishlist\Auth\Authentification as Auth;
 
 
@@ -27,7 +27,7 @@ class ContRecherche {
                 $q->where("idUser", "!=", $userId)->where("prénom", "like", "%" . $_GET['search'] . "%");
             })->get();
             
-            $vue = new VueAffichageListe(array("liste" => $listes, "membre" => $membres, "recherche" => $_GET));
+            $vue = new VueWebSite(array("liste" => $listes, "membre" => $membres, "recherche" => $_GET));
             $vue->render('RECHERCHE');
             
         } else{
@@ -198,7 +198,7 @@ class ContRecherche {
             }
             
             $get = $_GET;
-            $vue = new VueAffichageListe(array("liste" => $listes, "membre" => $membres, "recherche" => $get));
+            $vue = new VueWebSite(array("liste" => $listes, "membre" => $membres, "recherche" => $get));
             $vue->render('RECHERCHE');
             
         } else{

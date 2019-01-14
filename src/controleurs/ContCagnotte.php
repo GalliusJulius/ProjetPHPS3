@@ -10,7 +10,7 @@ use \wishlist\models\Liste;
 use \wishlist\models\Reservation;
 use \wishlist\models\Membre;
 use \wishlist\models\Participation;
-use \wishlist\vues\VueAffichageListe;
+use \wishlist\vues\VueWebSite;
 use \wishlist\Auth\Authentification as Auth;
 
 
