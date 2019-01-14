@@ -3,7 +3,7 @@ namespace wishlist\vues;
 
 class VueWebSite{
     
-    private $liste, $listePart, $item, $membre, $amis, $demande, $recherche, $erreur, $app;
+    private $liste, $listePart, $item, $membre, $amis, $demande, $recherche, $messageErreur, $app;
     
     public function __construct($tab){
         
@@ -91,6 +91,33 @@ END;
         $lien = $this->app->urlFor('Compte');
         
         $html = <<< END
+        <div id ="top" class="position-relative overflow-hidden  p-3 p-md-5  text-center bg-light">
+              <div class="col-md-5 p-lg-5 mx-auto my-5">
+                    <h1 class="display-4 font-weight-normal">Bienvenue sur whishList!</h1>
+                    <p class="lead font-weight-normal">Vous pouvez sur notre application créer des listes de cadeaux, participer et consulter celles de vos amis et bien d'autres choses! Sur cette page vous retrouverez un pannel de ce que vous pouvez faire ici!</p>
+              </div>
+        </div>
+        
+        <div class="flex-md-equal w-100">
+            <div class="articles bg-dark text-center text-white overflow-hidden">
+            <div>
+              <h2 class="display-5">Vous pouvez créer une liste</h2>
+              <p class="lead">Puis la partager avec vos amis.</p>
+            </div>
+        <div class="explications bg-light shadow-sm mx-auto" style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;">
+        <p class="lead">Explications</p></div>
+        </div>
+      <div class="articles bg-light text-center overflow-hidden">
+        <div>
+            <h2 class="display-5">Vous pouvez partager votre liste facilement</h2>
+            <p class="lead">Même à ceux qui n'ont pas de compte sur whishList.</p>
+            </div>
+        <div class="explications2 bg-dark shadow-sm mx-auto" style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;">
+        <p class="lead">Explications</p>
+        </div>
+    </div>
+</div>
+
                 <div class="row">
                 <form method="post" action="">
                         <div  class="col col-lg-4"> 
@@ -113,6 +140,7 @@ END;
         catch(\Exception $e){}
         
         $html = <<<END
+        <div class="container">
             <div class="row justify-content-md-center">
             <div class="col col-lg-4 justify-content-md-center">
                 <form method="post" class="text-center">
@@ -143,6 +171,7 @@ END;
                             </a>
                         </form>
                     </div>
+                </div>
                 </div>
 END;
         
@@ -294,13 +323,15 @@ END;
     }
     
     public function createurs(){
-        $html = "<div class=\"row\">";
+        
+        $html = "<div class=\"container\"><div class=\"row\">";
         
         foreach($this->membre as $m){
-            $html .= "<div class=\"col-lg-6\"><h2>$m->Pseudo</h2><p>Ce créateur n'a pas de messages d'humeurs</p><p>Il a créé : " . count($m->listes()) . " liste(s)</div>";
+            $pers = $m[0];
+            $html .= "<div class=\"col-lg-6\"><h2>$pers->Pseudo # $pers->idUser</h2><p>Ce créateur n'a pas de messages d'humeurs</p><p>Il a créé : " . $m[1] . " liste(s)</div>";
         }
         
-        $html .="</div>";
+        $html .="</div></div>";
         
         return $html;
     }
@@ -956,7 +987,7 @@ END;
         $lienListesPublic = $this->app->urlFor('listePublic');
         $lienCreateur = $this->app->urlFor('createur');
         $lienContact = $this->app->urlFor('contact');
-        
+        $title = strtolower($code);
         
         $html = <<< END
         <!doctype html>
@@ -968,7 +999,7 @@ END;
     <meta name="author" content="">
     <link rel="icon" href="../../../favicon.ico">
 
-    <title>Navbar Template for Bootstrap</title>
+    <title>$title</title>
     <link rel="stylesheet" href="$path./src/css/bootstrap.min.css">
     <link rel="stylesheet" href="$path./src/css/principale.css">
     $style
@@ -976,7 +1007,9 @@ END;
 
   <body>
             <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-              <a class="navbar-brand" href="$lienAccueil">MyWishList</a>
+              <a class="navbar-brand" href="$lienAccueil">
+              <img src="$path./src/img/logo.png" width="120" height="50" alt="">
+              </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
@@ -985,11 +1018,12 @@ END;
                 </form> 
               <div class="collapse navbar-collapse" id="navbarsExample04">
                 <ul class="navbar-nav mr-auto">
-                  <li class="nav-item active">
-                    <a class="nav-link" href=$lienMesListes>Mes listes <span class="sr-only">(current)</span></a>
-                </li>
-                  <li class="nav-item active">
-                    <a class="nav-link" href=$lienListesPublic>Les listes du moment <span class="sr-only">(current)</span></a>
+                 <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Listes</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown01">
+                      <a class="dropdown-item" href=$lienMesListes>Mes listes </a>
+                      <a class="dropdown-item" href=$lienListesPublic>Les listes du moment</a>
+                    </div>
                   </li>
                   <li class="nav-item active">
                     <a class="nav-link" href=$lienCreateur>Listes créateurs<span class="sr-only">(current)</span></a>
@@ -1003,13 +1037,12 @@ END;
                 </ul>
                 </div>
                 <a class="nav-item " href=$lienCompte>
-                    <img src="$path./src/img/profil.png" width="30" height="30" alt="">
+                    <img src="$path./src/img/profil.png" width="40" height="40" alt="">
                 </a>
             </nav>
             
-            <div class="container">
                 $contenu
-            </div>
+           
             
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
             <script src="./src/js/bootstrap.min.js"></script>

@@ -11,15 +11,30 @@
     vertical-align: baseline;
 }
 
-nav img {
-    width: 40px;
-    height: 40px;
-    margin-left: 20%;
-    margin-right: 20%;
-}
-
 .container{
     margin-top: 2em;
+}
+
+.articles{
+    border-top: 2px solid black;
+}
+
+.bg-dark{
+    background-color: #393E46;
+}
+
+#top{
+    background-color: #F8B500!important;
+}
+
+.explications2 p {
+    color:white;
+    font-size: 1.4em;
+}
+
+.explications p{
+    color: #393E46;
+    font-size: 1.4em;
 }
 
 @media (max-width: 768px) {

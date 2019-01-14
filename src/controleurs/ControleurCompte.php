@@ -10,8 +10,8 @@ class ControleurCompte{
     protected $erreur = "";
     
     public function recupererVue($type){
-        $v = new v\VueAccueil($type,$this->erreur);
-        $v->render();
+        $v = new v\VueWebSite(array('erreur'=>$this->erreur));
+        $v->render($type);
     }
     
     public function miseAjour(){
@@ -65,8 +65,8 @@ class ControleurCompte{
                 $i++;
             }
         }
-        $v = new v\VueAccueil("createurs","",$res);
-        $v->render();
+        $v = new v\VueWebSite(array('membre'=>$res));
+        $v->render("CREATEURS");
     }
              
     public function afficherCompte($id){
