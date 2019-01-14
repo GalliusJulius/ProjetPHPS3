@@ -58,7 +58,7 @@ class ControleurCompte{
         $res = array();
         $i=0;
         foreach($createur as $val){
-            $nb = m\Liste::where('user_id','=',Auth::getIdUser())->count();
+            $nb = m\Liste::where('user_id','=',$val->idUser)->count();
             if($nb!=0){
                 $res[$i][]=$val;
                 $res[$i][]=$nb;
@@ -68,5 +68,31 @@ class ControleurCompte{
         $v = new v\VueAccueil("createurs","",$res);
         $v->render();
     }
-    
+             
+    public function afficherCompte($id){
+        if($id == $_SESSION['idUser']){
+            $app = \Slim\Slim::getInstance();
+            $app->redirect($app->urlFor('Compte'));
+        }
+        else{
+            $user = m\Membre::where("idUser","=",$id)->first();
+            $fabrique = m\Liste::where('user_id',"=",$id)->get();
+            $amis = m\Amis::where(function($query) use($id){
+                $query->where("idRecu","=",$id)->where("idDemande","=",Auth::getIdUser());
+            })->orWhere(function($query) use ($id){
+                $query->where("idDemande","=",$id)->where("idRecu","=",Auth::getIdUser());
+            })->first();
+            $arr=array();
+            if(isset($user)){
+                $arr[]=$user;
+                $arr[]=$amis;
+                $arr[]=$fabrique;
+                $v = new v\VueAccueil("visionComptes","",$arr);
+                $v->render();
+            }
+            else{
+                //on met erreur page not found
+            }
+        }
+    }
 }

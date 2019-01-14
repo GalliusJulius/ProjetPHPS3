@@ -67,6 +67,7 @@ class ContAffichageListe {
             $vue->render(LISTE_INV);
         }
     }
+    
     public function reserverItem($share, $idItem){
         $app = \Slim\Slim::getInstance();
         

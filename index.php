@@ -85,6 +85,16 @@ $app->get('/Compte',function(){
     $acc->recupererVue("compte");
 })->name('Compte');
 
+$app->get('/utilisateur/:id',function($id){
+    $acc = new c\ControleurCompte();
+    $acc->afficherCompte($id);
+})->name('user');
+
+$app->post('/utilisateur/:id',function($id){
+    $acc = new c\ControleurCompte();
+    $acc->ajouterAmi($id);
+})->name('user');
+
 $app->post('/Compte',function(){
    $acc = new c\ControleurCompte();
    $acc->miseAjour();
