@@ -6,18 +6,8 @@ require_once 'vendor/autoload.php';
 
 use \Illuminate\Database\Capsule\Manager as DB;
 use \wishlist\models as m;
-use \wishlist\vues\VueParticipant;
-use \wishlist\vues\VueAffichageListe;
+use \wishlist\vues\VueWebSite;
 use \wishlist\Auth\Authentification as Auth;
-
-
-const LISTES = 1.0;
-const LISTES_CREA = 1.1;
-const LISTE_CREA = 2.0;
-const LISTE_CO = 2.1;
-const LISTE_INV = 2.2;
-const ITEM = 3.0;
-const RESERVER = 4.0;
 
 class ContAffichageListe {
 
@@ -26,8 +16,8 @@ class ContAffichageListe {
     public function afficherListesPublic(){
         $listes = m\Liste::where('public', '=', '1')->get();
         
-        $vue = new VueAffichageListe(array('liste' => $listes));
-        $vue->render(LISTES);
+        $vue = new VueWebSite(array('liste' => $listes));
+        $vue->render('LISTES');
     }
     
     public function afficherListesUtilisateurs(){
@@ -38,8 +28,8 @@ class ContAffichageListe {
             $m = m\Membre::where('idUser', '=', $userId)->first();
             $listes = $m->listes()->get();
             
-            $vue = new VueAffichageListe(array('liste' => $listes));
-            $vue->render(LISTES_CREA);
+            $vue = new VueWebSite(array('liste' => $listes));
+            $vue->render('LISTES_CREA');
         /*} else{
             $app = \Slim\Slim::getInstance();
             $app->response->redirect($app->urlFor('listePublic'));
@@ -48,10 +38,12 @@ class ContAffichageListe {
 
     public function afficherListe($token){
         $liste = m\Liste::where('token', 'like', $token)->first();
-        $vue = new VueAffichageListe(array('liste' => $liste));
+        $vue = new VueWebSite(array('liste' => $liste));
+        
         $listes = m\Liste::where('token', 'like', $token)->get();
+        
         //if(Auth::isCreator($token)){ // si l'utilisateur est créateur
-        $vue->render(LISTE_CREA);
+        $vue->render('LISTE_CREA');
         /*} else{ // sinon redirection vers l'affichage des invités
             $app = \Slim\Slim::getInstance();
             $app->response->redirect($app->urlFor('listeShare', array('share' => $liste->share)));
@@ -59,12 +51,14 @@ class ContAffichageListe {
     }
     
     public function afficherListeInvite($share){
+        
         $listes = m\Liste::where('share', 'like', $share)->first();
-        $vue = new VueAffichageListe(array('liste' => $listes));      
+        $vue = new VueWebSite(array('liste' => $listes));
+        
         if(Auth::isLogged()){ // si l'utilisateur est connecté
-            $vue->render(LISTE_CO);
+            $vue->render('LISTE_CO');
         } else{ // si l'utilisateur n'est pas connecté (vue invité)
-            $vue->render(LISTE_INV);
+            $vue->render('LISTE_INV');
         }
     }
     
@@ -106,13 +100,15 @@ class ContAffichageListe {
         #on cherche les listes qui n'ont pas été crée par user mais a accès dessus
         $listes = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->get();
         $fusion = array($fabrique,$listes);
-        $vue = new \wishlist\vues\VueAccueil("mesListes",$err,$fusion);
-        $vue->render();
+        
+        $vue = new VueWebSite(array("erreur" => $err, "liste" => $fusion));
+        $vue->render('MESLISTES');
     }
     
     public function ajouterListe($token){
         $erreur="";
         $verif=m\Liste::where("token","=",$token)->count();
+        
         if($verif!=0){
             $verif2 = m\Membre::where("email","=",$_SESSION['profil']['Email'])->first()->liste()->where("token","=",$token)->count();
             $verif2+= m\Liste::where("token","=",$token)->where('user_id',"=",Auth::getIdUser())->count();
