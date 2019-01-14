@@ -216,7 +216,7 @@ $app->get('/liste/:token/modifier/:id',function($token, $id){
   $contItem->modifier($token, $id);
 })->name('modifierItem');
 
-$app->post('/liste/:token/modifier/:id/:modifier_item',function($token,$id){
+$app->post('/liste/:token/modifier/:id',function($token,$id){
   $contItem = new c\ContItem();
   if(isset($_POST['valider_modif'])){
     $contItem->modifierItem($token, $id);
@@ -230,7 +230,7 @@ $app->get('/liste/:token/:id/supprimer', function($token, $id) {
   $contItem->supprimerItem($token, $id);
 })->name('supprimer');
 
-$app->post('/liste/:token/ajouter_message', function($token) {
+$app->post('/liste/:token', function($token) {
     $cont = new c\ContAffichageListe();
     $cont->afficherMessageListe($token);  
 })->name('ajouterMessageListe');
