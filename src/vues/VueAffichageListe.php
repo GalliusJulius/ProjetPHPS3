@@ -90,11 +90,11 @@ class VueAffichageListe {
         if(isset($l)){
             $items = $l->items()->get();
 
-            if(isset($l->message)) {
+            if(!isset($l->message) or empty($l->message))  {
+                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
+            } else {
                 $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p>';
                 $html .= '<br><p><i><b>Message du créateur :</b></i> ' . $l->message . '</p><div class="row items">';
-            } else {
-                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
             }
 
             foreach($items as $i){
@@ -105,7 +105,14 @@ class VueAffichageListe {
                 } else{
                     $html .= '<div class="col col-l-3">';
                 }
-                $html .= '<p class="nom"><h4>' . $i->nom . '</h4></p><img src="../src/img/' . $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
+                
+                if(substr($i->img, 0, 4) == 'http') {
+                   $image_item = '<img src="' . $i->img . '">'; 
+                } else {
+                   $image_item = '<img src="' . '../src/img/' . $i->img . '">';
+                }
+                
+                $html .= '<p class="nom"><h4>' . $i->nom . '</h4></p>' . $image_item . '<p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
 
 
                 if(isset($reserv)){
@@ -209,11 +216,20 @@ class VueAffichageListe {
         if(isset($l)){
             $items = $l->items()->get();
 
-            $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
-
+            if(!isset($l->message) or empty($l->message))  {
+                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
+            } else {
+                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p>';
+                $html .= '<br><p><i><b>Message du créateur :</b></i> ' . $l->message . '</p><div class="row items">';
+            }
+            
             foreach($items as $i){
 
-                
+                if(substr($i->img, 0, 4) == 'http') {
+                   $image_item = '<img src="' . $i->img . '">'; 
+                } else {
+                   $image_item = '<img src="' . '../src/img/' . $i->img . '">';
+                }
                 
                 if($i->cagnotte == 1){
                     
@@ -221,9 +237,9 @@ class VueAffichageListe {
 
                     $html .= '<p class="nom"><h4>' . $i->nom;
 
-                    $html .= '</h4></p><img src="' . $path . 'src/img/';
+                    $html .= '</h4></p>' . $image_item;
 
-                    $html .= $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
+                    $html .= '<p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
 
                     $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
 
@@ -248,8 +264,7 @@ class VueAffichageListe {
 
                     
                     $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '" required>';
-                    $html .= '<p>Votre prénom : </p><input type="text" name="prenom"
-                    value="' . $p . '" required>';
+                    $html .= '<p>Votre prénom : </p><input type="text" name="prenom" value="' . $p . '" required>';
                     $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Cagn"></textarea>';
 
                     $html .= '<button type="submit" class="btn btn-primary confirmerC h' . $cpt . '">Participer</button>';
@@ -285,9 +300,9 @@ class VueAffichageListe {
 
                     $html .= '<p class="nom"><h4>' . $i->nom;
 
-                    $html .= '</h4></p><img src="' . $path . 'src/img/';
+                    $html .= '</h4></p><img src="' . $image_item . '">';
 
-                    $html .= $i->img . '"><p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
+                    $html .= '<p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
 
                     $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
 
@@ -320,8 +335,7 @@ class VueAffichageListe {
                         }
 
                         $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '" required>';
-                        $html .= '<p>Votre prénom : </p><input type="text" name="prenom"
-                        value="' . $p . '" required>';
+                        $html .= '<p>Votre prénom : </p><input type="text" name="prenom" value="' . $p . '" required>';
                         $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Reserv"></textarea>';
 
                         $html .= '<button type="submit" class="btn btn-primary confirmerR h' . $cpt . '">Réserver</button>';
@@ -378,6 +392,7 @@ class VueAffichageListe {
       $html .= '<p><input type="url" name="url" class="form-control" aria-describedby="emailHelp" placeholder="lien utile"/></p>';
       $html .= '<input type="hidden" name="MAX_FILE_SIZE" value="10485760" />';
       $html .= '<p><input type="file" name="image" id="image" accept=".png, .jpg, .jpeg" /></p>';
+      $html .= '<p><input type="text" name="image_url" class="form-control" placeholder="URL de l\'image"/></p>';
       $html .= '<p><button type="submit" class="btn btn-primary" name="valider" value="ajouter_item">Valider</button></p>';
       $html .= '</form>';
       $html .= '</div></div>';
@@ -395,7 +410,7 @@ class VueAffichageListe {
       $id=$i->id;
 
       $html .= '<div class="row"><div class="col-md-2">';
-      $html .= '<form method="POST" action="'.$id.'/$modifier_item" enctype="multipart/form-data">';
+      $html .= '<form method="POST" action="'.$id.'" enctype="multipart/form-data">';
       $html .= '<p><input type="text" name="nom" class="form-control" aria-describedby="emailHelp" placeholder="Nom" value="'.$i->nom.'" autofocus/></p>';
       $html .= '<p><textarea rows="5" cols="50" type="text" name="description" value="">'.$i->descr.'</textarea></p>:';
       //$html .= '<p><input type="text" name="description" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="'.$i->descr.'" /></p>';
@@ -403,6 +418,7 @@ class VueAffichageListe {
       $html .= '<p><input type="url" name="url" class="form-control" aria-describedby="emailHelp" placeholder="lien utile" value="'.$i->url.'" /></p>';
       $html .= '<input type="hidden" name="MAX_FILE_SIZE" value="10485760"/>';
       $html .= '<p><input type="file" name="image" id="image" accept=".png, .jpg, .jpeg" /></p>';
+      $html .= '<p><input type="text" name="image_url" class="form-control" placeholder="URL de l\'image"/></p>';
       $html .= '<p><button type="submit" class="btn btn-primary" name="supprimer_img" value="supprimer_image">Supprimer l\'image</button></p>';
       $html .= '<p><button type="submit" class="btn btn-primary" name="valider_modif" value="modifier_itesm">Valider modification</button></p>';
       $html .= '</form>';

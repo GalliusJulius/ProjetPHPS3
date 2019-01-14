@@ -54,8 +54,14 @@ class ContItem {
     $item->descr = $_POST['description'];
     $item->tarif = $_POST['tarif'];
     $item->url = $_POST['url'];
-    $erreur = $this->copier_image($_FILES['image']['name']);
-    $item->img = $_FILES['image']['name'];
+    if(isset($_POST['image_url']) and filter_var($_POST['image_url'], FILTER_VALIDATE_URL)) {
+      $item->img = $_POST['image_url'];
+    } elseif(isset($_FILES['image']['name'])) {
+      $erreur = $this->copier_image($_FILES['image']['name']);
+      $item->img = $_FILES['image']['name'];   
+    } else {
+        $item->img = 'questionmark.png';
+    }
     $item->save();
 
     $app = \Slim\Slim::getInstance();
@@ -90,8 +96,14 @@ class ContItem {
     if(isset($_POST['url'])){
       $i->url = $_POST['url'];
     }
-    $erreur = $this->copier_image($_FILES['image']['name']);
-    $i->img = $_FILES['image']['name'];
+    if(isset($_POST['image_url']) and filter_var($_POST['image_url'], FILTER_VALIDATE_URL)) {
+      $i->img = $_POST['image_url'];
+    } elseif(isset($_FILES['image']['name'])) {
+      $erreur = $this->copier_image($_FILES['image']['name']);
+      $i->img = $_FILES['image']['name'];   
+    } else {
+        $i->img = 'questionmark.png';
+    }
     $i->save();
     $app = \Slim\Slim::getInstance();
     $app->redirect($app->urlFor('listeCrea',array('token' => $token)));

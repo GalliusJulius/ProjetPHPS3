@@ -206,7 +206,7 @@ $app->get('/liste/:token/modifier/:id',function($token, $id){
   $contItem->modifier($token, $id);
 })->name('modifierItem');
 
-$app->post('/liste/:token/modifier/:id/:modifier_item',function($token,$id){
+$app->post('/liste/:token/modifier/:id',function($token,$id){
   $contItem = new c\ContItem();
   if(isset($_POST['valider_modif'])){
     $contItem->modifierItem($token, $id);
