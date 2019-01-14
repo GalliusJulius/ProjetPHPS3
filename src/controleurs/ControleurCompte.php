@@ -58,7 +58,7 @@ class ControleurCompte{
         $res = array();
         $i=0;
         foreach($createur as $val){
-            $nb = m\Liste::where('user_id','=',Auth::getIdUser())->count();
+            $nb = m\Liste::where('user_id','=',$val->idUser)->count();
             if($nb!=0){
                 $res[$i][]=$val;
                 $res[$i][]=$nb;
@@ -68,5 +68,53 @@ class ControleurCompte{
         $v = new v\VueAccueil("createurs","",$res);
         $v->render();
     }
+             
+    public function afficherCompte($id){
+        if($id == $_SESSION['idUser']){
+            $app = \Slim\Slim::getInstance();
+            $app->redirect($app->urlFor('Compte'));
+        }
+        else{
+            $user = m\Membre::where("idUser","=",$id)->first();
+            $fabrique = m\Liste::where('user_id',"=",$id)->get();
+            $amis = m\Amis::where(function($query) use($id){
+                $query->where("idRecu","=",$id)->where("idDemande","=",Auth::getIdUser());
+            })->orWhere(function($query) use ($id){
+                $query->where("idDemande","=",$id)->where("idRecu","=",Auth::getIdUser());
+            })->first();
+            $arr=array();
+            if(isset($user)){
+                $arr[]=$user;
+                $arr[]=$amis;
+                $arr[]=$fabrique;
+                $v = new v\VueAccueil("visionComptes","",$arr);
+                $v->render();
+            }
+            else{
+                //on met erreur page not found
+            }
+        }
+    }
     
+    public function ajouterAmi($id){
+        $ajout = new m\Amis();
+        $ajout->idDemande=Auth::getIdUser();
+        $ajout->idRecu=$id;
+        $ajout->save();
+    }
+    
+    public function affichageContacts(){
+        $liste = array();
+        $attente = m\Amis::where("idRecu","=",Auth::getIdUser())->where("statut","=","Attente")->get();
+        $amis = m\Amis::where(function($q){
+            $q->where("idRecu","=",Auth::getIdUser());
+        })->orWhere(function($q){
+            $q->where("idDemande","=",Auth::getIdUser());
+        });
+        $amis = $amis->where("statut","=","ok")->get();
+        $liste[] = $attente;
+        $liste[] = $amis;
+        $v = new v\VueAccueil("contact","",$liste);
+        $v->render();
+    }
 }

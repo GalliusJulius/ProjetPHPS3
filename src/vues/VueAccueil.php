@@ -16,6 +16,7 @@ class VueAccueil{
         $app = \Slim\Slim::getInstance();
         $contenu = "<h1>ERREUR</h1>";
         $style="";
+        $path="";
         switch($this->typePage){
             case "accueil":{
                 $contenu = $this->accueil();
@@ -45,6 +46,15 @@ class VueAccueil{
                 $contenu = $this->createurs();
                 break;
             }
+            case "visionComptes":{
+                $contenu = $this->visionComptes();
+                $path=".";
+                break;
+            }
+            case "contact":{
+                $contenu=$this->contact();
+                break;
+            }
                 
         }
         $lienAccueil = $app->urlFor('accueil');
@@ -52,6 +62,7 @@ class VueAccueil{
         $lienMesListes = $app->urlFor('mesListes');
         $lienListesPublic = $app->urlFor('listePublic');
         $lienCreateur = $app->urlFor('createur');
+        $lienContact = $app->urlFor('contact');
         $html = <<< END
         <!doctype html>
 <html lang="en">
@@ -63,8 +74,8 @@ class VueAccueil{
     <link rel="icon" href="../../../favicon.ico">
 
     <title>Navbar Template for Bootstrap</title>
-    <link rel="stylesheet" href="./src/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./src/css/principale.css">
+    <link rel="stylesheet" href="$path./src/css/bootstrap.min.css">
+    <link rel="stylesheet" href="$path./src/css/principale.css">
     $style
   </head>
 
@@ -88,13 +99,16 @@ class VueAccueil{
                   <li class="nav-item active">
                     <a class="nav-link" href=$lienCreateur>Listes créateurs<span class="sr-only">(current)</span></a>
                   </li>
+                  <li class="nav-item active">
+                    <a class="nav-link" href=$lienContact>Contact <span class="sr-only">(current)</span></a>
+                </li>
                 <li class="nav-item active" id="compte">
                     <a class="nav-link" href=$lienCompte>Mon compte <span class="sr-only">(current)</span></a>
                   </li>
                 </ul>
                 </div>
                 <a class="nav-item " href=$lienCompte>
-                    <img src="./src/img/profil.png" width="30" height="30" alt="">
+                    <img src="$path./src/img/profil.png" width="30" height="30" alt="">
                 </a>
             </nav>
             
@@ -285,6 +299,54 @@ END;
         return $html;
     }
     
+    public function visionComptes(){
+        $app = \Slim\Slim::getInstance();
+        $perso = $this->tableau[0];
+        $amis = $this->tableau[1];
+        $liste = $this->tableau[2];
+        $contenu = <<<END
+        <div class="row justify-content-md-center">
+            <div class="col">
+                <h1>$perso->Pseudo : #$perso->idUser</h1>
+                <img src="../src/img/profil.png" width="150" height="150">
+                <p>Message d'humeur :</p>
+                <h2>Ses listes:</h2>
+END;
+        $btn = "";
+        if(!isset($amis)){
+            $btn = "<form method=\"POST\">
+                <button name=\"add\" value=\"y\"class=\"btn btn-primary\">Ajouter à sa liste d'ami</button>
+            </form>";
+        }
+        else{
+            if($amis->statut == "Attente"){
+                $btn = "<h3>En attente de validation</h3>";
+            }
+            else{
+                $btn = "<h3>Vous etes déjà amis</h3>";
+            }
+        }
+        $contenu.=$btn;
+        $listes ="";
+        if(count($liste)==0){
+            $listes="<p>Cet utilisateur n'a pas crée de listes</p>";
+        }
+        else{
+            $i=0;
+            foreach($liste as $val){
+                $lien = $app->urlFor('listeCrea',['token'=>$val->token]);
+                $i++;
+                $listes .=
+                "<div class=\"col col-lg-6 \">
+                <h2><b>$i : </b><a href = $lien>$val->titre</a><h2>
+                </div>";       
+            }
+        }
+        $contenu.=$listes;
+        $contenu .="</div></div>";
+        return $contenu;
+    }
+    
     public function createurs(){
         $contenu = "<div class=\"row\">";
         foreach($this->tableau as $val){
@@ -292,6 +354,25 @@ END;
             $contenu .= "<div class=\"col-lg-6\"><h2>$personne->Pseudo</h2><p>Ce créateur n'a pas de messages d'humeurs</p><p>Il a créé : $val[1] liste(s)</div>";
         }
         $contenu .="</div>";
+        return $contenu;
+    }
+    
+    public function contact(){
+        $att = $this->tableau[0];
+        $amis = $this->tableau[1];
+        $contenu = "<h1>Demandes d'amis:</h1>";
+        foreach($att as $val){
+            $contenu .=  
+                "<p>$val->idDemande</p> 
+                <form method=\"POST\">
+                    <button name=\"ok\" class =\"btn btn-primary\"value=\"$val->idDemande\">Accepter</button>
+                    <button name=\"del\" class =\"btn btn-warning\"value=\"$val->idDemande\">Supprimer</button>
+                </form>";
+        }
+        $contenu .= "<h1>Mes amis</h1>";
+        foreach($amis as $val){
+            $contenu.="<p>$val->idDemande</p>";
+        }
         return $contenu;
     }
 }
