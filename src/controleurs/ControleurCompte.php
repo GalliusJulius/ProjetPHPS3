@@ -110,11 +110,51 @@ class ControleurCompte{
             $q->where("idRecu","=",Auth::getIdUser());
         })->orWhere(function($q){
             $q->where("idDemande","=",Auth::getIdUser());
-        });
-        $amis = $amis->where("statut","=","ok")->get();
-        $liste[] = $attente;
-        $liste[] = $amis;
-        $v = new v\VueAccueil("contact","",$liste);
-        $v->render();
+        })->get();
+        $membreAttente = array();
+        foreach($attente as $temp){
+            $membre = m\Membre::where("idUser","=",$temp->idDemande)->first();
+            $membreAttente[]=$membre;
+        }
+        $membreAmis = array();
+        foreach($amis as $m){
+            if($m->statut != "Attente"){
+                if($m->idDemande == Auth::getIdUser() ){
+                    $membre = m\Membre::where("idUser","=",$m->idRecu)->first();
+                }
+                else{
+                   $membre = m\Membre::where("idUser","=",$m->idDemande)->first(); 
+                }
+                $membreAmis[] = $membre;
+            }
+        }
+        $liste['demande'] = $membreAttente;
+        $liste['amis'] = $membreAmis;
+        $v = new v\VueWebSite($liste);
+        $v->render('CONTACT');
     }
+    
+    public function validationContact(){
+        #si il veux accepter la demande
+        if(isset($_POST['ok'])){
+            $a = m\Amis::where("idDemande","=",$_POST['ok'])->where("idRecu","=",Auth::getIdUser());
+            $a->delete();
+            #impossible d'update avec la clef composite
+            $ajout = new m\Amis();
+            $ajout->idDemande =$_POST['ok'];
+            $ajout->idRecu =Auth::getIdUser();
+            $ajout->statut="ok";
+            $ajout->save();
+            
+        }
+    }
+    
+    public function supprimerContact($id){
+        $amis = m\Amis::where(function($q) use ($id){
+            $q->where("idRecu","=",$id)->where("idRecu","=",Auth::getIdUser());
+        })->orWhere(function($q) use ($id){
+            $q->where("idDemande","=",$id)->where("idRecu","=",Auth::getIdUser());
+        })->delete();
+    }
+
 }

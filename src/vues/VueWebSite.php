@@ -305,17 +305,17 @@ END;
         $html = "<h1>Demandes d'amis:</h1>";
         
         foreach($att as $val){
-            $html .= "<p>$val->idDemande</p> 
+            $html .= "<p>$val->Pseudo</p> 
                 <form method=\"POST\">
-                    <button name=\"ok\" class =\"btn btn-primary\"value=\"$val->idDemande\">Accepter</button>
-                    <button name=\"del\" class =\"btn btn-warning\"value=\"$val->idDemande\">Supprimer</button>
+                    <button name=\"ok\" class =\"btn btn-primary\"value=\"$val->idUser\">Accepter</button>
+                    <button name=\"del\" class =\"btn btn-warning\"value=\"$val->idUser\">Supprimer</button>
                 </form>";
         }
         
         $html .= "<h1>Mes amis</h1>";
         
         foreach($amis as $val){
-            $html .= "<p>$val->idDemande</p>";
+            $html .= "<p>$val->Pseudo</p> <form method=\"Post\"><button name=\"delUs\" class =\"btn btn-warning\"value=\"$val->idUser\">Supprimer</button></form>";  
         }
         
         return $html;
@@ -840,7 +840,6 @@ END;
 
         return $html;
     }
-    
     
     public function render($code){
         

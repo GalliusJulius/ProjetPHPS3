@@ -111,6 +111,19 @@ $app->get('/Contact',function(){
     $acc->affichageContacts();
 })->name('contact');
 
+$app->post('/Contact',function(){
+    if(isset($_POST['del']) || isset($_POST['ok'])){
+        $acc= new c\ControleurCompte();
+        $acc->validationContact();
+        $acc->affichageContacts();
+    }
+    else if(isset($_POST['delUs'])){
+        $acc= new c\ControleurCompte();
+        $acc->supprimerContact($_POST['delUs']);
+        $acc->affichageContacts();
+    }
+});
+
 //routage dans la confirmation de la suppression
 $app->get('/SupprimerCompte',function(){
     $acc = new c\ControleurCompte();
