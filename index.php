@@ -205,9 +205,10 @@ $app->get('/liste/:token/:id/supprimer', function($token, $id) {
   $contItem->supprimerItem($token, $id);
 })->name('supprimer');
 
-$app->post('/liste/:token/ajouter_message', function($token) {
+$app->post('/liste/:token', function($token) {
     $cont = new c\ContAffichageListe();
-    $cont->afficherMessageListe($token);  
-})->name('ajouterMessageListe');
+    $cont->afficherMessageListe($token);
+})->name('ajoutMsgListe');
+
 
 $app->run();

@@ -188,9 +188,10 @@ class VueAffichageListe {
 
         $html .= '<p><button class="partager btn btn-primary">Partager</button></p>';
         
-        $html .= '<form method="post" id="messageliste" action="' . $this->app->urlFor('ajouterMessageListe', array('token' => $l->token)) . '">';
+        
+        $html .= '<form method="POST" action="' . $this->app->urlFor('ajoutMsgListe', array('token' => $l->token)) . '">';
         $html .= '<div class="row justify-content-md-center"><div class="col-lg-5 justify-content-md-center">';
-        $html .= '<p><textarea class="form-control" rows="2" type="text" name="message_liste" placeholder="Message" value="" form="messageliste"></textarea></p></div></div>';
+        $html .= '<p><textarea id="msg" class="form-control" rows="2" type="text" name="message_liste" placeholder="Message"></textarea></p></div></div>';
         $html .= '<p><button type="submit" class="btn btn-primary" name="ajouter_message_liste">Ajouter un message</button></p>';
         $html .= '</form>';
         
@@ -224,8 +225,6 @@ class VueAffichageListe {
             $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
 
             foreach($items as $i){
-
-                
                 
                 if($i->cagnotte == 1){
                     
@@ -239,39 +238,45 @@ class VueAffichageListe {
 
                     $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
 
+                    if(! $i->participationPossible()){
 
-                    
-                    
-                    $html .= '<button class="btn btn-primary cagnotte h' . $cpt . '">Participer à la cagnotte</button>';
+                        $html .= '<button disabled class="btn btn-primary cagnotte h' . $cpt . '">Participer à la cagnotte</button>';
 
-                    $html .= '<div class="cagnotte modal h' . $cpt . '"><div class="form">';
-                    $html .= '<form id="Cagn" method="POST" action="' . $this->app->urlFor('participerCagnotte', array('id' => $i->id)) . '">';
-                    $html .= '<p>Nom de l\'item auquel vous participer : </p><input type="text" name="nomItem" value="' . $i->nom . '" disabled>';
-                    $html .= '<p>Montant de participation : </p><input type="text" name="montant" value="" required>';
+                        $html .= '<div class="cagnotte">';
+                        $html .= '<p>Le montant cible de la cagnotte a été atteint !</p>';
+                        $html .= '</div>';
 
-                    $n = ''; $p = '';
-                    $idUser = Auth::getIdUser();
+                    } else{
+                        $html .= '<button class="btn btn-primary cagnotte h' . $cpt . '">Participer à la cagnotte</button>';
+                        
+                        $html .= '<div class="cagnotte modal h' . $cpt . '"><div class="form">';
+                        $html .= '<form id="Cagn" method="POST" action="' . $this->app->urlFor('participerCagnotte', array('id' => $i->id)) . '">';
+                        $html .= '<p>Nom de l\'item auquel vous participer : </p><input type="text" name="nomItem" value="' . $i->nom . '" disabled>';
+                        $html .= '<p>Montant de participation : </p><input type="text" name="montant" value="" required>';
 
-                    if(isset($idUser)){
-                        $m = Membre::where('idUser', '=', $idUser)->first();
-                        $n = $m->Nom;
-                        $p = $m->Prénom;
+                        $n = ''; $p = '';
+                        $idUser = Auth::getIdUser();
+
+                        if(isset($idUser)){
+                            $m = Membre::where('idUser', '=', $idUser)->first();
+                            $n = $m->Nom;
+                            $p = $m->Prénom;
+                        }
+
+
+                        $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '" required>';
+                        $html .= '<p>Votre prénom : </p><input type="text" name="prénom"
+                        value="' . $p . '" required>';
+                        $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Cagn"></textarea>';
+
+                        $html .= '<button type="submit" class="btn btn-primary confirmerC h' . $cpt . '">Participer</button>';
+
+                        $html .= '</form>';
+                        $html .= '<button class="btn btn-primary annulerC h' . $cpt . '">Annuler</button>';
+
+                        $html .= '</div>';
+                        $html .= '</div>';
                     }
-
-                    
-                    $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '" required>';
-                    $html .= '<p>Votre prénom : </p><input type="text" name="prénom"
-                    value="' . $p . '" required>';
-                    $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Cagn"></textarea>';
-
-                    $html .= '<button type="submit" class="btn btn-primary confirmerC h' . $cpt . '">Participer</button>';
-
-                    $html .= '</form>';
-                    $html .= '<button class="btn btn-primary annulerC h' . $cpt . '">Annuler</button>';
-
-                    $html .= '</div>';
-                    $html .= '</div>';
-                    
                     
                     $html .= '<section class="details hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
                     $html .= '<p class="hidden desc">' . $i->descr . '</p>';
@@ -281,13 +286,14 @@ class VueAffichageListe {
                     } else{
                         $html .= '<p class="hidden">Aucune URL associé !</p>';
                     }
+                    
                     $html .= '</section>';
 
 
                     $html .= '</div>';
                     
                 } else{
-                    $reserv = $i->reservation()->first();
+                    $reserv = $i->reservation();
                     
                     if(isset($reserv)){
                         $html .= '<div class="reserve col col-l-3">';
@@ -303,7 +309,7 @@ class VueAffichageListe {
 
                     $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
 
-
+                    
                     if(isset($reserv)){
 
                         $html .= '<button disabled class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
@@ -334,7 +340,7 @@ class VueAffichageListe {
                         $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '" required>';
                         $html .= '<p>Votre prénom : </p><input type="text" name="prénom"
                         value="' . $p . '" required>';
-                        $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Reserv"></textarea>';
+                        $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value=""></textarea>';
 
                         $html .= '<button type="submit" class="btn btn-primary confirmerR h' . $cpt . '">Réserver</button>';
 
@@ -378,43 +384,179 @@ class VueAffichageListe {
         $html = '<div class="row justify-content-md-center">';
         $html .= '<form class="form-inline my-2 my-md-0" id="search" method="GET" action="' . $this->app->urlFor('rechercheAvancee') . '">';
         $html .= '<div class="row col-md-12 justify-content-md-center">
-        <input class="form-control" type="text" name="search" placeholder="Terme recherché" value="' . $this->recherche . '">
+        <input class="form-control" type="text" name="search" placeholder="Terme recherché" value="' . $this->recherche['search'] . '">
         </div>';
-        $html .= '<div class="col col-md-3">
-        <p>Option de filtre :</p>
-        <input type="radio" name="on" value="Listes"><label for="search">Listes</label>
-        <input type="radio" name="on" value="Créateurs"><label for="search">Créateurs</label>
-        <input type="radio" name="on" value="Membres"><label for="search">Membres</label>
-        <input type="radio" name="on" value="Les deux" checked><label for="search">Les deux</label>
-        </div>';
-        $html .= '<div class="col col-md-2">
-        <p>Filtre par date d\'échéance :</p>
-        <input type="date" name="date">
-        </div>';
-        $html .= '<div class="col col-md-3">
-        <input type="checkbox" name="deep" value="deep"><label for="search">Recherche profonde</label>
-        <p>Recherche le mot clé dans la description des listes et/ou infos utilisateurs.</p>
-        </div>';
-        $html .= '<div class="col col-md-2">
-        <p>Filtre par nombre de réservations :</p>
-        <input type="number" name="nbReserv">
-        <input type="radio" name="reserv" value="Minimum">
-        <label for="search">Au minimum</label>
-        <input type="radio" name="reserv" value="Maximum">
-        <label for="search">Au maximum</label>
-        <input type="radio" name="reserv" value="Exact" checked>
-        <label for="search">Exactement</label>
-        </div>';
-        $html .= '<div class="col col-md-2">
-        <p>Filtre par nombre d\'items :</p>
-        <input type="number" name="nbItem">
-        <input type="radio" name="item" value="Minimum">
-        <label for="search">Au minimum</label>
-        <input type="radio" name="item" value="Maximum">
-        <label for="search">Au maximum</label>
-        <input type="radio" name="item" value="Exact" checked>
-        <label for="search">Exactement</label>
-        </div>';
+        
+        if(isset($this->recherche['on'])){
+            $html .= '<div class="col col-md-3">
+            <p>Option de filtre :</p>';
+            
+            if($this->recherche['on'] == 'Listes'){
+                $html .= '<input type="radio" name="on" value="Listes" checked>
+                <label for="search">Listes</label>';
+            } else{
+                $html .= '<input type="radio" name="on" value="Listes">
+                <label for="search">Listes</label>';
+            }
+            
+            if($this->recherche['on'] == 'Créateurs'){
+                $html .= '<input type="radio" name="on" value="Créateurs" checked>
+            <label for="search">Créateurs</label>';
+            } else{
+                $html .= '<input type="radio" name="on" value="Créateurs">
+            <label for="search">Créateurs</label>';
+            }
+            
+            if($this->recherche['on'] == 'Membres'){
+                $html .= '<input type="radio" name="on" value="Membres" checked>
+            <label for="search">Membres</label>';
+            } else{
+                $html .= '<input type="radio" name="on" value="Membres">
+            <label for="search">Membres</label>';
+            }
+            
+            if($this->recherche['on'] == 'Les deux'){
+                $html .= '<input type="radio" name="on" value="Les deux" checked>
+            <label for="search">Les deux</label>';
+            } else{
+                $html .= '<input type="radio" name="on" value="Les deux">
+            <label for="search">Les deux</label>';
+            }
+            
+            $html .= '</div>';
+            
+        } else{
+            $html .= '<div class="col col-md-3">
+            <p>Option de filtre :</p>
+            <input type="radio" name="on" value="Listes">
+            <label for="search">Listes</label>
+            <input type="radio" name="on" value="Créateurs">
+            <label for="search">Créateurs</label>
+            <input type="radio" name="on" value="Membres">
+            <label for="search">Membres</label>
+            <input type="radio" name="on" value="Les deux" checked>
+            <label for="search">Les deux</label>
+            </div>'; 
+        }
+        
+        if(isset($this->recherche['date'])){
+            $html .= '<div class="col col-md-2">
+            <p>Filtre par date d\'échéance :</p>
+            <input type="date" name="date" value="' . $this->recherche['date'] . '">
+            </div>';
+        } else{
+            $html .= '<div class="col col-md-2">
+            <p>Filtre par date d\'échéance :</p>
+            <input type="date" name="date">
+            </div>';
+        }
+        
+        
+        if(isset($this->recherche['deep']) and ($this->recherche['deep'] == 'deep')){
+            $html .= '<div class="col col-md-3">
+            <input type="checkbox" name="deep" value="deep" checked><label for="search" checked>Recherche profonde</label>
+            <p>Recherche le mot clé dans la description des listes et/ou infos utilisateurs.</p>
+            </div>';
+        } else{
+            $html .= '<div class="col col-md-3">
+            <input type="checkbox" name="deep" value="deep"><label for="search">Recherche profonde</label>
+            <p>Recherche le mot clé dans la description des listes et/ou infos utilisateurs.</p>
+            </div>';
+        }
+        
+        if(isset($this->recherche['nbReserv'])){
+            $html .= '<div class="col col-md-2">
+            <p>Filtre par nombre de réservations :</p>
+            <input type="number" name="nbReserv" value="' . $this->recherche['nbReserv'] . '">';
+            
+            if($this->recherche['reserv'] == 'Minimum'){
+                $html .= '<input type="radio" name="reserv" value="Minimum" checked>
+                <label for="search">Au minimum</label>
+                <input type="radio" name="reserv" value="Maximum">
+                <label for="search">Au maximum</label>
+                <input type="radio" name="reserv" value="Exact">
+                <label for="search">Exactement</label>';
+                
+            } elseif($this->recherche['reserv'] == 'Maximum'){
+                $html .= '<input type="radio" name="reserv" value="Minimum">
+                <label for="search">Au minimum</label>
+                <input type="radio" name="reserv" value="Maximum" checked>
+                <label for="search">Au maximum</label>
+                <input type="radio" name="reserv" value="Exact">
+                <label for="search">Exactement</label>';
+                
+            } else{
+                $html .= '<input type="radio" name="reserv" value="Minimum">
+                <label for="search">Au minimum</label>
+                <input type="radio" name="reserv" value="Maximum">
+                <label for="search">Au maximum</label>
+                <input type="radio" name="reserv" value="Exact" checked>
+                <label for="search">Exactement</label>';
+                
+            }
+            
+            $html .= '</div>';
+            
+        } else{
+            $html .= '<div class="col col-md-2">
+            <p>Filtre par nombre de réservations :</p>
+            <input type="number" name="nbReserv">
+            <input type="radio" name="reserv" value="Minimum">
+            <label for="search">Au minimum</label>
+            <input type="radio" name="reserv" value="Maximum">
+            <label for="search">Au maximum</label>
+            <input type="radio" name="reserv" value="Exact" checked>
+            <label for="search">Exactement</label>
+            </div>';
+        }
+        
+        
+        if(isset($this->recherche['nbItem'])){
+            $html .= '<div class="col col-md-2">
+            <p>Filtre par nombre d\'items :</p>
+            <input type="number" name="nbItem" value="' . $this->recherche['nbItem'] . '">';
+            
+            if($this->recherche['item'] == 'Minimum'){
+                $html .= '<input type="radio" name="item" value="Minimum" checked>
+                <label for="search">Au minimum</label>
+                <input type="radio" name="item" value="Maximum">
+                <label for="search">Au maximum</label>
+                <input type="radio" name="item" value="Exact">
+                <label for="search">Exactement</label>';
+                
+            } elseif($this->recherche['item'] == 'Maximum'){
+                $html .= '<input type="radio" name="item" value="Minimum">
+                <label for="search">Au minimum</label>
+                <input type="radio" name="item" value="Maximum" checked>
+                <label for="search">Au maximum</label>
+                <input type="radio" name="item" value="Exact">
+                <label for="search">Exactement</label>';
+                
+            } else{
+                $html .= '<input type="radio" name="item" value="Minimum">
+                <label for="search">Au minimum</label>
+                <input type="radio" name="item" value="Maximum">
+                <label for="search">Au maximum</label>
+                <input type="radio" name="item" value="Exact" checked>
+                <label for="search">Exactement</label>';
+                
+            }
+            
+            $html .= '</div>';
+            
+        } else{
+            $html .= '<div class="col col-md-2">
+            <p>Filtre par nombre d\'items :</p>
+            <input type="number" name="nbItem">
+            <input type="radio" name="item" value="Minimum">
+            <label for="search">Au minimum</label>
+            <input type="radio" name="item" value="Maximum">
+            <label for="search">Au maximum</label>
+            <input type="radio" name="item" value="Exact" checked>
+            <label for="search">Exactement</label>
+            </div>';
+        }
+        
         $html .= '<div class="row col-md-12 justify-content-md-center">
         <button type="submit" class="btn btn-primary">Rechercher</button>
         </div>';
@@ -432,7 +574,7 @@ class VueAffichageListe {
         }
         
         if(isset($this->membre) and (count($this->membre) > 0)){
-            $html .= '<div><h3>Créateur :</h3>';
+            $html .= '<div><h3>Membre / Créateur :</h3>';
             foreach($this->membre as $m){
                 $html .= '<p>' . $m->nom . ' ' . $m->prénom . '</p>';
             }

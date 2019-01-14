@@ -70,11 +70,14 @@ class ContAffichageListe {
     public function reserverItem($share, $idItem){
         $app = \Slim\Slim::getInstance();
         
-        if(isset($_POST["nom"]) and isset($_POST["prénom"]) and isset($_POST["message"])){
+        if(isset($_POST["nom"]) and isset($_POST["prénom"])){
             $r = new m\Reservation();
             $r->prénom = $_POST["prénom"];
             $r->nom = $_POST["nom"];
-            $r->message = $_POST["message"];
+            
+            if(isset($_POST["message"]) and ($_POST["message"] != '')){
+                $r->message = $_POST["message"];
+            }
             
             $l = m\Liste::where('share', 'like', $share)->first();
             $idListe = $l->no;
@@ -85,6 +88,7 @@ class ContAffichageListe {
             if(isset($_SESSION["idUser"])){
                 $r->idUser = $_SESSION["idUser"];
             }
+            
             
             $r->save();
             
@@ -134,9 +138,10 @@ class ContAffichageListe {
     }
 
     public function afficherMessageListe($token) {
-        $liste = m\Liste::where("token", "=", $token);
+        $liste = m\Liste::where("token", "=", $token)->first();
         $liste->message = $_POST['message_liste'];
         $liste->save();
+        
         $app = \Slim\Slim::getInstance();
         $app->redirect($app->urlFor('listeCrea', array('token' => $token)));
     }

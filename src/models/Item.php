@@ -15,11 +15,17 @@ class Item extends Model{
   }
     
   public function reservation() {
-    return $this->belongsTo('\wishlist\models\Reservation','idItem');
+    return Reservation::where('idItem', '=', $this->id)->first();
   }
     
-  public function participations() {
-    return $this->hasMany('\wishlist\models\Participation','idItem');
+  public function participationPossible() {
+      $part = Participation::where('idItem', '=', $this->id)->get();
+      $cpt = 0;
+      foreach($part as $p){
+          $cpt += $p->montant;
+      }
+          
+      return ($cpt < $this->tarif);
   }
 
 }
