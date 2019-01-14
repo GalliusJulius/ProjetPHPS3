@@ -101,7 +101,7 @@ class ContAffichageListe {
         $listes = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->get();
         $fusion = array($fabrique,$listes);
         
-        $vue = new VueWebSite(array("erreur" => $err, "liste" => $fusion));
+        $vue = new VueWebSite(array("erreur" => $err, "liste" => $fusion, "listeParatagee" => $listes));
         $vue->render('MESLISTES');
     }
     

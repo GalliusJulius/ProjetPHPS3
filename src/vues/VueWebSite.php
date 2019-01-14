@@ -160,28 +160,32 @@ END;
 END;
         
         $i=0;
-        
-        foreach($this->liste as $val){
-            $lien = $this->app->urlFor('listeCrea',['token'=>$val->token]);
-            $i++;
-            $modifierListe = $this->app->urlFor('modifierListe', array('token' => $val->token));
-            $supprimerListe = $this->app->urlFor('supprimer_liste', array('token' => $val->token));
-            $html .= '<div class="row">';
-            $html .= '<div class="col col-lg-6 ">';
-            $html .= '<h2><b>'.$i.' : </b><a href = $lien  >'.$val->titre.'</a><h2>';
-            $html .= '</div>';
-            $html .= '<div class="col col-lg-3">';
-            $html .= '<form method="GET" action= "'.$modifierListe.'">';
-            $html .= '<button class="btn btn-primary col col-lg-6" value="modifierListe">Modifier liste</button>';
-            $html .= "</form>";
-            $html .= '</div>';
-            $html .= '<div class="col col-lg-3">';
-            $html .= '<form method="GET" action= "'.$supprimerListe.'" >';
-            $html .= '<button class="btn btn-primary col col-lg-6" value="supprimerListe">Supprimer liste</button>';
-            $html .= "</form>";
-            $html .= '</div>';
-            $html .= "</div>";
+        if(isset($this->liste)){
+            foreach($this->liste as $separation){
+                foreach($separation as $val){
+                    $lien = $this->app->urlFor('listeCrea', array('token' => $val->token));
+                    $i++;
+                    $modifierListe = $this->app->urlFor('modifierListe', array('token' => $val->token));
+                    $supprimerListe = $this->app->urlFor('supprimer_liste', array('token' => $val->token));
+                    $html .= '<div class="row">';
+                    $html .= '<div class="col col-lg-6 ">';
+                    $html .= '<h2><b>'.$i.' : </b><a href = $lien  >'.$val->titre.'</a><h2>';
+                    $html .= '</div>';
+                    $html .= '<div class="col col-lg-3">';
+                    $html .= '<form method="GET" action= "'.$modifierListe.'">';
+                    $html .= '<button class="btn btn-primary col col-lg-6" value="modifierListe">Modifier liste</button>';
+                    $html .= "</form>";
+                    $html .= '</div>';
+                    $html .= '<div class="col col-lg-3">';
+                    $html .= '<form method="GET" action= "'.$supprimerListe.'" >';
+                    $html .= '<button class="btn btn-primary col col-lg-6" value="supprimerListe">Supprimer liste</button>';
+                    $html .= "</form>";
+                    $html .= '</div>';
+                    $html .= "</div>";
+                } 
+            }
         }
+        
         
         if($i == 0){
             $html .= "<h3> vous n'avez pas encore créé de listes!</h3>";  
@@ -203,12 +207,15 @@ END;
 END;
         
         $i = 0;
-        foreach($this->listePart as $val){
-            $lien = $this->app->urlFor('listeCrea',['token'=>$val->token]);
-            $i++;
-            
-            $html .=  "<div class =\"col-lg-8\"><h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div><div class =\"col-lg-2\"><form method=\"post\"><button type=\"submit\" class=\"btn btn-danger\" name=\"suppression\" value=$val->token>Supprimer</button></form></div>"; 
+        if(isset($this->listePart)){
+            foreach($this->listePart as $val){
+                $lien = $this->app->urlFor('listeCrea', array('token' => $val->token));
+                $i++;
+
+                $html .=  "<div class =\"col-lg-8\"><h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div><div class =\"col-lg-2\"><form method=\"post\"><button type=\"submit\" class=\"btn btn-danger\" name=\"suppression\" value=$val->token>Supprimer</button></form></div>"; 
+            }
         }
+        
         
         if($i == 0){
             $html .= "</div><h3> vous n'avez pas encore ajouté de listes de vos amis, vous pouvez en créer une !</h3>";  
