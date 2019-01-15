@@ -6,6 +6,7 @@ html,body
     margin: 0px;
     padding: 0px;
     overflow-x: hidden; 
+    background-color: #FFF4E0; 
 }
 
 .bg-dark{
@@ -63,6 +64,13 @@ footer a:hover{
 .explications p{
     color: #393E46;
     font-size: 1.4em;
+}
+
+nav a:hover{
+    text-decoration: none;
+    color: #393E46;;
+    font-weight: bold;
+    transition: 0,2s;
 }
 
 @media (max-width: 768px) {

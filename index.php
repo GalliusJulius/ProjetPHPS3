@@ -21,17 +21,15 @@ $app->get('/',function(){
 $app->post('/',function(){
     $app = \Slim\Slim::getInstance();
     $gest = new c\ControleurConnexion();
-    //Si on veux se connecter
-    //if(isset($_POST['connexion'])){
     try{
         a\Authentification::authentificate($_POST['mail'],$_POST['pass']); a\Authentification::loadProfil($_POST['mail']);
-        $app->redirect($app->urlFor('Accueil'));
+        $app->redirect($app->urlFor('accueil'));
     }
      catch(Exception $e){
          $gest->erreur="ER_CONNEXION";
          $gest->recupererVue("connexion");
     }
-    //}
+    
 })->name('connexionPost');
 
 //Routage pour l'inscription
@@ -71,15 +69,6 @@ $app->get('/Accueil',function(){
     $acc->recupererVue("ACCUEIL");
 })->name('accueil');
 
-$app->post('/Accueil',function(){
-    $app = \Slim\Slim::getInstance();
-     if(isset($_POST['deconnexion'])){
-         $gest = new c\ControleurConnexion();
-         $gest->seDeconnecter();
-         $app->redirect($app->urlFor('connexion'));
-     }
-})->name('Accueil');
-
 //Routage pour la gestion de compte
 $app->get('/Compte',function(){
    $acc = new c\ControleurCompte();
@@ -101,10 +90,18 @@ $app->post('/utilisateur/:id',function($id){
 });
 
 $app->post('/Compte',function(){
-   $acc = new c\ControleurCompte();
-   $acc->miseAjour();
-    a\Authentification::loadProfil($_SESSION['profil']['Email']);
-   $acc->recupererVue("compte");
+    $app = \Slim\Slim::getInstance();
+    $acc = new c\ControleurCompte();
+    if(isset($_POST['deconnexion'])){
+         $gest = new c\ControleurConnexion();
+         $gest->seDeconnecter();
+         $app->redirect($app->urlFor('connexion'));
+     }
+    else{
+        $acc->miseAjour();
+        a\Authentification::loadProfil($_SESSION['profil']['Email']);
+       $acc->recupererVue("compte");   
+    }
 });
 
 $app->get('/Contact',function(){
