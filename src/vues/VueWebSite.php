@@ -437,9 +437,9 @@ END;
                 }
                 
                 if(substr($i->img, 0, 4) == 'http') {
-                   $image_item = '<img class="imgDesc" src="' . $i->img . '">'; 
+                   $image_item = '<div class="contImage"><img class="imgDesc" src="' . $i->img . '"></div>'; 
                 } else {
-                   $image_item = '<img class="imgDesc" src="' . '../src/img/' . $i->img . '">';
+                   $image_item = '<div class="contImage"><img class="imgDesc" src="' . '../src/img/' . $i->img . '"></div>';
                 }
                 
                 $html .= '<h4>' . $i->nom . '</h4>' . $image_item . '<p class="tarif">' . $i->tarif .  '</p>';
