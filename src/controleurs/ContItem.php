@@ -15,7 +15,7 @@ class ContItem {
   public function modifier($token, $id){
     $liste =  m\Liste::where("token","=",$token)->first();
     $item = m\Item::where("id","=",$id)->first();
-    $v = new v\VueAffichageListe(array('liste'=> $liste, 'item' => $item));
+    $v = new v\VueWebSite(array('liste'=> $liste, 'item' => $item));
     $v->render('MODIFIER');
 
   }
@@ -82,7 +82,7 @@ class ContItem {
   // methode pour ajouter un item a la base
   public function ajouterItem($token){
     $liste =  m\Liste::where("token","=",$token)->first();
-    $v = new v\VueAffichageListe($liste);
+    $v = new v\VueWebSite($liste);
     $v->render('ITEM_AJOUT');
   }
 
