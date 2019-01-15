@@ -84,6 +84,23 @@ class Authentification{
         
     }
     
+    public static function isAuthorized($token){
+        if(self::isLogged()){
+            $res = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","=",$_SESSION['idUser'])->where('token', 'like', $token)->first();
+            
+            if($res != false){
+                return true;
+            } else{
+                return false;
+            }
+            
+        } else{
+            return false;
+        }
+        
+        
+    }
+    
     public static function getIdUser(){
         $res = NULL;
         

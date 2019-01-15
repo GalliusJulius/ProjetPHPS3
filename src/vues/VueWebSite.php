@@ -48,8 +48,6 @@ class VueWebSite{
             $_SESSION['messageErreur'] = NULL;
             $_SESSION['typeErreur'] = NULL;
         }
-        
-        //echo $this->messageErreur;
 
         $this->app = \Slim\Slim::getInstance();
     }
@@ -637,7 +635,7 @@ END;
                         if(isset($idUser)){
                             $m = Membre::where('idUser', '=', $idUser)->first();
                             $n = $m->Nom;
-                            $p = $m->Prénom;
+                            $p = $m->Prenom;
                         }
 
 
@@ -975,7 +973,9 @@ END;
         if(isset($this->liste) and (count($this->liste) > 0)){
             $html .= '<div><h3>Listes :</h3>';
             foreach($this->liste as $l){
-                $html .= '<p><a class="nav-link" href="' . $this->app->urlFor('listeShare', array('share' => $l->share)) . '">' . $l->titre . '</a></p>';
+                if(isset($l->share) and ($l->share != '')){
+                    $html .= '<p><a class="nav-link" href="' . $this->app->urlFor('listeShare', array('share' => $l->share)) . '">' . $l->titre . '</a></p>';
+                }
             }
             $html .= '</div>';
         }
@@ -1184,7 +1184,6 @@ END;
             }
             case 'RECHERCHE':{
                 $contenu = $this->recherche();
-                $this->message = "Recherche";
                 $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
