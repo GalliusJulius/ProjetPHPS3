@@ -1105,31 +1105,31 @@ END;
             }
             case 'LISTE_CREA':{
                 $contenu = $this->affichageListeCrea();
-                $style = '<link rel="stylesheet"  href="' . $path . '../src/css/itemsListes.css"/>';
                 $path = '.';
+                $style = '<link rel="stylesheet"  href="' . $path . '../src/css/itemsListes.css"/>';
                 break;
             }
             case 'LISTE_CO':{
                 $contenu = $this->affichageListeInvite();
-                $style = '<link rel="stylesheet"  href="../src/css/itemsListes.css"/>';
                 $path = '.';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'LISTE_INV':{
                 $contenu = $this->affichageListeInvite();
-                $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
                 $path = '../.';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'ITEM_AJOUT':{
                 $contenu = $this->ajouterItem();
-                $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
                 $path = '../.';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'RECHERCHE':{
                 $contenu = $this->recherche();
-                $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'MODIFIER':{

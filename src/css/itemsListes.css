@@ -186,7 +186,11 @@ div.recherche, div.recherche div.row, div.recherche input{
     margin: auto;
     text-align: center;
     display: block;
-    font-size: 0.25em;
+    font-size: 0.75em;
+}
+
+div.recherche > form > div.row:first-child{
+    font-size: 2em;
 }
 
 div.recherche input[type="radio"], div.recherche label[for="search"]{
