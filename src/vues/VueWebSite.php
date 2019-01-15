@@ -291,12 +291,12 @@ END;
         $liste = $this->liste;
         
         $html = <<<END
+        <div class="container">
         <div class="row justify-content-md-center">
             <div class="col">
-                <h1>$perso->Pseudo : #$perso->idUser</h1>
+                <h1>$perso->pseudo : #$perso->idUser</h1>
                 <img src="../src/img/profil.png" width="150" height="150">
-                <p>Message d'humeur :</p>
-                <h2>Ses listes:</h2>
+                <p>Message d'humeur : $perso->message</p>
 END;
         
         $btn = "";
@@ -315,10 +315,10 @@ END;
         }
         
         $html .= $btn;
-        $listes = "";
+        $listes = "<h2>Ses listes:</h2>";
         
         if(count($liste) == 0){
-            $listes = "<p>Cet utilisateur n'a pas crée de listes</p>";
+            $listes .= "<p>Cet utilisateur n'a pas crée de listes</p>";
         }
         else{
             $i=0;
@@ -332,7 +332,7 @@ END;
         }
         
         $html .= $listes;
-        $html .= "</div></div>";
+        $html .= "</div></div></div>";
         
         return $html;
     }

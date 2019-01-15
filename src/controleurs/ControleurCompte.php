@@ -84,11 +84,11 @@ class ControleurCompte{
             })->first();
             $arr=array();
             if(isset($user)){
-                $arr[]=$user;
-                $arr[]=$amis;
-                $arr[]=$fabrique;
-                $v = new v\VueAccueil("visionComptes","",$arr);
-                $v->render();
+                $arr['membre']=$user;
+                $arr['amis']=$amis;
+                $arr['liste']=$fabrique;
+                $v = new v\VueWebSite($arr);
+                $v->render("VISIONCOMPTES");
             }
             else{
                 //on met erreur page not found
