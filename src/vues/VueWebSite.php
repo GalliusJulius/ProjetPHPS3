@@ -1,11 +1,14 @@
 <?php
 namespace wishlist\vues;
 
+use \wishlist\Auth\Authentification as Auth;
+use \wishlist\models\Membre;
+
 class VueWebSite{
     
-    private $liste, $listePart, $item, $membre, $amis, $demande, $recherche, $erreur, $app;
+    private $liste, $listePart, $item, $membre, $amis, $demande, $recherche, $messageErreur, $app;
     
-    public function __construct($tab){
+    public function __construct($tab = array()){
         
         if(isset($tab['liste'])){
             $this->liste = $tab['liste'];
@@ -91,13 +94,32 @@ END;
         $lien = $this->app->urlFor('Compte');
         
         $html = <<< END
-                <div class="row">
-                <form method="post" action="">
-                        <div  class="col col-lg-4"> 
-                                <button type="submit" class="btn btn-primary" name="deconnexion">Se déconnecter</button>
-                        </div>
-                    </form>
-                </div>
+        <div id ="top" class="position-relative overflow-hidden  p-3 p-md-5  text-center bg-light">
+              <div class="col-md-5 p-lg-5 mx-auto my-5">
+                    <h1 class="display-4 font-weight-normal">Bienvenue sur whishList!</h1>
+                    <p class="lead font-weight-normal">Vous pouvez sur notre application créer des listes de cadeaux, participer et consulter celles de vos amis et bien d'autres choses! Sur cette page vous retrouverez un pannel de ce que vous pouvez faire ici!</p>
+              </div>
+        </div>
+        
+        <div class="flex-md-equal w-100">
+            <div class="articles bg-dark text-center text-white overflow-hidden">
+            <div>
+              <h2 class="display-5">Vous pouvez créer une liste</h2>
+              <p class="lead">Puis la partager avec vos amis.</p>
+            </div>
+        <div class="explications bg-light shadow-sm mx-auto" style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;">
+        <p class="lead">Explications</p></div>
+        </div>
+      <div class="articles bg-light text-center overflow-hidden">
+        <div>
+            <h2 class="display-5">Vous pouvez partager votre liste facilement</h2>
+            <p class="lead">Même à ceux qui n'ont pas de compte sur whishList.</p>
+            </div>
+        <div class="explications2 bg-dark shadow-sm mx-auto" style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;">
+        <p class="lead">Explications</p>
+        </div>
+    </div>
+</div>
         
 END;
         
@@ -113,6 +135,14 @@ END;
         catch(\Exception $e){}
         
         $html = <<<END
+        <div class="container">
+        <div class="row">
+                <form method="post" action="">
+                        <div  class="col col-lg-4"> 
+                                <button type="submit" class="btn btn-primary" name="deconnexion">Se déconnecter</button>
+                        </div>
+                    </form>
+            </div>
             <div class="row justify-content-md-center">
             <div class="col col-lg-4 justify-content-md-center">
                 <form method="post" class="text-center">
@@ -144,6 +174,7 @@ END;
                         </form>
                     </div>
                 </div>
+                </div>
 END;
         
         $html = $html . $fin;
@@ -154,9 +185,8 @@ END;
     
     public function mesListes(){
         $html = <<<END
-        <div class="row justify-content-md-center">
-            <div class="col col-lg-12 justify-content-md-center">
-            <h1>Les listes que vous avez créé:</h1>
+        <div class="container">
+            <h1>Les listes que vous avez créé ou sur lesquelles vous avez des droits de modification:</h1>
 END;
         
         $i=0;
@@ -168,19 +198,21 @@ END;
                     $modifierListe = $this->app->urlFor('modifierListe', array('token' => $val->token));
                     $supprimerListe = $this->app->urlFor('supprimer_liste', array('token' => $val->token));
                     $html .= '<div class="row">';
-                    $html .= '<div class="col col-lg-6 ">';
-                    $html .= '<h2><b>'.$i.' : </b><a href = $lien  >'.$val->titre.'</a><h2>';
+                    $html .= '<div class="col-sm-8">';
+                    $html .= '<h2><b>'.$i.' : </b><a href =' . $lien . '  >'.$val->titre.'</a><h2>';
                     $html .= '</div>';
-                    $html .= '<div class="col col-lg-3">';
+                    $html .= '<div class ="col-sm-4">';
+                    $html .= '<div class="row">';
                     $html .= '<form method="GET" action= "'.$modifierListe.'">';
-                    $html .= '<button class="btn btn-primary col col-lg-6" value="modifierListe">Modifier liste</button>';
+                    $html .= '<button class="btn modif col col-lg-6" value="modifierListe">Modifier liste</button>';
                     $html .= "</form>";
                     $html .= '</div>';
-                    $html .= '<div class="col col-lg-3">';
+                    $html .= '<div class="row">';
                     $html .= '<form method="GET" action= "'.$supprimerListe.'" >';
-                    $html .= '<button class="btn btn-primary col col-lg-6" value="supprimerListe">Supprimer liste</button>';
+                    $html .= '<button class="btn del col col-lg-6" value="supprimerListe">Supprimer liste</button>';
                     $html .= "</form>";
-                    $html .= '</div>';
+                    $html .= "</div>";
+                    $html .= "</div>";
                     $html .= "</div>";
                 } 
             }
@@ -193,17 +225,18 @@ END;
         
 		$creerListe = $this->app->urlFor('creerListe');
         $html .= <<<END
-        <div class="row">
-            <div class="col col-lg-6">
-                <p>Vous voulez créer une liste?</p>
+        <div class="row separation " >
+            <div class="col-sm-8">
+                <h3>Vous voulez créer une liste?</h3>
             </div>
-            <div class="col col-lg-6">
+            <div class="col-sm-4">
               <form method="GET" action= "$creerListe">
-                <button class="btn btn-primary col col-lg-3" value="creerListe">Créer listes</button>
+                <button class="btn add" value="creerListe">Créer listes</button>
               </form>
             </div>
         </div>
-        <h1>Les listes qu'on vous a partagé :</h1>
+        <h1>Vos listes favorites:</h1>
+        <p>Ici vous pouvez retrouver rapidement une liste que vous vouliez garder sous la main en l'ajoutant grâce à son token.</p>
 END;
         
         $i = 0;
@@ -212,27 +245,29 @@ END;
                 $lien = $this->app->urlFor('listeCrea', array('token' => $val->token));
                 $i++;
 
-                $html .=  "<div class =\"col-lg-8\"><h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div><div class =\"col-lg-2\"><form method=\"post\"><button type=\"submit\" class=\"btn btn-danger\" name=\"suppression\" value=$val->token>Supprimer</button></form></div>"; 
+                $html .=  "<div class =\"col-lg-8\"><h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div><div class =\"col-lg-2\"><form method=\"post\"><button type=\"submit\" class=\"btn del\" name=\"suppression\" value=$val->token>Supprimer</button></form></div>"; 
             }
         }
         
         
         if($i == 0){
-            $html .= "</div><h3> vous n'avez pas encore ajouté de listes de vos amis, vous pouvez en créer une !</h3>";  
+            $html .= "<h4> Vous n'avez pas encore ajouté de listes de vos amis!</h4>";  
         }
         
         $html .= <<<END
         <div class="row justify-content-md-center">
-        <div class="col col-lg-6 justify-content-md-center">
+        <div class="col-sm-8">
         <p>Ajouter la liste d'un de vos amis? Remplissez le token de sa liste dans le champ prévu et cliquez sur ok</p>
          </div>
-         <div class="col col-lg-6 justify-content-md-center">
+         <div class="col-sm-8">
             <form method="post" class="text-center">
                 <input type="text" name="token" class="form-control" placeholder="Token liste">
-                <button type="submit" class="btn btn-primary" name="ajout" value="add">Ajouter</button>
+                <button type="submit" class="btn add" name="ajout" value="add">Ajouter</button>
             </form>
             <p class="">$this->erreur</p>
             </div>
+        </div>
+        </div>
         </div>
         </div>
         </div>
@@ -294,13 +329,15 @@ END;
     }
     
     public function createurs(){
-        $html = "<div class=\"row\">";
+        
+        $html = "<div class=\"container\"><div class=\"row\">";
         
         foreach($this->membre as $m){
-            $html .= "<div class=\"col-lg-6\"><h2>$m->Pseudo</h2><p>Ce créateur n'a pas de messages d'humeurs</p><p>Il a créé : " . count($m->listes()) . " liste(s)</div>";
+            $pers = $m[0];
+            $html .= "<div class=\"col-lg-6\"><h2>$pers->Pseudo # $pers->idUser</h2><p>Ce créateur n'a pas de messages d'humeurs</p><p>Il a créé : " . $m[1] . " liste(s)</div>";
         }
         
-        $html .="</div>";
+        $html .="</div></div>";
         
         return $html;
     }
@@ -372,6 +409,135 @@ END;
         return $html;
     }
     
+    private function affichageListeCrea() {
+        $html = '<section class="listes">';
+        $cpt = 1;
+
+
+        $l = $this->liste;
+
+        if(isset($l)){
+            $items = $l->items()->get();
+
+            if(!isset($l->message) or empty($l->message))  {
+                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
+            } else {
+                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p>';
+                $html .= '<br><p><i><b>Message du créateur :</b></i> ' . $l->message . '</p><div class="row items">';
+            }
+
+            foreach($items as $i){
+                //echo $i->reservation()->first();
+                //if($i->reservation()->first() !== NULL){
+                $reserv = $i->reservation()->first();
+                //}
+
+                if(isset($reserv) and ($i->cagnotte == 0)){
+                    $html .= '<div class="reserve col col-l-3">';
+                } else{
+                    $html .= '<div class="col col-l-3">';
+                }
+                
+                if(substr($i->img, 0, 4) == 'http') {
+                   $image_item = '<img class="imgDesc" src="' . $i->img . '">'; 
+                } else {
+                   $image_item = '<img class="imgDesc" src="' . '../src/img/' . $i->img . '">';
+                }
+                
+                $html .= '<p class="nom"><h4>' . $i->nom . '</h4></p>' . $image_item . '<p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
+
+
+                if(isset($reserv)){
+
+                    $html .= '<p>Cet item a été réservé !</p>';
+                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
+                    $html .= '<button class="message btn btn-primary h' . $cpt . '">Voir le message</button>';
+
+                } elseif($i->cagnotte == 0){
+                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
+                    $html .= '<form method="GET" action= "' . $this->app->urlFor('modifierItem', array('id' => $i->id,'token' => $l->token)) . '">';
+                    $html .= '<button class="btn btn-primary">Modifier</button>';
+                    $html .= '</form>';
+
+                    $html .= '<form method="GET" action= "' . $this->app->urlFor('supprimer', array('id' => $i->id,'token' => $l->token)) . '">';
+                    $html .= '<button class="btn btn-primary">Supprimer</button>';
+                    $html .= '</form>';
+                    
+                    $html .= '<form method="POST" action= "' . $this->app->urlFor('creerCagnotte', array('id' => $i->id)) . '">';
+                    $html .= '<button class="btn btn-primary">Créer une cagnotte</button>';
+                    $html .= '</form>';
+                } else{
+                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
+                    $html .= '<form method="GET" action= "' . $this->app->urlFor('modifierItem', array('id' => $i->id,'token' => $l->token)) . '">';
+                    $html .= '<button class="btn btn-primary">Modifier</button>';
+                    $html .= '</form>';
+
+                    $html .= '<form method="GET" action= "' . $this->app->urlFor('supprimer', array('id' => $i->id,'token' => $l->token)) . '">';
+                    $html .= '<button class="btn btn-primary">Supprimer</button>';
+                    $html .= '</form>';
+                }
+
+
+                $html .= '<section class="details hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
+                $html .= '<p class="hidden desc">' . $i->descr . '</p>';
+
+                if($i->url != null or $i->url != ""){
+                    $html .= '<a class="hidden" target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
+                } else{
+                    $html .= '<p class="hidden">Aucune URL associé !</p>';
+                }
+
+                $html .= '</section>';
+
+
+                if(isset($reserv)){
+                    $html .= '<section class="message hidden hide' . $cpt . '">';
+
+                    $html .= '<h6>Messages :</h6>';
+                    $html .= '<p class="message">' . $reserv->message . '</p>';
+
+                }
+
+                $html .= '</div>';
+
+
+                $cpt++;
+            }
+
+            $html .= '</div>';
+            $html .= '<p class="date">Date d\'échéance :</p><p class="date">' . $l->expiration . '</p>';
+
+        }
+
+        $html .= '<form method="GET"  action= "' . $this->app->urlFor('ajouterItem', array('token' => $l->token)) . '">';
+        $html .= '<button class="btn btn-primary">Ajouter un item</button>';
+        $html .= '</form>';
+
+        $html .= '<p><button class="partager btn btn-primary">Partager</button></p>';
+        
+        
+        $html .= '<form method="POST" action="' . $this->app->urlFor('ajoutMsgListe', array('token' => $l->token)) . '">';
+        $html .= '<div class="row justify-content-md-center"><div class="col-lg-5 justify-content-md-center">';
+        $html .= '<p><textarea id="msg" class="form-control" rows="2" type="text" name="message_liste" placeholder="Message"></textarea></p></div></div>';
+        $html .= '<p><button type="submit" class="btn btn-primary" name="ajouter_message_liste">Ajouter un message</button></p>';
+        $html .= '</form>';
+        
+        if(isset($l)){
+            $html .= '<div class="partager hidden hide modal">';
+            $html .= '<div class="form">';
+            $html .= '<h6>Lien de partage :</h6>';
+            $html .= '<p>Le lien de partage vous permet de partager votre liste à qui vous souhaitez, même des personnes qui ne sont pas inscrites sur le site.</p>';
+            $html .= '<input type="text" name="lien" value="' . $_SERVER['HTTP_HOST'] . $this->app->urlFor('listeShare', array('share' => $l->share)) . '" disabled>';
+            $html .= '<button class="fermer btn btn-primary">Fermer</button>';
+            $html .= '</div>';
+            $html .= '</div>';
+        }
+
+        $html .= '</section>';
+
+        return $html;
+    }
+    
     private function affichageListeInvite() {
         $html = '<section class="listes">';
         $cpt = 1;
@@ -391,9 +557,9 @@ END;
             foreach($items as $i){
 
                 if(substr($i->img, 0, 4) == 'http') {
-                   $image_item = '<img src="' . $i->img . '">'; 
+                   $image_item = '<img class="imgDesc" src="' . $i->img . '">'; 
                 } else {
-                   $image_item = '<img src="' . '../src/img/' . $i->img . '">';
+                   $image_item = '<img class="imgDesc" src="' . '../src/img/' . $i->img . '">';
                 }
                 
                 if($i->cagnotte == 1){
@@ -463,7 +629,7 @@ END;
                     $html .= '</div>';
                     
                 } else{
-                    $reserv = $i->reservation();
+                    $reserv = $i->reservation()->first();
                     
                     if(isset($reserv)){
                         $html .= '<div class="reserve col col-l-3">';
@@ -473,7 +639,7 @@ END;
 
                     $html .= '<p class="nom"><h4>' . $i->nom;
 
-                    $html .= '</h4></p><img src="' . $image_item . '">';
+                    $html .= '</h4></p><img class="imageDesc" src="' . $image_item . '">';
 
                     $html .= '<p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
 
@@ -549,7 +715,7 @@ END;
     }
     
     private function recherche(){
-        $html = '<div class="row justify-content-md-center">';
+        $html = '<div class="recherche row justify-content-md-center">';
         $html .= '<form class="form-inline my-2 my-md-0" id="search" method="GET" action="' . $this->app->urlFor('rechercheAvancee') . '">';
         $html .= '<div class="row col-md-12 justify-content-md-center">
         <input class="form-control" type="text" name="search" placeholder="Terme recherché" value="' . $this->recherche['search'] . '">
@@ -560,35 +726,43 @@ END;
             <p>Option de filtre :</p>';
             
             if($this->recherche['on'] == 'Listes'){
-                $html .= '<input type="radio" name="on" value="Listes" checked>
-                <label for="search">Listes</label>';
+                $html .= '<div class="grpRech">
+                <input type="radio" name="on" value="Listes" checked>
+                <label for="search">Listes</label></div>';
             } else{
-                $html .= '<input type="radio" name="on" value="Listes">
-                <label for="search">Listes</label>';
+                $html .= '<div class="grpRech">
+                <input type="radio" name="on" value="Listes">
+                <label for="search">Listes</label></div>';
             }
             
             if($this->recherche['on'] == 'Créateurs'){
-                $html .= '<input type="radio" name="on" value="Créateurs" checked>
-            <label for="search">Créateurs</label>';
+                $html .= '<div class="grpRech">
+                <input type="radio" name="on" value="Créateurs" checked>
+                <label for="search">Créateurs</label></div>';
             } else{
-                $html .= '<input type="radio" name="on" value="Créateurs">
-            <label for="search">Créateurs</label>';
+                $html .= '<div class="grpRech">
+                <input type="radio" name="on" value="Créateurs">
+                <label for="search">Créateurs</label></div>';
             }
             
             if($this->recherche['on'] == 'Membres'){
-                $html .= '<input type="radio" name="on" value="Membres" checked>
-            <label for="search">Membres</label>';
+                $html .= '<div class="grpRech">
+                <input type="radio" name="on" value="Membres" checked>
+                <label for="search">Membres</label></div>';
             } else{
-                $html .= '<input type="radio" name="on" value="Membres">
-            <label for="search">Membres</label>';
+                $html .= '<div class="grpRech">
+                <input type="radio" name="on" value="Membres">
+                <label for="search">Membres</label></div>';
             }
             
             if($this->recherche['on'] == 'Les deux'){
-                $html .= '<input type="radio" name="on" value="Les deux" checked>
-            <label for="search">Les deux</label>';
+                $html .= '<div class="grpRech">
+                <input type="radio" name="on" value="Les deux" checked>
+                <label for="search">Les deux</label></div>';
             } else{
-                $html .= '<input type="radio" name="on" value="Les deux">
-            <label for="search">Les deux</label>';
+                $html .= '<div class="grpRech">
+                <input type="radio" name="on" value="Les deux">
+                <label for="search">Les deux</label></div>';
             }
             
             $html .= '</div>';
@@ -596,14 +770,14 @@ END;
         } else{
             $html .= '<div class="col col-md-3">
             <p>Option de filtre :</p>
-            <input type="radio" name="on" value="Listes">
-            <label for="search">Listes</label>
-            <input type="radio" name="on" value="Créateurs">
-            <label for="search">Créateurs</label>
-            <input type="radio" name="on" value="Membres">
-            <label for="search">Membres</label>
-            <input type="radio" name="on" value="Les deux" checked>
-            <label for="search">Les deux</label>
+            <div class="grpRech"><input type="radio" name="on" value="Listes">
+            <label for="search">Listes</label></div>
+            <div class="grpRech"><input type="radio" name="on" value="Créateurs">
+            <label for="search">Créateurs</label></div>
+            <div class="grpRech"><input type="radio" name="on" value="Membres">
+            <label for="search">Membres</label></div>
+            <div class="grpRech"><input type="radio" name="on" value="Les deux" checked>
+            <label for="search">Les deux</label></div>
             </div>'; 
         }
         
@@ -623,12 +797,12 @@ END;
         if(isset($this->recherche['deep']) and ($this->recherche['deep'] == 'deep')){
             $html .= '<div class="col col-md-3">
             <input type="checkbox" name="deep" value="deep" checked><label for="search" checked>Recherche profonde</label>
-            <p>Recherche le mot clé dans la description des listes et/ou infos utilisateurs.</p>
+            <p><i>Recherche le mot clé dans la description des listes et/ou infos utilisateurs.</i></p>
             </div>';
         } else{
             $html .= '<div class="col col-md-3">
             <input type="checkbox" name="deep" value="deep"><label for="search">Recherche profonde</label>
-            <p>Recherche le mot clé dans la description des listes et/ou infos utilisateurs.</p>
+            <p><i>Recherche le mot clé dans la description des listes et/ou infos utilisateurs.</i></p>
             </div>';
         }
         
@@ -638,28 +812,37 @@ END;
             <input type="number" name="nbReserv" value="' . $this->recherche['nbReserv'] . '">';
             
             if($this->recherche['reserv'] == 'Minimum'){
-                $html .= '<input type="radio" name="reserv" value="Minimum" checked>
-                <label for="search">Au minimum</label>
+                $html .= '<div class="grpRech">
+                <input type="radio" name="reserv" value="Minimum" checked>
+                <label for="search">Au minimum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="reserv" value="Maximum">
-                <label for="search">Au maximum</label>
+                <label for="search">Au maximum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="reserv" value="Exact">
-                <label for="search">Exactement</label>';
+                <label for="search">Exactement</label></div>';
                 
             } elseif($this->recherche['reserv'] == 'Maximum'){
-                $html .= '<input type="radio" name="reserv" value="Minimum">
-                <label for="search">Au minimum</label>
+                $html .= '<div class="grpRech">
+                <input type="radio" name="reserv" value="Minimum">
+                <label for="search">Au minimum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="reserv" value="Maximum" checked>
-                <label for="search">Au maximum</label>
+                <label for="search">Au maximum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="reserv" value="Exact">
-                <label for="search">Exactement</label>';
+                <label for="search">Exactement</label></div>';
                 
             } else{
-                $html .= '<input type="radio" name="reserv" value="Minimum">
-                <label for="search">Au minimum</label>
+                $html .= '<div class="grpRech">
+                <input type="radio" name="reserv" value="Minimum">
+                <label for="search">Au minimum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="reserv" value="Maximum">
-                <label for="search">Au maximum</label>
+                <label for="search">Au maximum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="reserv" value="Exact" checked>
-                <label for="search">Exactement</label>';
+                <label for="search">Exactement</label></div>';
                 
             }
             
@@ -669,12 +852,15 @@ END;
             $html .= '<div class="col col-md-2">
             <p>Filtre par nombre de réservations :</p>
             <input type="number" name="nbReserv">
+            <div class="grpRech">
             <input type="radio" name="reserv" value="Minimum">
-            <label for="search">Au minimum</label>
+            <label for="search">Au minimum</label></div>
+            <div class="grpRech">
             <input type="radio" name="reserv" value="Maximum">
-            <label for="search">Au maximum</label>
+            <label for="search">Au maximum</label></div>
+            <div class="grpRech">
             <input type="radio" name="reserv" value="Exact" checked>
-            <label for="search">Exactement</label>
+            <label for="search">Exactement</label></div>
             </div>';
         }
         
@@ -685,28 +871,37 @@ END;
             <input type="number" name="nbItem" value="' . $this->recherche['nbItem'] . '">';
             
             if($this->recherche['item'] == 'Minimum'){
-                $html .= '<input type="radio" name="item" value="Minimum" checked>
-                <label for="search">Au minimum</label>
+                $html .= '<div class="grpRech">
+                <input type="radio" name="item" value="Minimum" checked>
+                <label for="search">Au minimum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="item" value="Maximum">
-                <label for="search">Au maximum</label>
+                <label for="search">Au maximum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="item" value="Exact">
-                <label for="search">Exactement</label>';
+                <label for="search">Exactement</label></div>';
                 
             } elseif($this->recherche['item'] == 'Maximum'){
-                $html .= '<input type="radio" name="item" value="Minimum">
-                <label for="search">Au minimum</label>
+                $html .= '<div class="grpRech">
+                <input type="radio" name="item" value="Minimum">
+                <label for="search">Au minimum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="item" value="Maximum" checked>
-                <label for="search">Au maximum</label>
+                <label for="search">Au maximum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="item" value="Exact">
-                <label for="search">Exactement</label>';
+                <label for="search">Exactement</label></div>';
                 
             } else{
-                $html .= '<input type="radio" name="item" value="Minimum">
-                <label for="search">Au minimum</label>
+                $html .= '<div class="grpRech">
+                <input type="radio" name="item" value="Minimum">
+                <label for="search">Au minimum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="item" value="Maximum">
-                <label for="search">Au maximum</label>
+                <label for="search">Au maximum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="item" value="Exact" checked>
-                <label for="search">Exactement</label>';
+                <label for="search">Exactement</label></div>';
                 
             }
             
@@ -716,12 +911,15 @@ END;
             $html .= '<div class="col col-md-2">
             <p>Filtre par nombre d\'items :</p>
             <input type="number" name="nbItem">
+            <div class="grpRech">
             <input type="radio" name="item" value="Minimum">
-            <label for="search">Au minimum</label>
+            <label for="search">Au minimum</label></div>
+            <div class="grpRech">
             <input type="radio" name="item" value="Maximum">
-            <label for="search">Au maximum</label>
+            <label for="search">Au maximum</label></div>
+            <div class="grpRech">
             <input type="radio" name="item" value="Exact" checked>
-            <label for="search">Exactement</label>
+            <label for="search">Exactement</label></div>
             </div>';
         }
         
@@ -736,7 +934,8 @@ END;
         if(isset($this->liste) and (count($this->liste) > 0)){
             $html .= '<div><h3>Listes :</h3>';
             foreach($this->liste as $l){
-                $html .= '<p>' . $l->titre . '</p>';
+                //echo var_dump($l);
+                $html .= '<p><a class="nav-link" href="' . $this->app->urlFor('listeShare', array('share' => $l->share)) . '">' . $l->titre . '</a></p>';
             }
             $html .= '</div>';
         }
@@ -744,7 +943,8 @@ END;
         if(isset($this->membre) and (count($this->membre) > 0)){
             $html .= '<div><h3>Membre / Créateur :</h3>';
             foreach($this->membre as $m){
-                $html .= '<p>' . $m->nom . ' ' . $m->prénom . '</p>';
+                echo $m->idUser;
+                $html .= '<p><a class="nav-link" href="' . $this->app->urlFor('user', array('id' =>  $m->idUser)) . '">' . $m->nom . ' ' . $m->prenom . '</a></p>';
             }
             $html .= '</div>';
         }
@@ -840,6 +1040,7 @@ END;
         $html .= '<p><input type="text" name="titre" class="form-control" aria-describedby="emailHelp" placeholder="Titre" value="'.$li->titre.'" autofocus/></p>';
         $html .= '<p><input type="text" name="descr" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="'.$li->description.'" /></p>';
         $html .= '<p><input type="date" name="date" class="form-control" aria-describedby="emailHelp" placeholder="Date d\'expiration" value="'.$li->expiration.'" /></p>';
+        $html .= '<p><input type="date" name="date" class="form-control" aria-describedby="emailHelp" placeholder="Date d\'expiration" value="'.$li->expiration.'" /></p>';
         $html .= '<p><button type="submit" class="btn btn-primary" name="valider_modif" value="modifier_liste">Valider modification</button></p>';
         $html .= '</form>';
         $html .= '</div></div></div>';
@@ -877,6 +1078,7 @@ END;
             }
             case 'MESLISTES':{
                 $contenu = $this->mesListes();
+                $style="<link rel=\"stylesheet\" href=\"./src/css/mesListes.css\">";
                 break;
             }
             case 'CREATEURS':{
@@ -903,30 +1105,31 @@ END;
             }
             case 'LISTE_CREA':{
                 $contenu = $this->affichageListeCrea();
-                $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
+                $path = '.';
+                $style = '<link rel="stylesheet"  href="' . $path . '../src/css/itemsListes.css"/>';
                 break;
             }
             case 'LISTE_CO':{
                 $contenu = $this->affichageListeInvite();
-                $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
                 $path = '../.';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'LISTE_INV':{
                 $contenu = $this->affichageListeInvite();
-                $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
                 $path = '../.';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'ITEM_AJOUT':{
                 $contenu = $this->ajouterItem();
-                $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
                 $path = '../.';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'RECHERCHE':{
                 $contenu = $this->recherche();
-                $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'MODIFIER':{
@@ -937,8 +1140,8 @@ END;
             }
             case 'CREER_LISTE':{
                 $contenu = $this->creerListe();
-                $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
                 $path = '.';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'MODIFIER_LISTE':{
@@ -956,11 +1159,12 @@ END;
         $lienListesPublic = $this->app->urlFor('listePublic');
         $lienCreateur = $this->app->urlFor('createur');
         $lienContact = $this->app->urlFor('contact');
-        
+        $lienRecherche = $this->app->urlFor('recherche');
+        $title = strtolower($code);
         
         $html = <<< END
-        <!doctype html>
-<html lang="en">
+        <!DOCTYPE HTML>
+<html lang="fr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -968,7 +1172,7 @@ END;
     <meta name="author" content="">
     <link rel="icon" href="../../../favicon.ico">
 
-    <title>Navbar Template for Bootstrap</title>
+    <title>$title</title>
     <link rel="stylesheet" href="$path./src/css/bootstrap.min.css">
     <link rel="stylesheet" href="$path./src/css/principale.css">
     $style
@@ -976,20 +1180,23 @@ END;
 
   <body>
             <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-              <a class="navbar-brand" href="$lienAccueil">MyWishList</a>
+              <a class="navbar-brand" href="$lienAccueil">
+              <img src="$path./src/img/logo.png" width="120" height="50" alt="">
+              </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
-               <form class="form-inline my-2 my-md-0">
-                  <input class="form-control" type="text" placeholder="Rechercher">
+               <form class="form-inline my-2 my-md-0 method="GET" action="$lienRecherche">
+                  <input class="form-control" type="text" name="search" placeholder="Rechercher">
                 </form> 
               <div class="collapse navbar-collapse" id="navbarsExample04">
                 <ul class="navbar-nav mr-auto">
-                  <li class="nav-item active">
-                    <a class="nav-link" href=$lienMesListes>Mes listes <span class="sr-only">(current)</span></a>
-                </li>
-                  <li class="nav-item active">
-                    <a class="nav-link" href=$lienListesPublic>Les listes du moment <span class="sr-only">(current)</span></a>
+                 <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Listes</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown01">
+                      <a class="dropdown-item" href=$lienMesListes>Mes listes </a>
+                      <a class="dropdown-item" href=$lienListesPublic>Les listes du moment</a>
+                    </div>
                   </li>
                   <li class="nav-item active">
                     <a class="nav-link" href=$lienCreateur>Listes créateurs<span class="sr-only">(current)</span></a>
@@ -1003,17 +1210,21 @@ END;
                 </ul>
                 </div>
                 <a class="nav-item " href=$lienCompte>
-                    <img src="$path./src/img/profil.png" width="30" height="30" alt="">
+                    <img src="$path./src/img/profil.png" width="40" height="40" alt="">
                 </a>
             </nav>
             
-            <div class="container">
                 $contenu
-            </div>
-            
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        
+        </body>
+        <footer class="text-muted text-center text-small">
+                <p class="mb-1">&copy; 2018-2019 Site réalisé dans le module de PHP S3</p>
+                <ul class="list-inline">
+                  <li class="list-inline-item"><a href=https://iut-charlemagne.univ-lorraine.fr/>Iut Nancy Charlemagne</a></li>
+                </ul>
+        </footer>
+               <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
             <script src="./src/js/bootstrap.min.js"></script>
-        </body> 
      </html>
 END;
         

@@ -64,8 +64,8 @@ class VueAccueil{
         $lienCreateur = $app->urlFor('createur');
         $lienContact = $app->urlFor('contact');
         $html = <<< END
-        <!doctype html>
-<html lang="en">
+        <!DOCTYPE HTML>
+<html lang="fr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">

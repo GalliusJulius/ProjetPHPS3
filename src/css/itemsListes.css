@@ -25,7 +25,7 @@ section.listes, section.listes > ul > li, ul.listes > li{
     border-radius: 50px;
 }
 
-img{
+img.imgDesc{
     width: 200px;
     height: 200px;
 }
@@ -180,6 +180,25 @@ div.partager input{
 div.partager .fermer{
     font-size: 1em;
     text-align: center;
+}
+
+div.recherche, div.recherche div.row, div.recherche input{
+    margin: auto;
+    text-align: center;
+    display: block;
+    font-size: 0.75em;
+}
+
+div.recherche > form > div.row:first-child{
+    font-size: 2em;
+}
+
+div.recherche input[type="radio"], div.recherche label[for="search"]{
+    display: inline;
+}
+
+div.grp{
+    display: block;
 }
 
 

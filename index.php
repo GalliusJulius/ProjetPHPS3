@@ -11,6 +11,7 @@ $db->addConnection($info);
 $db->setAsGlobal();
 $db->bootEloquent();
 session_start();
+
 //Routage pour la connexion
 $app->get('/',function(){
     $gest = new c\ControleurConnexion();
@@ -67,7 +68,7 @@ $app->post('/inscription',function(){
 //Routage dans l'accueil
 $app->get('/Accueil',function(){
     $acc = new c\ControleurCompte();
-    $acc->recupererVue("accueil");
+    $acc->recupererVue("ACCUEIL");
 })->name('accueil');
 
 $app->post('/Accueil',function(){
@@ -82,7 +83,7 @@ $app->post('/Accueil',function(){
 //Routage pour la gestion de compte
 $app->get('/Compte',function(){
    $acc = new c\ControleurCompte();
-    $acc->recupererVue("compte");
+    $acc->recupererVue("COMPTE");
 })->name('Compte');
 
 $app->get('/utilisateur/:id',function($id){
@@ -266,6 +267,5 @@ $app->post('/liste/:token', function($token) {
     $cont = new c\ContAffichageListe();
     $cont->afficherMessageListe($token);
 })->name('ajoutMsgListe');
-
 
 $app->run();

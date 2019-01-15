@@ -13,7 +13,7 @@ use \wishlist\Auth\Authentification as Auth;
 class ContInstanceListe {
 
   public function creerListe(){
-    $v = new v\VueAffichageListe();
+    $v = new v\VueWebSite();
     $v->render('CREER_LISTE');
   }
 
@@ -55,7 +55,7 @@ class ContInstanceListe {
 
   public function modifierListe($token){
     $liste =  m\Liste::where("token","=",$token)->first();
-    $v = new v\VueAffichageListe(array('liste'=> $liste));
+    $v = new v\VueWebSite(array('liste'=> $liste));
     $v->render('MODIFIER_LISTE');
   }
 
