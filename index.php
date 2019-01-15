@@ -179,18 +179,36 @@ $app->get('/MesListes/supprimerListe/:token',function($token){
 })->name('supprimer_liste');
 
 $app->get('/Createurs',function(){
-    $cont = new c\ControleurCompte();
-    $cont->afficherCreateurs();
+    try{
+        $cont = new c\ControleurCompte();
+        $cont->afficherCreateurs();
+    }
 })->name('createur');
 
 $app->get('/Recherche',function(){
     $cont = new c\contRecherche();
-    $cont->afficherRecherche();
+    try{
+        $cont->afficherRecherche();
+    } catch(\Exception $e){
+        $_SESSION['messageErreur'] = "Une erreur est survenue lors de la recherche !";
+        $_SESSION['typeErreur'] = "err";
+        unset($_GET['search']);
+        $app = \Slim\Slim::getInstance();
+        $app->redirect($app->urlFor('recherche'));
+    }
 })->name('recherche');
 
 $app->get('/RechercheAvancee',function(){
     $cont = new c\contRecherche();
-    $cont->rechercherAvancee();
+    try{
+        $cont->rechercherAvancee();
+    } catch(\Exception $e){
+        $_SESSION['messageErreur'] = "Une erreur est survenue lors de la recherche !";
+        $_SESSION['typeErreur'] = "err";
+        unset($_GET['search']);
+        $app = \Slim\Slim::getInstance();
+        $app->redirect($app->urlFor('recherche'));
+    }
 })->name('rechercheAvancee');
 
 $app->get('/liste/:token', function($token){
@@ -223,12 +241,27 @@ $app->post('/liste/:share/partager/reserver/:idItem', function($share, $idItem){
 
 $app->post('/item/:id/cagnotte', function($id){
     $cont = new c\ContCagnotte();
-    $cont->creerCagnotte($id);
+    try{
+        $cont->creerCagnotte($id);
+    } catch(\Exception $e){
+        $_SESSION['messageErreur'] = "Une erreur est survenue lors de la création de la cagnotte !";
+        $_SESSION['typeErreur'] = "err";
+        $app = \Slim\Slim::getInstance();
+        $app->redirect($app->urlFor('accueil'));
+    }
+    
 })->name('creerCagnotte');
 
 $app->post('/item/:id/cagnotte/participer', function($id){
     $cont = new c\ContCagnotte();
-    $cont->participerCagnotte($id);
+    try{
+        $cont->participerCagnotte($id);
+    } catch(\Exception $e){
+        $_SESSION['messageErreur'] = "Une erreur est survenue lors de la participation à la cagnotte !";
+        $_SESSION['typeErreur'] = "err";
+        $app = \Slim\Slim::getInstance();
+        $app->redirect($app->urlFor('accueil'));
+    }
 })->name('participerCagnotte');
 
 $app->get('/liste_public', function(){

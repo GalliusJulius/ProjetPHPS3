@@ -87,9 +87,8 @@ class ContAffichageListe {
             }
             
             
-            //$r->save();
-            echo $_POST["prenom"];
-            //$app->response->redirect($app->urlFor('listeShare', array('share' => $share)));
+            $r->save();
+            $app->response->redirect($app->urlFor('listeShare', array('share' => $share)));
         } else{
             throw new ExceptionPerso('Une erreur est survenue lors de la réservation de l\'item, vérifez bien à remplir tout les champs !', 'err');
         }

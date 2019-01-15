@@ -599,7 +599,7 @@ END;
                         if(isset($idUser)){
                             $m = Membre::where('idUser', '=', $idUser)->first();
                             $n = $m->Nom;
-                            $p = $m->Prénom;
+                            $p = $m->Prenom;
                         }
 
 
@@ -1145,7 +1145,6 @@ END;
             }
             case 'RECHERCHE':{
                 $contenu = $this->recherche();
-                $this->message = "Recherche";
                 $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }

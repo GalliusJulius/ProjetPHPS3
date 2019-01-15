@@ -73,6 +73,36 @@ nav a:hover{
     transition: 0,2s;
 }
 
+
+div.messageErreur{
+    display: none;
+    border: 1px solid rgba(52, 62, 70, 0.2);
+    background-color: rgba(152, 162, 170, 0.5);
+    -webkit-box-shadow: 1px 1px 2px 2px #ccc;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+    -moz-box-shadow:    1px 1px 2px 2px #ccc;  /* Firefox 3.5 - 3.6 */
+    box-shadow:         1px 1px 2px 2px #ccc;  /* Opera 10.5, IE 9, Firefox 4+, Chrome 6+, iOS 5 */
+    border-radius: 25px;
+    text-align: center;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 1%;
+    margin-bottom: 2%;
+    padding-top: 1%;
+}
+
+div.info{
+    background-color: rgba(52, 162, 70, 0.5);
+}
+
+div.avert{
+    background-color: rgba(152, 162, 70, 0.5);
+}
+
+div.err{
+    background-color: rgba(152, 62, 70, 0.5);
+}
+
+
 @media (max-width: 768px) {
     .navbar-brand{
         display: none;
