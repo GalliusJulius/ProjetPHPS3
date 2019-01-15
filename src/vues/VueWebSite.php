@@ -340,10 +340,20 @@ END;
     public function createurs(){
         
         $html = "<div class=\"container\"><div class=\"row\">";
-        
+        $app = \Slim\Slim::getInstance();
         foreach($this->membre as $m){
             $pers = $m[0];
-            $html .= "<div class=\"col-lg-6\"><h2>$pers->Pseudo # $pers->idUser</h2><p>Ce créateur n'a pas de messages d'humeurs</p><p>Il a créé : " . $m[1] . " liste(s)</div>";
+            $lien = $app->urlFor('user', array('id' => $pers->idUser));
+            $vous="";
+            if($pers->idUser == $_SESSION['idUser']){
+                $vous=' (Vous)';
+            }
+            $html .= <<<END
+            <div class="col-sm-6 col-md-4">
+                <a href=$lien><h2>$pers->pseudo # $pers->idUser $vous</h2></a>
+                <p>$pers->message</p><p>Il a créé : $m[1] liste(s)
+            </div>
+END;
         }
         
         $html .="</div></div>";
@@ -355,21 +365,49 @@ END;
         $att = $this->demande;
         $amis = $this->amis;
         
-        $html = "<h1>Demandes d'amis:</h1>";
+        $html = "<div class=\"container\"><h1>Demandes d'amis:</h1>";
         
+        $i = 1;
         foreach($att as $val){
-            $html .= "<p>$val->Pseudo</p> 
-                <form method=\"POST\">
-                    <button name=\"ok\" class =\"btn btn-primary\"value=\"$val->idUser\">Accepter</button>
-                    <button name=\"del\" class =\"btn btn-warning\"value=\"$val->idUser\">Supprimer</button>
-                </form>";
+            $lien = $this->app->urlFor('user', array('id' => $val->idUser));
+            $html .= <<<END
+            <div class="row">
+            <a class="col-md-8" href=$lien><h3>$i ) $val->pseudo # $val->idUser</h3> </a>
+                <form class="col-md-4" method="POST">
+                    <button name="ok" class ="btn btn-primary" value="$val->idUser">Accepter</button>
+                    <button name="del" class ="btn btn-warning"value="$val->idUser">Supprimer</button>
+                </form>
+            </div>
+END;
+        $i++;
+        }
+        
+        if(count($att)==0){
+            $html.="<h3>Vous n'avez aucune demande en attente</h3>";
         }
         
         $html .= "<h1>Mes amis</h1>";
         
+        $i = 1;
+        
         foreach($amis as $val){
-            $html .= "<p>$val->Pseudo</p> <form method=\"Post\"><button name=\"delUs\" class =\"btn btn-warning\"value=\"$val->idUser\">Supprimer</button></form>";  
+            $lien = $this->app->urlFor('user', array('id' => $val->idUser));
+            $html .= <<<END
+            <div class="row">
+            <a class="col-md-8" href=$lien><h3>$i ) $val->pseudo # $val->idUser</h3></a>
+                <form class="col-md-4" method="Post">
+                    <button name="delUs" class ="btn btn-warning" value="$val->idUser">Supprimer</button>
+                </form> 
+            </div>
+END;
+            $i++;
         }
+        
+        if(count($amis)==0){
+            $html.="<h3>Vous n'avez pas encore d'amis, n'hésitez pas à faire une demande à un utilisateur</h3>";
+        }
+        
+        $html.="</div>";
         
         return $html;
     }
@@ -431,8 +469,8 @@ END;
             if(!isset($l->message) or empty($l->message))  {
                 $html .= '<h1 class="col-12">' . $l->titre . '</h1><p class="col-12">' . $l->description . '</p>';
             } else {
-                $html .= '<h1>' . $l->titre . '</h1><p> Description : ' . $l->description . '</p>';
-                $html .= '<p><i>Message du créateur :</i> ' . $l->message . '</p>';
+                $html .= '<h1  class="col-12">' . $l->titre . '</h1><p class="col-12"> Description : ' . $l->description . '</p>';
+                $html .= '<p class="col-12"><i>Message du créateur :</i> ' . $l->message . '</p>';
             }
             $html.='</div><div class="row">';
             foreach($items as $i){
@@ -1108,6 +1146,7 @@ END;
             }
             case 'CONTACT':{
                 $contenu = $this->contact();
+                 $style = '<link rel="stylesheet"  href="' . $path . 'src/css/contact.css"/>';
                 break;
             }
             case 'LISTES_CREA':{
@@ -1231,8 +1270,6 @@ END;
                 </a>
             </nav>
             
-            <div class="messageErreur $this->typeErreur"><p>$this->messageErreur</p></div>
-            
                 $contenu
         
         </body>
@@ -1243,9 +1280,10 @@ END;
                 </ul>
         </footer>
                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-            <script src="./src/js/bootstrap.min.js"></script>
+            <script src="$path./src/js/bootstrap.min.js"></script>
      </html>
 END;
+        //<div class="messageErreur $this->typeErreur"><p>$this->messageErreur</p></div>
         
         echo $html;
     }

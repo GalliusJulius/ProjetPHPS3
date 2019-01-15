@@ -9,6 +9,16 @@ html,body
     background-color: #FFF4E0; 
 }
 
+a:hover{
+    text-decoration: none;
+    color: #393E46;
+    font-weight: bold;
+}
+
+a{
+    color: #393E46
+}
+
 .bg-dark{
     background-color: #393E46!important;
 }

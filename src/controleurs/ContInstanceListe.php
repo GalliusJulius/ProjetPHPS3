@@ -26,7 +26,7 @@ class ContInstanceListe {
     $share = openssl_random_pseudo_bytes(32);
     $share = bin2hex($share);
     $liste->share = $share;
-
+    $erreur = array();
 
     $titre = filter_var($_POST['titre'], FILTER_SANITIZE_STRING);
     $liste->titre = $titre;
@@ -34,17 +34,14 @@ class ContInstanceListe {
     $descr = filter_var($_POST['descr'], FILTER_SANITIZE_STRING);
     $liste->description = $descr;
 
-    if (!\DateTime::createFromFormat('d/m/Y', $_POST['date'])){
+    if (\DateTime::createFromFormat('d/m/Y', $_POST['date'])){
       $liste->expiration = $_POST['date'];
-    }else{
-      $app->redirect($app->urlFor('creerListe')); // voir pour les erreurs
     }
 
     $liste->user_id = Auth::getIdUser();
+
     if(isset($_POST['liste_publique'])){
       $liste->public = $_POST['liste_publique'];
-    }else{
-      $liste->public = 0;
     }
 
     $liste->save();
@@ -74,10 +71,8 @@ class ContInstanceListe {
     }
 
     if(isset($_POST['date'])){
-      if (!\DateTime::createFromFormat('d/m/Y', $_POST['date'])){
+      if (\DateTime::createFromFormat('d/m/y', $_POST['date'])){
         $liste->expiration = $_POST['date'];
-      }else{
-        $app->redirect($app->urlFor('creerListe')); // voir pour les erreurs
       }
     }
 

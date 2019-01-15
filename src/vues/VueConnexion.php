@@ -23,6 +23,10 @@ class VueConnexion{
                 $err="<p class=\"erreur\">Mail non disponible</p>";
                 break;
             }
+            case "ER_INSCRIPTION3":{
+                $err='<p class=erreur>Votre mod de passe doit contenir au moins 6 caracteres dont au moins une majuscule, une minuscule et un chiffre!</p>';
+                break;
+            }
         }
         
         $contenu ="<h1>Errer de contenu</h1>";
