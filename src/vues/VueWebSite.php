@@ -117,14 +117,6 @@ END;
         </div>
     </div>
 </div>
-
-                <div class="row">
-                <form method="post" action="">
-                        <div  class="col col-lg-4"> 
-                                <button type="submit" class="btn btn-primary" name="deconnexion">Se déconnecter</button>
-                        </div>
-                    </form>
-                </div>
         
 END;
         
@@ -141,6 +133,13 @@ END;
         
         $html = <<<END
         <div class="container">
+        <div class="row">
+                <form method="post" action="">
+                        <div  class="col col-lg-4"> 
+                                <button type="submit" class="btn btn-primary" name="deconnexion">Se déconnecter</button>
+                        </div>
+                    </form>
+            </div>
             <div class="row justify-content-md-center">
             <div class="col col-lg-4 justify-content-md-center">
                 <form method="post" class="text-center">
@@ -990,8 +989,8 @@ END;
         $title = strtolower($code);
         
         $html = <<< END
-        <!doctype html>
-<html lang="en">
+        <!DOCTYPE HTML>
+<html lang="fr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -1042,11 +1041,16 @@ END;
             </nav>
             
                 $contenu
-           
-            
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        
+        </body>
+        <footer class="text-muted text-center text-small">
+                <p class="mb-1">&copy; 2018-2019 Site réalisé dans le module de PHP S3</p>
+                <ul class="list-inline">
+                  <li class="list-inline-item"><a href=https://iut-charlemagne.univ-lorraine.fr/>Iut Nancy Charlemagne</a></li>
+                </ul>
+        </footer>
+               <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
             <script src="./src/js/bootstrap.min.js"></script>
-        </body> 
      </html>
 END;
         
