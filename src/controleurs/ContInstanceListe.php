@@ -41,7 +41,12 @@ class ContInstanceListe {
     }
 
     $liste->user_id = Auth::getIdUser();
-    $liste->public = 0;
+    if(isset($_POST['liste_publique'])){
+      $liste->public = $_POST['liste_publique'];
+    }else{
+      $liste->public = 0;
+    }
+
     $liste->save();
 
     $app->redirect($app->urlFor('listeCrea',array('token' => $token)));
