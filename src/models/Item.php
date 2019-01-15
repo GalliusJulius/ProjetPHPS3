@@ -15,7 +15,7 @@ class Item extends Model{
   }
     
   public function reservation() {
-    return Reservation::where('idItem', '=', $this->id)->first();
+    return Reservation::where('idItem', '=', $this->id);
   }
     
   public function participationPossible() {
