@@ -187,10 +187,8 @@ $app->get('/MesListes/supprimerListe/:token',function($token){
 })->name('supprimer_liste');
 
 $app->get('/Createurs',function(){
-    try{
-        $cont = new c\ControleurCompte();
-        $cont->afficherCreateurs();
-    }
+    $cont = new c\ControleurCompte();
+    $cont->afficherCreateurs();
 })->name('createur');
 
 $app->get('/Recherche',function(){

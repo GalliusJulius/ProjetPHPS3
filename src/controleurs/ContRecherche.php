@@ -31,32 +31,44 @@ class ContRecherche {
     }
     
     public function afficherRecherche(){
-        if(isset($_GET['search'])){
+        try{
             
-            if(! filter_var($_GET['search'], FILTER_SANITIZE_SPECIAL_CHARS)){
-                throw new ExceptionPerso('La valeur entrée n\'est pas valide !', 'avert');
+            
+            if(isset($_GET['search'])){
+            
+                if(! filter_var($_GET['search'], FILTER_SANITIZE_SPECIAL_CHARS)){
+                    throw new ExceptionPerso('La valeur entrée n\'est pas valide !', 'avert');
+                } else{
+                    $search = filter_var($_GET['search'], FILTER_SANITIZE_SPECIAL_CHARS);
+                }
+
+                $userId = Auth::getIdUser();
+                $l1 = Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where("titre", "like", "%" . $search . "%")->get();
+                $l2 =  Liste::where('public', '=', '1')->where("user_id","!=",$userId)->where("titre", "like", "%" . $search . "%")->get();
+                $listes = $l1->merge($l2);
+
+                $membres = Membre::select('nom', 'prenom', 'idUser')->where("idUser", "!=", $userId)->where(function($q) use($userId){
+                    $q->where("prenom", "like", "%" . $search . "%")->orwhere("nom", "like", "%" . $search . "%");
+                })->get();
+
+                $vue = new VueWebSite(array("liste" => $listes, "membre" => $membres, "recherche" => $_GET));
+                $vue->render('RECHERCHE');
+
             } else{
-                $search = filter_var($_GET['search'], FILTER_SANITIZE_SPECIAL_CHARS);
+                $_SESSION['messageErreur'] = "Oups ! Un problème est survenu !";
+                $_SESSION['typeErreur'] = "avert";
+
+                $vue = new VueWebSite(array("liste" => NULL, "membre" => NULL, "recherche" => NULL));
+                $vue->render('RECHERCHE');
             }
             
-            $userId = Auth::getIdUser();
-            $l1 = Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where("titre", "like", "%" . $search . "%")->get();
-            $l2 =  Liste::where('public', '=', '1')->where("user_id","!=",$userId)->where("titre", "like", "%" . $search . "%")->get();
-            $listes = $l1->merge($l2);
             
-            $membres = Membre::select('nom', 'prenom', 'idUser')->where("idUser", "!=", $userId)->where(function($q) use($userId){
-                $q->where("prenom", "like", "%" . $search . "%")->orwhere("nom", "like", "%" . $search . "%");
-            })->get();
-            
-            $vue = new VueWebSite(array("liste" => $listes, "membre" => $membres, "recherche" => $_GET));
-            $vue->render('RECHERCHE');
-            
-        } else{
-            $_SESSION['messageErreur'] = "Oups ! Un problème est survenu !";
-            $_SESSION['typeErreur'] = "avert";
-            
-            $vue = new VueWebSite(array("liste" => NULL, "membre" => NULL, "recherche" => NULL));
-            $vue->render('RECHERCHE');
+        } catch(ExceptionPerso $e){
+            $_SESSION['messageErreur'] = $e->getMessage();
+            $_SESSION['typeErreur'] = $e->getType();
+            unset($_GET['search']);
+            $app = \Slim\Slim::getInstance();
+            $app->redirect($app->urlFor('recherche'));
         }
     }
     
@@ -241,6 +253,7 @@ class ContRecherche {
         } catch(ExceptionPerso $e){
             $_SESSION['messageErreur'] = $e->getMessage();
             $_SESSION['typeErreur'] = $e->getType();
+            unset($_GET['search']);
             $app = \Slim\Slim::getInstance();
             $app->redirect($app->urlFor('recherche'));
         }
