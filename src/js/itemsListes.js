@@ -102,7 +102,13 @@ var fenCagnotte = (function(){
 
 var affAvertissement = (function(){
     window.addEventListener("load", () => {
-        $("div.avertissement").fadeOut("slow");
+        
+        if($("div.hidden.messageErreur").text() != ""){
+            setTimeout(function(){
+                $("div.messageErreur").fadeOut("slow");
+            }, 100000);
+        }
+        
     });
 })();
 

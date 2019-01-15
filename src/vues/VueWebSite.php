@@ -6,7 +6,7 @@ use \wishlist\models\Membre;
 
 class VueWebSite{
     
-    private $liste, $listePart, $item, $membre, $amis, $demande, $recherche, $messageErreur, $app;
+    private $liste, $listePart, $item, $membre, $amis, $demande, $recherche, $messageErreur, $typeErreur, $app;
     
     public function __construct($tab = array()){
         
@@ -40,6 +40,11 @@ class VueWebSite{
         
         if(isset($tab['demande'])){
             $this->demande = $tab['demande'];
+        }
+        
+        if(isset($tab['messageErreur']) and isset($tab['typeErreur'])){
+            $this->messageErreur = $tab['messageErreur'];
+            $this->typeErreur = $tab['typeErreur'];
         }
 
         $this->app = \Slim\Slim::getInstance();
@@ -1061,9 +1066,11 @@ END;
                 break;
             }
             case 'COMPTE':{
+                // A voir :
                 if($this->messageErreur!=""){
                     $this->messageErreur="<p class=\"erreur\">$this->messageErreur</p>";
                 }
+                ////
                 $contenu = $this->monCompte();
                 $style = "<link rel=\"stylesheet\" href=\"./src/css/monCompte.css\">"; 
                 break;
@@ -1129,6 +1136,7 @@ END;
             }
             case 'RECHERCHE':{
                 $contenu = $this->recherche();
+                $this->message = "Recherche";
                 $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
@@ -1176,6 +1184,7 @@ END;
     <link rel="stylesheet" href="$path./src/css/bootstrap.min.css">
     <link rel="stylesheet" href="$path./src/css/principale.css">
     $style
+    <script src="$path./src/js/itemsListes.js"></script>
   </head>
 
   <body>
@@ -1213,6 +1222,8 @@ END;
                     <img src="$path./src/img/profil.png" width="40" height="40" alt="">
                 </a>
             </nav>
+            
+            <div class="messageErreur $this->typeErreur"><p>$this->messageErreur</p></div>
             
                 $contenu
         
