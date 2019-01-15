@@ -111,3 +111,20 @@ ALTER TABLE participation ADD FOREIGN KEY fItem(idItem) REFERENCES item(idItem) 
 ALTER TABLE liste ADD COLUMN message VARCHAR(1000);
 
 
+
+
+
+ALTER TABLE `membres` CHANGE `Prénom` `Prenom` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+
+
+-- Ne pas utiliser :
+
+/**********
+ALTER TABLE `membres` CHANGE `idUser` `idUser` INT(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `liste` CHANGE `user_id` `user_id` INT(11) NOT NULL;
+ALTER TABLE `membres` CHANGE `idUser` `idUser` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `liste` CHANGE `user_id` `user_id` INT(11) UNSIGNED NOT NULL;
+
+
+ALTER TABLE liste ADD FOREIGN KEY fkListe(user_id) REFERENCES membres(idUser) ON DELETE NO ACTION ON UPDATE CASCADE;
+*********/

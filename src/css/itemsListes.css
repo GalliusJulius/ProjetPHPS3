@@ -25,7 +25,7 @@ section.listes, section.listes > ul > li, ul.listes > li{
     border-radius: 50px;
 }
 
-img{
+img.imgDesc{
     width: 200px;
     height: 200px;
 }

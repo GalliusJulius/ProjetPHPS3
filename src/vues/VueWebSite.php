@@ -1,6 +1,9 @@
 <?php
 namespace wishlist\vues;
 
+use \wishlist\Auth\Authentification as Auth;
+use \wishlist\models\Membre;
+
 class VueWebSite{
     
     private $liste, $listePart, $item, $membre, $amis, $demande, $recherche, $messageErreur, $app;
@@ -196,7 +199,7 @@ END;
                     $supprimerListe = $this->app->urlFor('supprimer_liste', array('token' => $val->token));
                     $html .= '<div class="row">';
                     $html .= '<div class="col-sm-8">';
-                    $html .= '<h2><b>'.$i.' : </b><a href = $lien  >'.$val->titre.'</a><h2>';
+                    $html .= '<h2><b>'.$i.' : </b><a href =' . $lien . '  >'.$val->titre.'</a><h2>';
                     $html .= '</div>';
                     $html .= '<div class ="col-sm-4">';
                     $html .= '<div class="row">';
@@ -406,6 +409,135 @@ END;
         return $html;
     }
     
+    private function affichageListeCrea() {
+        $html = '<section class="listes">';
+        $cpt = 1;
+
+
+        $l = $this->liste;
+
+        if(isset($l)){
+            $items = $l->items()->get();
+
+            if(!isset($l->message) or empty($l->message))  {
+                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
+            } else {
+                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p>';
+                $html .= '<br><p><i><b>Message du créateur :</b></i> ' . $l->message . '</p><div class="row items">';
+            }
+
+            foreach($items as $i){
+                //echo $i->reservation()->first();
+                //if($i->reservation()->first() !== NULL){
+                $reserv = $i->reservation()->first();
+                //}
+
+                if(isset($reserv) and ($i->cagnotte == 0)){
+                    $html .= '<div class="reserve col col-l-3">';
+                } else{
+                    $html .= '<div class="col col-l-3">';
+                }
+                
+                if(substr($i->img, 0, 4) == 'http') {
+                   $image_item = '<img class="imgDesc" src="' . $i->img . '">'; 
+                } else {
+                   $image_item = '<img class="imgDesc" src="' . '../src/img/' . $i->img . '">';
+                }
+                
+                $html .= '<p class="nom"><h4>' . $i->nom . '</h4></p>' . $image_item . '<p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
+
+
+                if(isset($reserv)){
+
+                    $html .= '<p>Cet item a été réservé !</p>';
+                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
+                    $html .= '<button class="message btn btn-primary h' . $cpt . '">Voir le message</button>';
+
+                } elseif($i->cagnotte == 0){
+                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
+                    $html .= '<form method="GET" action= "' . $this->app->urlFor('modifierItem', array('id' => $i->id,'token' => $l->token)) . '">';
+                    $html .= '<button class="btn btn-primary">Modifier</button>';
+                    $html .= '</form>';
+
+                    $html .= '<form method="GET" action= "' . $this->app->urlFor('supprimer', array('id' => $i->id,'token' => $l->token)) . '">';
+                    $html .= '<button class="btn btn-primary">Supprimer</button>';
+                    $html .= '</form>';
+                    
+                    $html .= '<form method="POST" action= "' . $this->app->urlFor('creerCagnotte', array('id' => $i->id)) . '">';
+                    $html .= '<button class="btn btn-primary">Créer une cagnotte</button>';
+                    $html .= '</form>';
+                } else{
+                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
+                    $html .= '<form method="GET" action= "' . $this->app->urlFor('modifierItem', array('id' => $i->id,'token' => $l->token)) . '">';
+                    $html .= '<button class="btn btn-primary">Modifier</button>';
+                    $html .= '</form>';
+
+                    $html .= '<form method="GET" action= "' . $this->app->urlFor('supprimer', array('id' => $i->id,'token' => $l->token)) . '">';
+                    $html .= '<button class="btn btn-primary">Supprimer</button>';
+                    $html .= '</form>';
+                }
+
+
+                $html .= '<section class="details hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
+                $html .= '<p class="hidden desc">' . $i->descr . '</p>';
+
+                if($i->url != null or $i->url != ""){
+                    $html .= '<a class="hidden" target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
+                } else{
+                    $html .= '<p class="hidden">Aucune URL associé !</p>';
+                }
+
+                $html .= '</section>';
+
+
+                if(isset($reserv)){
+                    $html .= '<section class="message hidden hide' . $cpt . '">';
+
+                    $html .= '<h6>Messages :</h6>';
+                    $html .= '<p class="message">' . $reserv->message . '</p>';
+
+                }
+
+                $html .= '</div>';
+
+
+                $cpt++;
+            }
+
+            $html .= '</div>';
+            $html .= '<p class="date">Date d\'échéance :</p><p class="date">' . $l->expiration . '</p>';
+
+        }
+
+        $html .= '<form method="GET"  action= "' . $this->app->urlFor('ajouterItem', array('token' => $l->token)) . '">';
+        $html .= '<button class="btn btn-primary">Ajouter un item</button>';
+        $html .= '</form>';
+
+        $html .= '<p><button class="partager btn btn-primary">Partager</button></p>';
+        
+        
+        $html .= '<form method="POST" action="' . $this->app->urlFor('ajoutMsgListe', array('token' => $l->token)) . '">';
+        $html .= '<div class="row justify-content-md-center"><div class="col-lg-5 justify-content-md-center">';
+        $html .= '<p><textarea id="msg" class="form-control" rows="2" type="text" name="message_liste" placeholder="Message"></textarea></p></div></div>';
+        $html .= '<p><button type="submit" class="btn btn-primary" name="ajouter_message_liste">Ajouter un message</button></p>';
+        $html .= '</form>';
+        
+        if(isset($l)){
+            $html .= '<div class="partager hidden hide modal">';
+            $html .= '<div class="form">';
+            $html .= '<h6>Lien de partage :</h6>';
+            $html .= '<p>Le lien de partage vous permet de partager votre liste à qui vous souhaitez, même des personnes qui ne sont pas inscrites sur le site.</p>';
+            $html .= '<input type="text" name="lien" value="' . $_SERVER['HTTP_HOST'] . $this->app->urlFor('listeShare', array('share' => $l->share)) . '" disabled>';
+            $html .= '<button class="fermer btn btn-primary">Fermer</button>';
+            $html .= '</div>';
+            $html .= '</div>';
+        }
+
+        $html .= '</section>';
+
+        return $html;
+    }
+    
     private function affichageListeInvite() {
         $html = '<section class="listes">';
         $cpt = 1;
@@ -425,9 +557,9 @@ END;
             foreach($items as $i){
 
                 if(substr($i->img, 0, 4) == 'http') {
-                   $image_item = '<img src="' . $i->img . '">'; 
+                   $image_item = '<img class="imgDesc" src="' . $i->img . '">'; 
                 } else {
-                   $image_item = '<img src="' . '../src/img/' . $i->img . '">';
+                   $image_item = '<img class="imgDesc" src="' . '../src/img/' . $i->img . '">';
                 }
                 
                 if($i->cagnotte == 1){
@@ -507,7 +639,7 @@ END;
 
                     $html .= '<p class="nom"><h4>' . $i->nom;
 
-                    $html .= '</h4></p><img src="' . $image_item . '">';
+                    $html .= '</h4></p><img class="imageDesc" src="' . $image_item . '">';
 
                     $html .= '<p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
 
@@ -770,7 +902,8 @@ END;
         if(isset($this->liste) and (count($this->liste) > 0)){
             $html .= '<div><h3>Listes :</h3>';
             foreach($this->liste as $l){
-                $html .= '<p>' . $l->titre . '</p>';
+                //echo var_dump($l);
+                $html .= '<p><a class="nav-link" href="' . $this->app->urlFor('listeShare', array('share' => $l->share)) . '">' . $l->titre . '</a></p>';
             }
             $html .= '</div>';
         }
@@ -778,7 +911,8 @@ END;
         if(isset($this->membre) and (count($this->membre) > 0)){
             $html .= '<div><h3>Membre / Créateur :</h3>';
             foreach($this->membre as $m){
-                $html .= '<p>' . $m->nom . ' ' . $m->prénom . '</p>';
+                echo $m->idUser;
+                $html .= '<p><a class="nav-link" href="' . $this->app->urlFor('user', array('id' =>  $m->idUser)) . '">' . $m->nom . ' ' . $m->prenom . '</a></p>';
             }
             $html .= '</div>';
         }
@@ -874,6 +1008,7 @@ END;
         $html .= '<p><input type="text" name="titre" class="form-control" aria-describedby="emailHelp" placeholder="Titre" value="'.$li->titre.'" autofocus/></p>';
         $html .= '<p><input type="text" name="descr" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="'.$li->description.'" /></p>';
         $html .= '<p><input type="date" name="date" class="form-control" aria-describedby="emailHelp" placeholder="Date d\'expiration" value="'.$li->expiration.'" /></p>';
+        $html .= '<p><input type="date" name="date" class="form-control" aria-describedby="emailHelp" placeholder="Date d\'expiration" value="'.$li->expiration.'" /></p>';
         $html .= '<p><button type="submit" class="btn btn-primary" name="valider_modif" value="modifier_liste">Valider modification</button></p>';
         $html .= '</form>';
         $html .= '</div></div></div>';
@@ -938,13 +1073,14 @@ END;
             }
             case 'LISTE_CREA':{
                 $contenu = $this->affichageListeCrea();
-                $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
+                $style = '<link rel="stylesheet"  href="' . $path . '../src/css/itemsListes.css"/>';
+                $path = '.';
                 break;
             }
             case 'LISTE_CO':{
                 $contenu = $this->affichageListeInvite();
-                $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
-                $path = '../.';
+                $style = '<link rel="stylesheet"  href="../src/css/itemsListes.css"/>';
+                $path = '.';
                 break;
             }
             case 'LISTE_INV':{
@@ -972,8 +1108,7 @@ END;
             }
             case 'CREER_LISTE':{
                 $contenu = $this->creerListe();
-                $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
-                $path = '.';
+                $style = '<link rel="stylesheet"  href="/src/css/itemsListes.css"/>';
                 break;
             }
             case 'MODIFIER_LISTE':{
@@ -991,6 +1126,7 @@ END;
         $lienListesPublic = $this->app->urlFor('listePublic');
         $lienCreateur = $this->app->urlFor('createur');
         $lienContact = $this->app->urlFor('contact');
+        $lienRecherche = $this->app->urlFor('recherche');
         $title = strtolower($code);
         
         $html = <<< END
@@ -1017,8 +1153,8 @@ END;
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
-               <form class="form-inline my-2 my-md-0">
-                  <input class="form-control" type="text" placeholder="Rechercher">
+               <form class="form-inline my-2 my-md-0 method="GET" action="$lienRecherche">
+                  <input class="form-control" type="text" name="search" placeholder="Rechercher">
                 </form> 
               <div class="collapse navbar-collapse" id="navbarsExample04">
                 <ul class="navbar-nav mr-auto">
