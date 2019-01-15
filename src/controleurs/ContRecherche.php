@@ -50,9 +50,8 @@ class ContRecherche {
     public function rechercherAvancee(){
         // $_GET['on']  $_GET['date']  $_GET['deep']  $_GET['nbReserv']  $_GET['reserv']  $_GET['nbItem']  $_GET['item']  $_GET['nbReserv']
         
-        // Voir erreur dans la base de données pour ajout d'une clé étrangère dans liste
         // Faire la mise en page de la recherche
-        // Faire fonctionner les liens vers les listes / membres / créateurs
+        // Faire fonctionner les liens vers membres / créateurs
         
         if(isset($_GET['search'])){
             $listes = NULL;

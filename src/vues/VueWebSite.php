@@ -711,7 +711,7 @@ END;
     }
     
     private function recherche(){
-        $html = '<div class="row justify-content-md-center">';
+        $html = '<div class="recherche row justify-content-md-center">';
         $html .= '<form class="form-inline my-2 my-md-0" id="search" method="GET" action="' . $this->app->urlFor('rechercheAvancee') . '">';
         $html .= '<div class="row col-md-12 justify-content-md-center">
         <input class="form-control" type="text" name="search" placeholder="Terme recherché" value="' . $this->recherche['search'] . '">
@@ -722,35 +722,43 @@ END;
             <p>Option de filtre :</p>';
             
             if($this->recherche['on'] == 'Listes'){
-                $html .= '<input type="radio" name="on" value="Listes" checked>
-                <label for="search">Listes</label>';
+                $html .= '<div class="grpRech">
+                <input type="radio" name="on" value="Listes" checked>
+                <label for="search">Listes</label></div>';
             } else{
-                $html .= '<input type="radio" name="on" value="Listes">
-                <label for="search">Listes</label>';
+                $html .= '<div class="grpRech">
+                <input type="radio" name="on" value="Listes">
+                <label for="search">Listes</label></div>';
             }
             
             if($this->recherche['on'] == 'Créateurs'){
-                $html .= '<input type="radio" name="on" value="Créateurs" checked>
-            <label for="search">Créateurs</label>';
+                $html .= '<div class="grpRech">
+                <input type="radio" name="on" value="Créateurs" checked>
+                <label for="search">Créateurs</label></div>';
             } else{
-                $html .= '<input type="radio" name="on" value="Créateurs">
-            <label for="search">Créateurs</label>';
+                $html .= '<div class="grpRech">
+                <input type="radio" name="on" value="Créateurs">
+                <label for="search">Créateurs</label></div>';
             }
             
             if($this->recherche['on'] == 'Membres'){
-                $html .= '<input type="radio" name="on" value="Membres" checked>
-            <label for="search">Membres</label>';
+                $html .= '<div class="grpRech">
+                <input type="radio" name="on" value="Membres" checked>
+                <label for="search">Membres</label></div>';
             } else{
-                $html .= '<input type="radio" name="on" value="Membres">
-            <label for="search">Membres</label>';
+                $html .= '<div class="grpRech">
+                <input type="radio" name="on" value="Membres">
+                <label for="search">Membres</label></div>';
             }
             
             if($this->recherche['on'] == 'Les deux'){
-                $html .= '<input type="radio" name="on" value="Les deux" checked>
-            <label for="search">Les deux</label>';
+                $html .= '<div class="grpRech">
+                <input type="radio" name="on" value="Les deux" checked>
+                <label for="search">Les deux</label></div>';
             } else{
-                $html .= '<input type="radio" name="on" value="Les deux">
-            <label for="search">Les deux</label>';
+                $html .= '<div class="grpRech">
+                <input type="radio" name="on" value="Les deux">
+                <label for="search">Les deux</label></div>';
             }
             
             $html .= '</div>';
@@ -758,14 +766,14 @@ END;
         } else{
             $html .= '<div class="col col-md-3">
             <p>Option de filtre :</p>
-            <input type="radio" name="on" value="Listes">
-            <label for="search">Listes</label>
-            <input type="radio" name="on" value="Créateurs">
-            <label for="search">Créateurs</label>
-            <input type="radio" name="on" value="Membres">
-            <label for="search">Membres</label>
-            <input type="radio" name="on" value="Les deux" checked>
-            <label for="search">Les deux</label>
+            <div class="grpRech"><input type="radio" name="on" value="Listes">
+            <label for="search">Listes</label></div>
+            <div class="grpRech"><input type="radio" name="on" value="Créateurs">
+            <label for="search">Créateurs</label></div>
+            <div class="grpRech"><input type="radio" name="on" value="Membres">
+            <label for="search">Membres</label></div>
+            <div class="grpRech"><input type="radio" name="on" value="Les deux" checked>
+            <label for="search">Les deux</label></div>
             </div>'; 
         }
         
@@ -785,12 +793,12 @@ END;
         if(isset($this->recherche['deep']) and ($this->recherche['deep'] == 'deep')){
             $html .= '<div class="col col-md-3">
             <input type="checkbox" name="deep" value="deep" checked><label for="search" checked>Recherche profonde</label>
-            <p>Recherche le mot clé dans la description des listes et/ou infos utilisateurs.</p>
+            <p><i>Recherche le mot clé dans la description des listes et/ou infos utilisateurs.</i></p>
             </div>';
         } else{
             $html .= '<div class="col col-md-3">
             <input type="checkbox" name="deep" value="deep"><label for="search">Recherche profonde</label>
-            <p>Recherche le mot clé dans la description des listes et/ou infos utilisateurs.</p>
+            <p><i>Recherche le mot clé dans la description des listes et/ou infos utilisateurs.</i></p>
             </div>';
         }
         
@@ -800,28 +808,37 @@ END;
             <input type="number" name="nbReserv" value="' . $this->recherche['nbReserv'] . '">';
             
             if($this->recherche['reserv'] == 'Minimum'){
-                $html .= '<input type="radio" name="reserv" value="Minimum" checked>
-                <label for="search">Au minimum</label>
+                $html .= '<div class="grpRech">
+                <input type="radio" name="reserv" value="Minimum" checked>
+                <label for="search">Au minimum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="reserv" value="Maximum">
-                <label for="search">Au maximum</label>
+                <label for="search">Au maximum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="reserv" value="Exact">
-                <label for="search">Exactement</label>';
+                <label for="search">Exactement</label></div>';
                 
             } elseif($this->recherche['reserv'] == 'Maximum'){
-                $html .= '<input type="radio" name="reserv" value="Minimum">
-                <label for="search">Au minimum</label>
+                $html .= '<div class="grpRech">
+                <input type="radio" name="reserv" value="Minimum">
+                <label for="search">Au minimum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="reserv" value="Maximum" checked>
-                <label for="search">Au maximum</label>
+                <label for="search">Au maximum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="reserv" value="Exact">
-                <label for="search">Exactement</label>';
+                <label for="search">Exactement</label></div>';
                 
             } else{
-                $html .= '<input type="radio" name="reserv" value="Minimum">
-                <label for="search">Au minimum</label>
+                $html .= '<div class="grpRech">
+                <input type="radio" name="reserv" value="Minimum">
+                <label for="search">Au minimum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="reserv" value="Maximum">
-                <label for="search">Au maximum</label>
+                <label for="search">Au maximum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="reserv" value="Exact" checked>
-                <label for="search">Exactement</label>';
+                <label for="search">Exactement</label></div>';
                 
             }
             
@@ -831,12 +848,15 @@ END;
             $html .= '<div class="col col-md-2">
             <p>Filtre par nombre de réservations :</p>
             <input type="number" name="nbReserv">
+            <div class="grpRech">
             <input type="radio" name="reserv" value="Minimum">
-            <label for="search">Au minimum</label>
+            <label for="search">Au minimum</label></div>
+            <div class="grpRech">
             <input type="radio" name="reserv" value="Maximum">
-            <label for="search">Au maximum</label>
+            <label for="search">Au maximum</label></div>
+            <div class="grpRech">
             <input type="radio" name="reserv" value="Exact" checked>
-            <label for="search">Exactement</label>
+            <label for="search">Exactement</label></div>
             </div>';
         }
         
@@ -847,28 +867,37 @@ END;
             <input type="number" name="nbItem" value="' . $this->recherche['nbItem'] . '">';
             
             if($this->recherche['item'] == 'Minimum'){
-                $html .= '<input type="radio" name="item" value="Minimum" checked>
-                <label for="search">Au minimum</label>
+                $html .= '<div class="grpRech">
+                <input type="radio" name="item" value="Minimum" checked>
+                <label for="search">Au minimum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="item" value="Maximum">
-                <label for="search">Au maximum</label>
+                <label for="search">Au maximum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="item" value="Exact">
-                <label for="search">Exactement</label>';
+                <label for="search">Exactement</label></div>';
                 
             } elseif($this->recherche['item'] == 'Maximum'){
-                $html .= '<input type="radio" name="item" value="Minimum">
-                <label for="search">Au minimum</label>
+                $html .= '<div class="grpRech">
+                <input type="radio" name="item" value="Minimum">
+                <label for="search">Au minimum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="item" value="Maximum" checked>
-                <label for="search">Au maximum</label>
+                <label for="search">Au maximum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="item" value="Exact">
-                <label for="search">Exactement</label>';
+                <label for="search">Exactement</label></div>';
                 
             } else{
-                $html .= '<input type="radio" name="item" value="Minimum">
-                <label for="search">Au minimum</label>
+                $html .= '<div class="grpRech">
+                <input type="radio" name="item" value="Minimum">
+                <label for="search">Au minimum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="item" value="Maximum">
-                <label for="search">Au maximum</label>
+                <label for="search">Au maximum</label></div>
+                <div class="grpRech">
                 <input type="radio" name="item" value="Exact" checked>
-                <label for="search">Exactement</label>';
+                <label for="search">Exactement</label></div>';
                 
             }
             
@@ -878,12 +907,15 @@ END;
             $html .= '<div class="col col-md-2">
             <p>Filtre par nombre d\'items :</p>
             <input type="number" name="nbItem">
+            <div class="grpRech">
             <input type="radio" name="item" value="Minimum">
-            <label for="search">Au minimum</label>
+            <label for="search">Au minimum</label></div>
+            <div class="grpRech">
             <input type="radio" name="item" value="Maximum">
-            <label for="search">Au maximum</label>
+            <label for="search">Au maximum</label></div>
+            <div class="grpRech">
             <input type="radio" name="item" value="Exact" checked>
-            <label for="search">Exactement</label>
+            <label for="search">Exactement</label></div>
             </div>';
         }
         
