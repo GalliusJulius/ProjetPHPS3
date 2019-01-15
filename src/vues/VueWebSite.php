@@ -182,9 +182,8 @@ END;
     
     public function mesListes(){
         $html = <<<END
-        <div class="row justify-content-md-center">
-            <div class="col col-lg-12 justify-content-md-center">
-            <h1>Les listes que vous avez créé:</h1>
+        <div class="container">
+            <h1>Les listes que vous avez créé ou sur lesquelles vous avez des droits de modification:</h1>
 END;
         
         $i=0;
@@ -196,19 +195,21 @@ END;
                     $modifierListe = $this->app->urlFor('modifierListe', array('token' => $val->token));
                     $supprimerListe = $this->app->urlFor('supprimer_liste', array('token' => $val->token));
                     $html .= '<div class="row">';
-                    $html .= '<div class="col col-lg-6 ">';
+                    $html .= '<div class="col-sm-8">';
                     $html .= '<h2><b>'.$i.' : </b><a href = $lien  >'.$val->titre.'</a><h2>';
                     $html .= '</div>';
-                    $html .= '<div class="col col-lg-3">';
+                    $html .= '<div class ="col-sm-4">';
+                    $html .= '<div class="row">';
                     $html .= '<form method="GET" action= "'.$modifierListe.'">';
-                    $html .= '<button class="btn btn-primary col col-lg-6" value="modifierListe">Modifier liste</button>';
+                    $html .= '<button class="btn modif col col-lg-6" value="modifierListe">Modifier liste</button>';
                     $html .= "</form>";
                     $html .= '</div>';
-                    $html .= '<div class="col col-lg-3">';
+                    $html .= '<div class="row">';
                     $html .= '<form method="GET" action= "'.$supprimerListe.'" >';
-                    $html .= '<button class="btn btn-primary col col-lg-6" value="supprimerListe">Supprimer liste</button>';
+                    $html .= '<button class="btn del col col-lg-6" value="supprimerListe">Supprimer liste</button>';
                     $html .= "</form>";
-                    $html .= '</div>';
+                    $html .= "</div>";
+                    $html .= "</div>";
                     $html .= "</div>";
                 } 
             }
@@ -221,17 +222,18 @@ END;
         
 		$creerListe = $this->app->urlFor('creerListe');
         $html .= <<<END
-        <div class="row">
-            <div class="col col-lg-6">
-                <p>Vous voulez créer une liste?</p>
+        <div class="row separation " >
+            <div class="col-sm-8">
+                <h3>Vous voulez créer une liste?</h3>
             </div>
-            <div class="col col-lg-6">
+            <div class="col-sm-4">
               <form method="GET" action= "$creerListe">
-                <button class="btn btn-primary col col-lg-3" value="creerListe">Créer listes</button>
+                <button class="btn add" value="creerListe">Créer listes</button>
               </form>
             </div>
         </div>
-        <h1>Les listes qu'on vous a partagé :</h1>
+        <h1>Vos listes favorites:</h1>
+        <p>Ici vous pouvez retrouver rapidement une liste que vous vouliez garder sous la main en l'ajoutant grâce à son token.</p>
 END;
         
         $i = 0;
@@ -240,27 +242,29 @@ END;
                 $lien = $this->app->urlFor('listeCrea', array('token' => $val->token));
                 $i++;
 
-                $html .=  "<div class =\"col-lg-8\"><h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div><div class =\"col-lg-2\"><form method=\"post\"><button type=\"submit\" class=\"btn btn-danger\" name=\"suppression\" value=$val->token>Supprimer</button></form></div>"; 
+                $html .=  "<div class =\"col-lg-8\"><h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div><div class =\"col-lg-2\"><form method=\"post\"><button type=\"submit\" class=\"btn del\" name=\"suppression\" value=$val->token>Supprimer</button></form></div>"; 
             }
         }
         
         
         if($i == 0){
-            $html .= "</div><h3> vous n'avez pas encore ajouté de listes de vos amis, vous pouvez en créer une !</h3>";  
+            $html .= "<h4> Vous n'avez pas encore ajouté de listes de vos amis!</h4>";  
         }
         
         $html .= <<<END
         <div class="row justify-content-md-center">
-        <div class="col col-lg-6 justify-content-md-center">
+        <div class="col-sm-8">
         <p>Ajouter la liste d'un de vos amis? Remplissez le token de sa liste dans le champ prévu et cliquez sur ok</p>
          </div>
-         <div class="col col-lg-6 justify-content-md-center">
+         <div class="col-sm-8">
             <form method="post" class="text-center">
                 <input type="text" name="token" class="form-control" placeholder="Token liste">
-                <button type="submit" class="btn btn-primary" name="ajout" value="add">Ajouter</button>
+                <button type="submit" class="btn add" name="ajout" value="add">Ajouter</button>
             </form>
             <p class="">$this->erreur</p>
             </div>
+        </div>
+        </div>
         </div>
         </div>
         </div>
@@ -907,6 +911,7 @@ END;
             }
             case 'MESLISTES':{
                 $contenu = $this->mesListes();
+                $style="<link rel=\"stylesheet\" href=\"./src/css/mesListes.css\">";
                 break;
             }
             case 'CREATEURS':{
