@@ -1,0 +1,66 @@
+.centrer{
+    text-align: center;
+}
+
+.centrer h1{
+    color: #FC3C3C;
+}
+
+.btn{
+    width: 100%;
+}
+
+.article{
+    color : white;
+    padding: 2px;
+}
+
+.contenu img{
+    width: 80%;
+    height: 60%;
+}
+
+.contenu{
+    background-color: gray;
+    text-align: center;
+    min-height: 100%;
+    border-radius: 4%;
+    padding: 1%;
+}
+
+.contenu .btn{
+    width:96%;
+    margin: 2%;
+}
+
+.bottom{
+    margin: 2%;
+}
+
+.del{
+    background-color: #FC3C3C;
+    color:white;
+}
+
+.del:hover{
+    color:black;
+}
+
+.add{
+    background-color: forestgreen;
+    color: white;
+}
+
+.add:hover{
+    color:black;
+}
+
+.modif{
+    background-color: #F8B500;
+    color:white;
+}
+
+.modif:hover{
+    color:black;
+}
+

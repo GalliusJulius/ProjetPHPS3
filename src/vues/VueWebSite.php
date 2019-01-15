@@ -418,9 +418,9 @@ END;
 
         if(isset($l)){
             $items = $l->items()->get();
-            $html .='<div class="row">';
+            $html .='<div class="row centrer">';
             if(!isset($l->message) or empty($l->message))  {
-                $html .= '<h1>' . $l->titre . '</h1><p>' . $l->description . '</p>';
+                $html .= '<h1 class="col-12">' . $l->titre . '</h1><p class="col-12">' . $l->description . '</p>';
             } else {
                 $html .= '<h1>' . $l->titre . '</h1><p> Description : ' . $l->description . '</p>';
                 $html .= '<p><i>Message du créateur :</i> ' . $l->message . '</p>';
@@ -430,9 +430,10 @@ END;
                 $reserv = $i->reservation()->first();
 
                 if(isset($reserv) and ($i->cagnotte == 0)){
-                    $html .= '<div class="reserve col col-l-3">';
+                    #reserve ici
+                    $html .= '<div class="article col-sm-6 col-md-4"><div class="contenu">';
                 } else{
-                    $html .= '<div class="col col-l-3">';
+                    $html .= '<div class="article col-sm-6 col-md-4"><div class="contenu">';
                 }
                 
                 if(substr($i->img, 0, 4) == 'http') {
@@ -441,37 +442,33 @@ END;
                    $image_item = '<img class="imgDesc" src="' . '../src/img/' . $i->img . '">';
                 }
                 
-                $html .= '<p class="nom"><h4>' . $i->nom . '</h4></p>' . $image_item . '<p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
+                $html .= '<h4>' . $i->nom . '</h4>' . $image_item . '<p class="tarif">' . $i->tarif .  '</p>';
 
-
+                $html .= '<button class="btn btn-primary' . $cpt . '">Description</button>';
                 if(isset($reserv)){
 
                     $html .= '<p>Cet item a été réservé !</p>';
-                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
-                    $html .= '<button class="message btn btn-primary h' . $cpt . '">Voir le message</button>';
-
+                    $html .= '<button class="message btn btn-primary' . $cpt . '">Voir le message</button>';
                 } elseif($i->cagnotte == 0){
-                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
-                    $html .= '<form method="GET" action= "' . $this->app->urlFor('modifierItem', array('id' => $i->id,'token' => $l->token)) . '">';
-                    $html .= '<button class="btn btn-primary">Modifier</button>';
+                    $html .= '<div class="row"><form method="GET" class="col-md-6" action= "' . $this->app->urlFor('modifierItem', array('id' => $i->id,'token' => $l->token)) . '">';
+                    $html .= '<button class="btn modif">Modifier</button>';
                     $html .= '</form>';
 
-                    $html .= '<form method="GET" action= "' . $this->app->urlFor('supprimer', array('id' => $i->id,'token' => $l->token)) . '">';
-                    $html .= '<button class="btn btn-primary">Supprimer</button>';
-                    $html .= '</form>';
+                    $html .= '<form class="col-md-6" method="GET" action= "' . $this->app->urlFor('supprimer', array('id' => $i->id,'token' => $l->token)) . '">';
+                    $html .= '<button class="btn del">Supprimer</button>';
+                    $html .= '</form></div>';
                     
                     $html .= '<form method="POST" action= "' . $this->app->urlFor('creerCagnotte', array('id' => $i->id)) . '">';
-                    $html .= '<button class="btn btn-primary">Créer une cagnotte</button>';
+                    $html .= '<button class="btn add">Créer une cagnotte</button>';
                     $html .= '</form>';
                 } else{
-                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
-                    $html .= '<form method="GET" action= "' . $this->app->urlFor('modifierItem', array('id' => $i->id,'token' => $l->token)) . '">';
-                    $html .= '<button class="btn btn-primary">Modifier</button>';
+                    $html .= '<div class="row"><form method="GET" class="col-md-6" action= "' . $this->app->urlFor('modifierItem', array('id' => $i->id,'token' => $l->token)) . '">';
+                    $html .= '<button class="btn modif">Modifier</button>';
                     $html .= '</form>';
 
-                    $html .= '<form method="GET" action= "' . $this->app->urlFor('supprimer', array('id' => $i->id,'token' => $l->token)) . '">';
-                    $html .= '<button class="btn btn-primary">Supprimer</button>';
-                    $html .= '</form>';
+                    $html .= '<form method="GET" class="col-md-6" action ="' . $this->app->urlFor('supprimer', array('id' => $i->id,'token' => $l->token)) . '">';
+                    $html .= '<button class="btn del">Supprimer</button>';
+                    $html .= '</form></div>';
                 }
 
 
@@ -495,7 +492,7 @@ END;
 
                 }
 
-                $html .= '</div>';
+                $html .= '</div></div>';
 
 
                 $cpt++;
@@ -506,17 +503,16 @@ END;
 
         }
 
-        $html .= '<form method="GET"  action= "' . $this->app->urlFor('ajouterItem', array('token' => $l->token)) . '">';
-        $html .= '<button class="btn btn-primary">Ajouter un item</button>';
+        $html .= '<div class="row"><form method="GET" class="col-md-6" action= "' . $this->app->urlFor('ajouterItem', array('token' => $l->token)) . '">';
+        $html .= '<button class="btn add">Ajouter un item</button>';
         $html .= '</form>';
 
-        $html .= '<p><button class="partager btn btn-primary">Partager</button></p>';
+        $html .= '<p class="col-md-6"><button class="btn btn-primary">Partager</button></p></div>';
         
         
-        $html .= '<form method="POST" action="' . $this->app->urlFor('ajoutMsgListe', array('token' => $l->token)) . '">';
-        $html .= '<div class="row justify-content-md-center"><div class="col-lg-5 justify-content-md-center">';
-        $html .= '<p><textarea id="msg" class="form-control" rows="2" type="text" name="message_liste" placeholder="Message"></textarea></p></div></div>';
-        $html .= '<p><button type="submit" class="btn btn-primary" name="ajouter_message_liste">Ajouter un message</button></p>';
+        $html .= '<form method="POST" class="row bottom" action="' . $this->app->urlFor('ajoutMsgListe', array('token' => $l->token)) . '">';
+        $html .= '<textarea id="msg" class="col-md-8 form-control" rows="2" type="text" name="message_liste" placeholder="Message"></textarea>';
+        $html .= '<button type="submit" class="col-md-4 btn add" name="ajouter_message_liste">Ajouter un message</button>';
         $html .= '</form>';
         
         if(isset($l)){
@@ -530,6 +526,7 @@ END;
             $html .= '</div>';
         }
 
+        $html .= '</div>';
         $html .= '</div>';
 
         return $html;
@@ -1103,12 +1100,12 @@ END;
             case 'LISTE_CREA':{
                 $contenu = $this->affichageListeCrea();
                 $path = '.';
-                $style = '<link rel="stylesheet"  href="' . $path . '../src/css/itemsListes.css"/>';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'LISTE_CO':{
                 $contenu = $this->affichageListeInvite();
-                $path = '../.';
+                $path = '.';
                 $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
