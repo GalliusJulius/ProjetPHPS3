@@ -8,7 +8,7 @@ class VueWebSite{
     
     private $liste, $listePart, $item, $membre, $amis, $demande, $recherche, $messageErreur, $app;
     
-    public function __construct($tab){
+    public function __construct($tab = array()){
         
         if(isset($tab['liste'])){
             $this->liste = $tab['liste'];
@@ -626,7 +626,7 @@ END;
                     $html .= '</div>';
                     
                 } else{
-                    $reserv = $i->reservation();
+                    $reserv = $i->reservation()->first();
                     
                     if(isset($reserv)){
                         $html .= '<div class="reserve col col-l-3">';
@@ -1102,31 +1102,31 @@ END;
             }
             case 'LISTE_CREA':{
                 $contenu = $this->affichageListeCrea();
-                $style = '<link rel="stylesheet"  href="' . $path . '../src/css/itemsListes.css"/>';
                 $path = '.';
+                $style = '<link rel="stylesheet"  href="' . $path . '../src/css/itemsListes.css"/>';
                 break;
             }
             case 'LISTE_CO':{
                 $contenu = $this->affichageListeInvite();
-                $style = '<link rel="stylesheet"  href="../src/css/itemsListes.css"/>';
-                $path = '.';
+                $path = '../.';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'LISTE_INV':{
                 $contenu = $this->affichageListeInvite();
-                $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
                 $path = '../.';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'ITEM_AJOUT':{
                 $contenu = $this->ajouterItem();
-                $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
                 $path = '../.';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'RECHERCHE':{
                 $contenu = $this->recherche();
-                $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'MODIFIER':{
@@ -1137,7 +1137,8 @@ END;
             }
             case 'CREER_LISTE':{
                 $contenu = $this->creerListe();
-                $style = '<link rel="stylesheet"  href="/src/css/itemsListes.css"/>';
+                $path = '.';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'MODIFIER_LISTE':{
