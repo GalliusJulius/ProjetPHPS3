@@ -209,7 +209,14 @@ $app->get('/liste/:share/partager', function($share){
 
 $app->post('/liste/:share/partager/reserver/:idItem', function($share, $idItem){
     $cont = new c\ContAffichageListe();
-    $cont->reserverItem($share, $idItem);
+    try{
+        $cont->reserverItem($share, $idItem);
+    } catch(c\ExceptionPerso $e){
+        $_SESSION['messageErreur'] = $e->getMessage();
+        $_SESSION['typeErreur'] = $e->getType();
+        $app = \Slim\Slim::getInstance();
+        $app->redirect($app->urlFor('listeShare', array('share' => $share)));
+    }
 })->name('reserver');
 
 /*$app->get('/item/:id', function($id){

@@ -218,6 +218,18 @@ div.messageErreur{
     padding-top: 1%;
 }
 
+div.info{
+    background-color: rgba(52, 162, 70, 0.5);
+}
+
+div.avert{
+    background-color: rgba(152, 162, 70, 0.5);
+}
+
+div.err{
+    background-color: rgba(152, 62, 70, 0.5);
+}
+
 
 @media (max-width: 1200px) {
     section.listes, section.listes > ul > li, ul.listes > li{

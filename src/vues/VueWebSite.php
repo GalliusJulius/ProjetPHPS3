@@ -42,10 +42,14 @@ class VueWebSite{
             $this->demande = $tab['demande'];
         }
         
-        if(isset($tab['messageErreur']) and isset($tab['typeErreur'])){
-            $this->messageErreur = $tab['messageErreur'];
-            $this->typeErreur = $tab['typeErreur'];
+        if(isset($_SESSION['messageErreur']) and isset($_SESSION['typeErreur'])){
+            $this->messageErreur = $_SESSION['messageErreur'];
+            $this->typeErreur = $_SESSION['typeErreur'];
+            $_SESSION['messageErreur'] = NULL;
+            $_SESSION['typeErreur'] = NULL;
         }
+        
+        //echo $this->messageErreur;
 
         $this->app = \Slim\Slim::getInstance();
     }
@@ -679,7 +683,7 @@ END;
                         }
 
                         $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '" required>';
-                        $html .= '<p>Votre prénom : </p><input type="text" name="prenom" value="' . $p . '" required>';
+                        $html .= '<p>Votre prénom : </p><input type="text" name="prenom" value="' . $p . '">';
                         $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Reserv"></textarea>';
 
                         $html .= '<button type="submit" class="btn btn-primary confirmerR h' . $cpt . '">Réserver</button>';
