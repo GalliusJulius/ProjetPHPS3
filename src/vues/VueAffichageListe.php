@@ -750,7 +750,7 @@ class VueAffichageListe {
         if(Auth::isLogged()){
             $navBar = '
             <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-              <a class="navbar-brand" href="' . $this->app->urlFor('Accueil') . '">My Wish List</a>
+              <a class="navbar-brand" href="' . $this->app->urlFor('accueil') . '">My Wish List</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
