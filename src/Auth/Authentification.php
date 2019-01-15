@@ -7,11 +7,13 @@ class Authentification{
 
     static function createUser($mail,$pass,$passC,$nom,$prenom,$pseudo){
         $count=m\Membre::where('email','=',$mail)->count();
-        #$policy = new \PasswordPolicy\Policy;
-        #$policy->contains('lowercase', $policy->atLeast(2));
-        #$policy->length( 6 ) ;
+        $policy = new \PasswordPolicy\Policy;
+        $policy->contains('lowercase', $policy->atLeast(1));
+        $policy->contains('digit',$policy->atLeast(1));
+        $policy->contains('upperCase',$policy->atLeast(1));
+        $policy->length($policy->atLeast(6));
             if($count == 0 && filter_var($mail,FILTER_VALIDATE_EMAIL)){
-                #if($policy->check($pass)){
+                if($policy->test($pass)->result){
                     if($pass == $passC){
                         $insert = new m\Membre();
                         $insert->email=$mail;
@@ -27,10 +29,14 @@ class Authentification{
                     else{
                         throw new \Exception("mdp");
                     }
+                }
+                else{
+                    throw new \Exception("police");
+                }
             }
-        else{
-            throw new \Exception("mail");
-        }
+            else{
+                    throw new \Exception("mail");
+            }
     }
 
     static function authentificate($user,$pass){

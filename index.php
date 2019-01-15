@@ -58,6 +58,9 @@ $app->post('/inscription',function(){
         else if($e->getMessage()=="mdp"){
             $gest->erreur="ER_INSCRIPTION1";
         }
+       else if($e->getMessage()=="police"){
+           $gest->erreur="ER_INSCRIPTION3";
+       }
     }
     $gest->recupererVue("inscription");
     }

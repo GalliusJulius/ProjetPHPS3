@@ -422,8 +422,8 @@ END;
             if(!isset($l->message) or empty($l->message))  {
                 $html .= '<h1 class="col-12">' . $l->titre . '</h1><p class="col-12">' . $l->description . '</p>';
             } else {
-                $html .= '<h1>' . $l->titre . '</h1><p> Description : ' . $l->description . '</p>';
-                $html .= '<p><i>Message du créateur :</i> ' . $l->message . '</p>';
+                $html .= '<h1  class="col-12">' . $l->titre . '</h1><p class="col-12"> Description : ' . $l->description . '</p>';
+                $html .= '<p class="col-12"><i>Message du créateur :</i> ' . $l->message . '</p>';
             }
             $html.='</div><div class="row">';
             foreach($items as $i){
@@ -1229,7 +1229,7 @@ END;
                 </ul>
         </footer>
                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-            <script src="./src/js/bootstrap.min.js"></script>
+            <script src="$path./src/js/bootstrap.min.js"></script>
      </html>
 END;
         
