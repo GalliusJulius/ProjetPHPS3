@@ -1011,19 +1011,22 @@ END;
         $html = '<section>';
         $creer_liste = $this->app->urlFor('creer_liste');
 
-        $html .= '<div class="row"><div class="col-md-8">';
-        $html .= '<h1>Vous pouvez créer une liste ici</h1>';
-        $html .= '<h3>Veuillez saisir les informations de la liste :</h3>';
-        $html .= '<div class="row"><div class="col-md-5">';
-        $html .= '<form method="POST" action="">';
-        $html .= '<p><input type="text" name="titre" class="form-control" aria-describedby="emailHelp" placeholder="Titre" value="" required autofocus/></p>';
-        $html .= '<p><input type="text" name="descr" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="" required/></p>';
-        $html .= '<p><input type="date" name="date" class="form-control" aria-describedby="emailHelp" placeholder="Date d\'expiration" value="" required/></p>';
-        $html .= '<p><input type="checkbox" name="liste_publique" value="" required > Liste publique</p>'; 
-        $html .= '<p><button type="submit" class="btn btn-primary" name="creerUneListe" value="creer_Liste">Créer la liste</button></p>';
-        $html .= '</form>';
-        $html .= '</div></div></div>';
-        $html .= '</section>';
+          $html .= '<div class="row"><div class="col-md-8">';
+	      $html .= '<h1>Vous pouvez créer une liste ici</h1>';
+		  $html .= '<h3>Veuillez saisir les informations de la liste :</h3>';
+          $html .= '<div class="row"><div class="col-md-5">';
+		  $html .= '<form method="POST" action="">';
+		  $html .= '<p><input type="text" name="titre" class="form-control" aria-describedby="emailHelp" placeholder="Titre" value="" required autofocus/></p>';
+		  $html .= '<p><input type="text" name="descr" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="" required/></p>';
+		  $html .= '<p><input type="date" name="date" class="form-control" aria-describedby="emailHelp" placeholder="Date d\'expiration" value="" required/></p>';
+	   	  $html .= '<div class="col-md-6">';
+		  $html .= '<p><input type="radio" name="liste_publique" value="1"> Liste publique</p>';
+		  $html .= '<p><input type="radio" name="liste_publique" value="0"> Liste privée</p>';
+		  $html .= '</div>';
+		  $html .= '<p><button type="submit" class="btn btn-primary" name="creerUneListe" value="creer_Liste">Créer la liste</button></p>';
+		  $html .= '</form>';
+		  $html .= '</div></div></div>';
+		  $html .= '</section>';
 
         return $html;
     }
@@ -1040,7 +1043,15 @@ END;
         $html .= '<p><input type="text" name="titre" class="form-control" aria-describedby="emailHelp" placeholder="Titre" value="'.$li->titre.'" autofocus/></p>';
         $html .= '<p><input type="text" name="descr" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="'.$li->description.'" /></p>';
         $html .= '<p><input type="date" name="date" class="form-control" aria-describedby="emailHelp" placeholder="Date d\'expiration" value="'.$li->expiration.'" /></p>';
-        $html .= '<p><input type="date" name="date" class="form-control" aria-describedby="emailHelp" placeholder="Date d\'expiration" value="'.$li->expiration.'" /></p>';
+        $html .= '<div class="col-md-6">';
+        if($li->public == 0){
+          $html .= '<p><input type="radio" name="liste_publique" value="1"> Liste publique</p>';
+          $html .= '<p><input type="radio" name="liste_publique" value="0" checked> Liste privée</p>';
+        }else{
+          $html .= '<p><input type="radio" name="liste_publique" value="1" checked> Liste publique</p>';
+          $html .= '<p><input type="radio" name="liste_publique" value="0"> Liste privée</p>';
+        }
+        $html .= '</div>';
         $html .= '<p><button type="submit" class="btn btn-primary" name="valider_modif" value="modifier_liste">Valider modification</button></p>';
         $html .= '</form>';
         $html .= '</div></div></div>';

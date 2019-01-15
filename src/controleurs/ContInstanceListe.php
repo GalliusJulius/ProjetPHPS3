@@ -80,6 +80,11 @@ class ContInstanceListe {
         $app->redirect($app->urlFor('creerListe')); // voir pour les erreurs
       }
     }
+
+    if(isset($_POST['liste_publique'])){
+      $liste->public = $_POST['liste_publique'];
+    }
+
     $liste->save();
 
     $app->redirect($app->urlFor('listeCrea',array('token' => $token)));
