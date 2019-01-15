@@ -410,7 +410,7 @@ END;
     }
     
     private function affichageListeCrea() {
-        $html = '<section class="listes">';
+        $html = '<div class="container">';
         $cpt = 1;
 
 
@@ -418,19 +418,16 @@ END;
 
         if(isset($l)){
             $items = $l->items()->get();
-
+            $html .='<div class="row">';
             if(!isset($l->message) or empty($l->message))  {
-                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
+                $html .= '<h1>' . $l->titre . '</h1><p>' . $l->description . '</p>';
             } else {
-                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p>';
-                $html .= '<br><p><i><b>Message du créateur :</b></i> ' . $l->message . '</p><div class="row items">';
+                $html .= '<h1>' . $l->titre . '</h1><p> Description : ' . $l->description . '</p>';
+                $html .= '<p><i>Message du créateur :</i> ' . $l->message . '</p>';
             }
-
+            $html.='</div><div class="row">';
             foreach($items as $i){
-                //echo $i->reservation()->first();
-                //if($i->reservation()->first() !== NULL){
                 $reserv = $i->reservation()->first();
-                //}
 
                 if(isset($reserv) and ($i->cagnotte == 0)){
                     $html .= '<div class="reserve col col-l-3">';
@@ -533,7 +530,7 @@ END;
             $html .= '</div>';
         }
 
-        $html .= '</section>';
+        $html .= '</div>';
 
         return $html;
     }
