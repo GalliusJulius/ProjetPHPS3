@@ -193,28 +193,28 @@ $app->get('/Createurs',function(){
 
 $app->get('/Recherche',function(){
     $cont = new c\contRecherche();
-    try{
+    //try{
         $cont->afficherRecherche();
-    } catch(\Exception $e){
+    /*} catch(\Exception $e){
         $_SESSION['messageErreur'] = "Une erreur est survenue lors de la recherche !";
         $_SESSION['typeErreur'] = "err";
         unset($_GET['search']);
         $app = \Slim\Slim::getInstance();
         $app->redirect($app->urlFor('recherche'));
-    }
+    }*/
 })->name('recherche');
 
 $app->get('/RechercheAvancee',function(){
     $cont = new c\contRecherche();
-    try{
+    //try{
         $cont->rechercherAvancee();
-    } catch(\Exception $e){
+    /*} catch(\Exception $e){
         $_SESSION['messageErreur'] = "Une erreur est survenue lors de la recherche !";
         $_SESSION['typeErreur'] = "err";
         unset($_GET['search']);
         $app = \Slim\Slim::getInstance();
         $app->redirect($app->urlFor('recherche'));
-    }
+    }*/
 })->name('rechercheAvancee');
 
 $app->get('/liste/:token', function($token){
@@ -272,7 +272,14 @@ $app->post('/item/:id/cagnotte/participer', function($id){
 
 $app->get('/liste_public', function(){
     $cont = new c\ContAffichageListe();
-    $cont->afficherListesPublic();
+    try{
+        $cont->afficherListesPublic();
+    } catch(\Exception $e){
+        $_SESSION['messageErreur'] = "Une erreur est survenue lors de l'affichage des listes pubic !";
+        $_SESSION['typeErreur'] = "err";
+        $app = \Slim\Slim::getInstance();
+        $app->redirect($app->urlFor('accueil'));
+    }
 })->name('listePublic');
 
 $app->get('/liste/:token/ajouterItem', function($token) {

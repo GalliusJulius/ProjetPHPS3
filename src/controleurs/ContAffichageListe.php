@@ -15,26 +15,31 @@ class ContAffichageListe {
     public function __construct(){}
 
     public function afficherListesPublic(){
+        // A tester :
+        //$listes = m\Liste::where('public', '=', '1')->where('expiration','>=',now())->get();
         $listes = m\Liste::where('public', '=', '1')->get();
         
         $vue = new VueWebSite(array('liste' => $listes));
         $vue->render('LISTES');
     }
     
+    // Inutile ???
     public function afficherListesUtilisateurs(){
         $listes = m\Liste::get();
         $userId = Auth::getIdUser();
         
-        //if(isset($userId)){
+        if(isset($userId)){
             $m = m\Membre::where('idUser', '=', $userId)->first();
             $listes = $m->listes()->get();
             
             $vue = new VueWebSite(array('liste' => $listes));
             $vue->render('LISTES_CREA');
-        /*} else{
+        } else{
+            $_SESSION['messageErreur'] = "Vous n'êtes pas autorisé à accéder à cette liste !";
+            $_SESSION['typeErreur'] = "err";
             $app = \Slim\Slim::getInstance();
             $app->response->redirect($app->urlFor('listePublic'));
-        }*/
+        }
     }
 
     public function afficherListe($token){
@@ -43,12 +48,14 @@ class ContAffichageListe {
         
         $listes = m\Liste::where('token', 'like', $token)->get();
         
-        //if(Auth::isCreator($token)){ // si l'utilisateur est créateur
-        $vue->render('LISTE_CREA');
-        /*} else{ // sinon redirection vers l'affichage des invités
+        if(Auth::isAuthorized($token)){ // si l'utilisateur est autorisé à accéder à cette liste
+            $vue->render('LISTE_CREA');
+        } else{ // sinon redirection vers l'affichage des invités
+            $_SESSION['messageErreur'] = "Vous n'êtes pas autorisé à accéder à cette liste !";
+            $_SESSION['typeErreur'] = "err";
             $app = \Slim\Slim::getInstance();
             $app->response->redirect($app->urlFor('listeShare', array('share' => $liste->share)));
-        }*/
+        }
     }
     
     public function afficherListeInvite($share){
@@ -57,7 +64,7 @@ class ContAffichageListe {
         
         $vue = new VueWebSite(array('liste' => $liste));
         
-        
+        // Voir si utile ? (la condition)
         if(Auth::isLogged()){ // si l'utilisateur est connecté
             $vue->render('LISTE_CO');
         } else{ // si l'utilisateur n'est pas connecté (vue invité)
@@ -66,32 +73,60 @@ class ContAffichageListe {
     }
     
     public function reserverItem($share, $idItem){
-        $app = \Slim\Slim::getInstance();
-        
-        if(isset($_POST["nom"]) and isset($_POST["prenom"]) and ($_POST["nom"] != '') and ($_POST["prenom"] != '')){
-            $r = new m\Reservation();
-            $r->prenom = $_POST["prenom"];
-            $r->nom = $_POST["nom"];
+        try{
             
-            if(isset($_POST["message"]) and ($_POST["message"] != '')){
-                $r->message = $_POST["message"];
+            
+            $app = \Slim\Slim::getInstance();
+
+            if(isset($_POST["nom"]) and isset($_POST["prenom"]) and ($_POST["nom"] != '') and ($_POST["prenom"] != '')){
+
+                if((! filter_var($_POST['nom'], FILTER_SANITIZE_STRING)) or (! filter_var($_POST['prenom'], FILTER_SANITIZE_STRING))){
+                    throw new ExceptionPerso('Les valeurs entrées ne sont pas valide !', 'avert');
+                } else{
+                    $nom = filter_var($_POST['nom'], FILTER_SANITIZE_STRING);
+                    $prenom = filter_var($_POST['prenom'], FILTER_SANITIZE_STRING);
+                }
+
+                $r = new m\Reservation();
+                $r->prenom = $_POST["prenom"];
+                $r->nom = $_POST["nom"];
+
+                if(isset($_POST["message"]) and ($_POST["message"] != '')){
+                    if(! filter_var($_POST['message'], FILTER_SANITIZE_STRING)){
+                        throw new ExceptionPerso('Les valeurs entrées ne sont pas valide !', 'avert');
+                    } else{
+                        $msg = filter_var($_POST['message'], FILTER_SANITIZE_STRING);
+                    }
+
+                    $r->message = $msg;
+                }
+                $l = m\Liste::where('share', 'like', $share)->first();
+                $idListe = $l->no;
+
+                $r->idListe = $idListe;
+                $r->idItem = $idItem;
+
+                if(isset($_SESSION["idUser"])){
+                    $r->idUser = $_SESSION["idUser"];
+                }
+
+
+                $r->save();
+                $app->response->redirect($app->urlFor('listeShare', array('share' => $share)));
+                
+            } else{
+                throw new ExceptionPerso('Une erreur est survenue lors de la réservation de l\'item, vérifez bien à remplir tout les champs !', 'err');
             }
-            $l = m\Liste::where('share', 'like', $share)->first();
-            $idListe = $l->no;
-            
-            $r->idListe = $idListe;
-            $r->idItem = $idItem;
-            
-            if(isset($_SESSION["idUser"])){
-                $r->idUser = $_SESSION["idUser"];
-            }
             
             
-            $r->save();
-            $app->response->redirect($app->urlFor('listeShare', array('share' => $share)));
-        } else{
-            throw new ExceptionPerso('Une erreur est survenue lors de la réservation de l\'item, vérifez bien à remplir tout les champs !', 'err');
+        } catch(ExceptionPerso $e){
+            $_SESSION['messageErreur'] = $e->getMessage();
+            $_SESSION['typeErreur'] = $e->getType();
+            $app = \Slim\Slim::getInstance();
+            $app->redirect($app->urlFor('listeShare', array('share' => $share)));
         }
+        
+        
         
         
     }

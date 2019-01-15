@@ -47,11 +47,12 @@ class ContRecherche {
                 $l2 =  Liste::where('public', '=', '1')->where("user_id","!=",$userId)->where("titre", "like", "%" . $search . "%")->get();
                 $listes = $l1->merge($l2);
 
-                $membres = Membre::select('nom', 'prenom', 'idUser')->where("idUser", "!=", $userId)->where(function($q) use($userId){
+                $membres = Membre::select('nom', 'prenom', 'idUser')->where("idUser", "!=", $userId)->where(function($q) use($search){
                     $q->where("prenom", "like", "%" . $search . "%")->orwhere("nom", "like", "%" . $search . "%");
                 })->get();
 
-                $vue = new VueWebSite(array("liste" => $listes, "membre" => $membres, "recherche" => $_GET));
+                $get = $_GET;
+                $vue = new VueWebSite(array("liste" => $listes, "membre" => $membres, "recherche" => $get));
                 $vue->render('RECHERCHE');
 
             } else{
@@ -72,6 +73,8 @@ class ContRecherche {
         }
     }
     
+    // TESTER : http://localhost/ProjetPHPS3/RechercheAvancee?search=t&on=Les+deux&date=&deep=deep&nbReserv=1&reserv=Maximum&nbItem=2&item=Maximum
+    // A vérifier : faire un select sur les éléments utiliser (pour les listes) et unset ces élément dans la fonction ci-dessus.
     public function rechercherAvancee(){
         try{
             
@@ -90,7 +93,7 @@ class ContRecherche {
 
                     $userId = Auth::getIdUser();
 
-                    if(isset($_GET['date'])){
+                    if(isset($_GET['date']) and ($_GET['date'] != '')){
 
                         if(! filter_var($_GET['date'], FILTER_SANITIZE_STRING)){
                             throw new ExceptionPerso('La valeur de la date entrée n\'est pas valide !', 'avert');
@@ -100,11 +103,11 @@ class ContRecherche {
 
                         if(isset($_GET['deep']) and ($_GET['deep'] == "deep")){
 
-                            $l1 = Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where("expiration", ">=", $date)->where(function($q){
+                            $l1 = Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where("expiration", ">=", $date)->where(function($q) use($search){
                                 $q->where("description", "like", "%" . $search . "%")->orwhere("titre", "like", "%" . $search . "%");
                             })->get();
 
-                            $l2 =  Liste::where('public', '=', '1')->where("user_id","!=",$userId)->where("expiration", ">=", $date)->where(function($q){
+                            $l2 =  Liste::where('public', '=', '1')->where("user_id","!=",$userId)->where("expiration", ">=", $date)->where(function($q) use($search){
                                 $q->where("description", "like", "%" . $search . "%")->orwhere("titre", "like", "%" . $search . "%");
                             })->get();
 
@@ -122,11 +125,11 @@ class ContRecherche {
                     } else{
                         if(isset($_GET['deep']) and ($_GET['deep'] == "deep")){
 
-                            $l1 = Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where(function($q){
+                            $l1 = Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where(function($q) use($search){
                                 $q->where("description", "like", "%" . $search . "%")->orwhere("titre", "like", "%" . $search . "%");
                             })->get();
 
-                            $l2 =  Liste::where('public', '=', '1')->where("user_id","!=",$userId)->where(function($q){
+                            $l2 =  Liste::where('public', '=', '1')->where("user_id","!=",$userId)->where(function($q) use($search){
                                 $q->where("description", "like", "%" . $search . "%")->orwhere("titre", "like", "%" . $search . "%");
                             })->get();
 
@@ -145,7 +148,7 @@ class ContRecherche {
 
                     if(isset($_GET['nbReserv']) and ($_GET['nbReserv'] != '')){
 
-                        if((! filter_var($_GET['nbReserv'], FILTER_SANITIZE_INT)) or (! is_numeric($_GET['nbReserv']))){
+                        if((! filter_var($_GET['nbReserv'], FILTER_SANITIZE_NUMBER_INT)) or (! is_numeric($_GET['nbReserv']))){
                             throw new ExceptionPerso('La valeur du nombre de réservation entrée n\'est pas valide !', 'avert');
                         }
 
@@ -174,9 +177,9 @@ class ContRecherche {
                     }
 
 
-                    if(isset($_GET['nbItem']) and ($_GET['nbReserv'] != '')){
+                    if(isset($_GET['nbItem']) and ($_GET['nbItem'] != '')){
 
-                        if((! filter_var($_GET['nbItem'], FILTER_SANITIZE_INT)) or (! is_numeric($_GET['nbItem']))){
+                        if((! filter_var($_GET['nbItem'], FILTER_SANITIZE_NUMBER_INT)) or (! is_numeric($_GET['nbItem']))){
                             throw new ExceptionPerso('La valeur du nombre d\'items entrée n\'est pas valide !', 'avert');
                         }
 
@@ -189,6 +192,8 @@ class ContRecherche {
 
                         } elseif($_GET['item'] == "Maximum"){
                             foreach($listes as $l){
+                                echo $l->titre;
+                                echo count($l->items()->get());
                                 if(count($l->items()->get()) > $_GET['nbItem']){
                                     $this->delListe($l);
                                 }
@@ -213,13 +218,13 @@ class ContRecherche {
 
                     if(isset($_GET['deep']) and ($_GET['deep'] == "deep")){
 
-                        $membres = Membre::select('nom', 'prenom', 'idUser')->where("idUser", "!=", $userId)->where(function($q) use($userId){
+                        $membres = Membre::select('nom', 'prenom', 'idUser')->where("idUser", "!=", $userId)->where(function($q) use($search){
                             $q->where("prenom", "like", "%" . $search . "%")->orwhere("email", "like", "%" . $search . "%")->orwhere("Pseudo", "like", "%" . $search . "%")->orwhere("nom", "like", "%" . $search . "%");
                         })->get();
 
                     } else{
 
-                        $membres = Membre::select('nom', 'prenom', 'idUser')->where("idUser", "!=", $userId)->where(function($q) use($userId){
+                        $membres = Membre::select('nom', 'prenom', 'idUser')->where("idUser", "!=", $userId)->where(function($q) use($search){
                             $q->where("prenom", "like", "%" . $search . "%")->orwhere("nom", "like", "%" . $search . "%");
                         })->get();
                     }
@@ -251,11 +256,12 @@ class ContRecherche {
             
             
         } catch(ExceptionPerso $e){
+            echo $e->getMessage();
             $_SESSION['messageErreur'] = $e->getMessage();
             $_SESSION['typeErreur'] = $e->getType();
-            unset($_GET['search']);
+            //unset($_GET['search']);
             $app = \Slim\Slim::getInstance();
-            $app->redirect($app->urlFor('recherche'));
+            //$app->redirect($app->urlFor('recherche'));
         }
         
     }

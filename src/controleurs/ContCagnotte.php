@@ -26,7 +26,8 @@ class ContCagnotte {
             $item = Item::where('id', '=', $id)->first();
             $token = Liste::where('no', '=', $item->liste_id)->first()->token;
 
-            if(Auth::isCreator($token) and isset($item)){
+            if(Auth::isAuthorized($token) and isset($item)){
+                
                 $item->cagnotte = 1;
                 $item->save();
 
@@ -35,6 +36,7 @@ class ContCagnotte {
                 $_SESSION['typeErreur'] = "info";
                 $app = \Slim\Slim::getInstance();
                 $app->redirect($app->urlFor('listeCrea', array('token' => $token)));
+                
             } else{
                 throw new ExceptionPerso('Vous n\'êtes pas autorisé à créer une cagnotte sur cet item !', 'avert');
             }
