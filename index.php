@@ -103,7 +103,7 @@ $app->post('/Compte',function(){
     else{
         $acc->miseAjour();
         a\Authentification::loadProfil($_SESSION['profil']['Email']);
-       $acc->recupererVue("compte");   
+       $acc->recupererVue("COMPTE");   
     }
 });
 
@@ -113,14 +113,19 @@ $app->get('/Contact',function(){
 })->name('contact');
 
 $app->post('/Contact',function(){
-    if(isset($_POST['del']) || isset($_POST['ok'])){
+    if(isset($_POST['ok'])){
         $acc= new c\ControleurCompte();
         $acc->validationContact();
         $acc->affichageContacts();
     }
-    else if(isset($_POST['delUs'])){
+    else if(isset($_POST['delUs']) || isset($_POST['del'])){
         $acc= new c\ControleurCompte();
-        $acc->supprimerContact($_POST['delUs']);
+        if(isset($_POST['delUs'])){
+            $acc->supprimerContact($_POST['delUs']);
+        }
+        else{
+            $acc->supprimerContact($_POST['del']);   
+        }
         $acc->affichageContacts();
     }
 });

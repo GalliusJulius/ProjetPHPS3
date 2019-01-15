@@ -151,7 +151,7 @@ class ControleurCompte{
     
     public function supprimerContact($id){
         $amis = m\Amis::where(function($q) use ($id){
-            $q->where("idRecu","=",$id)->where("idRecu","=",Auth::getIdUser());
+            $q->where("idRecu","=",$id)->where("idDemande","=",Auth::getIdUser());
         })->orWhere(function($q) use ($id){
             $q->where("idDemande","=",$id)->where("idRecu","=",Auth::getIdUser());
         })->delete();
