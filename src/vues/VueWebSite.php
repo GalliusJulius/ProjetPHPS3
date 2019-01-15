@@ -736,7 +736,8 @@ END;
         if(isset($this->liste) and (count($this->liste) > 0)){
             $html .= '<div><h3>Listes :</h3>';
             foreach($this->liste as $l){
-                $html .= '<p>' . $l->titre . '</p>';
+                //echo var_dump($l);
+                $html .= '<p><a class="nav-link" href="' . $this->app->urlFor('listeShare', array($l->share)) . '">' . $l->titre . '</a></p>';
             }
             $html .= '</div>';
         }
@@ -744,7 +745,7 @@ END;
         if(isset($this->membre) and (count($this->membre) > 0)){
             $html .= '<div><h3>Membre / Créateur :</h3>';
             foreach($this->membre as $m){
-                $html .= '<p>' . $m->nom . ' ' . $m->prénom . '</p>';
+                $html .= '<p><a class="nav-link" href="' . $this->app->urlFor('user', array($m->idUser)) . '">' . $m->nom . ' ' . $m->prenom . '</a></p>';
             }
             $html .= '</div>';
         }
@@ -957,6 +958,7 @@ END;
         $lienListesPublic = $this->app->urlFor('listePublic');
         $lienCreateur = $this->app->urlFor('createur');
         $lienContact = $this->app->urlFor('contact');
+        $lienRecherche = $this->app->urlFor('recherche');
         
         
         $html = <<< END
@@ -981,8 +983,8 @@ END;
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
-               <form class="form-inline my-2 my-md-0">
-                  <input class="form-control" type="text" placeholder="Rechercher">
+               <form class="form-inline my-2 my-md-0 method="GET" action="$lienRecherche">
+                  <input class="form-control" type="text" name="search" placeholder="Rechercher">
                 </form> 
               <div class="collapse navbar-collapse" id="navbarsExample04">
                 <ul class="navbar-nav mr-auto">
