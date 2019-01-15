@@ -934,7 +934,6 @@ END;
         if(isset($this->liste) and (count($this->liste) > 0)){
             $html .= '<div><h3>Listes :</h3>';
             foreach($this->liste as $l){
-                //echo var_dump($l);
                 $html .= '<p><a class="nav-link" href="' . $this->app->urlFor('listeShare', array('share' => $l->share)) . '">' . $l->titre . '</a></p>';
             }
             $html .= '</div>';
@@ -943,8 +942,9 @@ END;
         if(isset($this->membre) and (count($this->membre) > 0)){
             $html .= '<div><h3>Membre / Créateur :</h3>';
             foreach($this->membre as $m){
-                echo $m->idUser;
-                $html .= '<p><a class="nav-link" href="' . $this->app->urlFor('user', array('id' =>  $m->idUser)) . '">' . $m->nom . ' ' . $m->prenom . '</a></p>';
+                if(isset($m->idUser) and ($m->idUser != '')){
+                    $html .= '<p><a class="nav-link" href="' . $this->app->urlFor('user', array('id' => $m->idUser)) . '">' . $m->nom . ' ' . $m->prenom . '</a></p>';
+                }
             }
             $html .= '</div>';
         }

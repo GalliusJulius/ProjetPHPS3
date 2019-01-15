@@ -50,7 +50,6 @@ class ContRecherche {
     public function rechercherAvancee(){
         // $_GET['on']  $_GET['date']  $_GET['deep']  $_GET['nbReserv']  $_GET['reserv']  $_GET['nbItem']  $_GET['item']  $_GET['nbReserv']
         
-        // Faire la mise en page de la recherche
         // Faire fonctionner les liens vers membres / créateurs
         
         if(isset($_GET['search'])){
@@ -168,12 +167,12 @@ class ContRecherche {
                 
                 if(isset($_GET['deep']) and ($_GET['deep'] == "deep")){
                     
-                    $membres = Membre::select('nom', 'prenom')->where("idUser", "!=", $userId)->where(function($q) use($userId){
+                    $membres = Membre::select('nom', 'prenom', 'idUser')->where("idUser", "!=", $userId)->where(function($q) use($userId){
                         $q->where("prenom", "like", "%" . $_GET['search'] . "%")->orwhere("nom", "like", "%" . $_GET['search'] . "%");
                     })->get();
                     
                 } else{
-                    $membres = Membre::select('nom', 'prenom')->where("idUser", "!=", $userId)->where(function($q) use($userId){
+                    $membres = Membre::select('nom', 'prenom', 'idUser')->where("idUser", "!=", $userId)->where(function($q) use($userId){
                         $q->where("prenom", "like", "%" . $_GET['search'] . "%")->orwhere("email", "like", "%" . $_GET['search'] . "%")->orwhere("Pseudo", "like", "%" . $_GET['search'] . "%")->orwhere("nom", "like", "%" . $_GET['search'] . "%");
                     })->get();
                 }
@@ -181,15 +180,10 @@ class ContRecherche {
                 if($_GET['on'] == "Créateurs"){
                     foreach($membres as $m){
                         $listeCount = Liste::where("user_id","=",$m->idUser)->get();
-                        echo count($listeCount);
                         if(count($listeCount) == 0){
-                            unset($m->id);
+                            unset($m->idUser);
                             unset($m->nom);
                             unset($m->prenom);
-                            unset($m->pseudo);
-                            unset($m->email);
-                            unset($m->mdp);
-                            unset($m->comp);
                         }
                     }
                 }
