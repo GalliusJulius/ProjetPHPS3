@@ -7,6 +7,7 @@ require_once 'vendor/autoload.php';
 use \Illuminate\Database\Capsule\Manager as DB;
 use \wishlist\models as m;
 use \wishlist\vues\VueWebSite;
+use \wishlist\controleurs\ExceptionPerso;
 use \wishlist\Auth\Authentification as Auth;
 
 class ContAffichageListe {
@@ -52,8 +53,10 @@ class ContAffichageListe {
     
     public function afficherListeInvite($share){
         
-        $listes = m\Liste::where('share', 'like', $share)->first();
-        $vue = new VueWebSite(array('liste' => $listes));
+        $liste = m\Liste::where('share', 'like', $share)->first();
+        
+        $vue = new VueWebSite(array('liste' => $liste));
+        
         
         if(Auth::isLogged()){ // si l'utilisateur est connecté
             $vue->render('LISTE_CO');
@@ -65,7 +68,7 @@ class ContAffichageListe {
     public function reserverItem($share, $idItem){
         $app = \Slim\Slim::getInstance();
         
-        if(isset($_POST["nom"]) and isset($_POST["prenom"])){
+        if(isset($_POST["nom"]) and isset($_POST["prenom"]) and ($_POST["nom"] != '') and ($_POST["prenom"] != '')){
             $r = new m\Reservation();
             $r->prenom = $_POST["prenom"];
             $r->nom = $_POST["nom"];
@@ -84,11 +87,11 @@ class ContAffichageListe {
             }
             
             
-            $r->save();
-            
-            $app->response->redirect($app->urlFor('listeShare', array('share' => $share)));
+            //$r->save();
+            echo $_POST["prenom"];
+            //$app->response->redirect($app->urlFor('listeShare', array('share' => $share)));
         } else{
-            // Afficher un avertissement
+            throw new ExceptionPerso('Une erreur est survenue lors de la réservation de l\'item, vérifez bien à remplir tout les champs !', 'err');
         }
         
         

@@ -6,7 +6,7 @@ use \wishlist\models\Membre;
 
 class VueWebSite{
     
-    private $liste, $listePart, $item, $membre, $amis, $demande, $recherche, $messageErreur, $app;
+    private $liste, $listePart, $item, $membre, $amis, $demande, $recherche, $messageErreur, $typeErreur, $app;
     
     public function __construct($tab = array()){
         
@@ -41,6 +41,15 @@ class VueWebSite{
         if(isset($tab['demande'])){
             $this->demande = $tab['demande'];
         }
+        
+        if(isset($_SESSION['messageErreur']) and isset($_SESSION['typeErreur'])){
+            $this->messageErreur = $_SESSION['messageErreur'];
+            $this->typeErreur = $_SESSION['typeErreur'];
+            $_SESSION['messageErreur'] = NULL;
+            $_SESSION['typeErreur'] = NULL;
+        }
+        
+        //echo $this->messageErreur;
 
         $this->app = \Slim\Slim::getInstance();
     }
@@ -668,7 +677,7 @@ END;
                         }
 
                         $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '" required>';
-                        $html .= '<p>Votre prénom : </p><input type="text" name="prenom" value="' . $p . '" required>';
+                        $html .= '<p>Votre prénom : </p><input type="text" name="prenom" value="' . $p . '">';
                         $html .= '<p>Message : </p><textarea rows="5" cols="50" type="text" name="message" value="" form="Reserv"></textarea>';
 
                         $html .= '<button type="submit" class="btn btn-primary confirmerR h' . $cpt . '">Réserver</button>';
@@ -1066,9 +1075,11 @@ END;
                 break;
             }
             case 'COMPTE':{
+                // A voir :
                 if($this->messageErreur!=""){
                     $this->messageErreur="<p class=\"erreur\">$this->messageErreur</p>";
                 }
+                ////
                 $contenu = $this->monCompte();
                 $style = "<link rel=\"stylesheet\" href=\"./src/css/monCompte.css\">"; 
                 break;
@@ -1134,6 +1145,7 @@ END;
             }
             case 'RECHERCHE':{
                 $contenu = $this->recherche();
+                $this->message = "Recherche";
                 $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
@@ -1181,6 +1193,7 @@ END;
     <link rel="stylesheet" href="$path./src/css/bootstrap.min.css">
     <link rel="stylesheet" href="$path./src/css/principale.css">
     $style
+    <script src="$path./src/js/itemsListes.js"></script>
   </head>
 
   <body>
@@ -1218,6 +1231,8 @@ END;
                     <img src="$path./src/img/profil.png" width="40" height="40" alt="">
                 </a>
             </nav>
+            
+            <div class="messageErreur $this->typeErreur"><p>$this->messageErreur</p></div>
             
                 $contenu
         
