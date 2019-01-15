@@ -51,7 +51,6 @@ class ContRecherche {
         // $_GET['on']  $_GET['date']  $_GET['deep']  $_GET['nbReserv']  $_GET['reserv']  $_GET['nbItem']  $_GET['item']  $_GET['nbReserv']
         
         // Voir erreur dans la base de données pour ajout d'une clé étrangère dans liste
-        // Prendre en compte que la liste peut-être public
         // Faire la mise en page de la recherche
         // Faire fonctionner les liens vers les listes / membres / créateurs
         
@@ -66,33 +65,45 @@ class ContRecherche {
                 if(isset($_GET['date'])){
                     if(isset($_GET['deep']) and ($_GET['deep'] == "deep")){
                         
-                        /*$listes = Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->orwhere(function($q){
-                            return Liste::where('public', '=', '1');
-                            //$q->where("public", "=", "1");
-                        })->where("user_id","!=",$userId)->where("expiration", ">=", $_GET['date'])->where(function($q){
+                        $l1 = Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where("expiration", ">=", $_GET['date'])->where(function($q){
                             $q->where("description", "like", "%" . $_GET['search'] . "%")->orwhere("titre", "like", "%" . $_GET['search'] . "%");
-                        })->get();*/
-                        echo var_dump(Liste::where('public', '=', '1')->get());
-                        $listes = Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->orwhere(function($q){
-                            return Liste::where('public', '=', '1');
-                            //$q->where("public", "=", "1");
                         })->get();
+                        
+                        $l2 =  Liste::where('public', '=', '1')->where("user_id","!=",$userId)->where("expiration", ">=", $_GET['date'])->where(function($q){
+                            $q->where("description", "like", "%" . $_GET['search'] . "%")->orwhere("titre", "like", "%" . $_GET['search'] . "%");
+                        })->get();
+                        
+                        $listes = $l1->merge($l2);
                         
                     } else{
                         
-                        $listes = Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where("titre", "like", "%" . $_GET['search'] . "%")->where("expiration", ">=", $_GET['date'])->get();
+                        $l1 = Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where("titre", "like", "%" . $_GET['search'] . "%")->where("expiration", ">=", $_GET['date'])->get();
+                        
+                        $l2 =  Liste::where('public', '=', '1')->where("user_id","!=",$userId)->where("titre", "like", "%" . $_GET['search'] . "%")->where("expiration", ">=", $_GET['date'])->get();
+                        
+                        $listes = $l1->merge($l2);
                         
                     }
                 } else{
                     if(isset($_GET['deep']) and ($_GET['deep'] == "deep")){
                         
-                        $listes = Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where(function($q){
+                        $l1 = Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where(function($q){
                             $q->where("description", "like", "%" . $_GET['search'] . "%")->orwhere("titre", "like", "%" . $_GET['search'] . "%");
                         })->get();
                         
+                        $l2 =  Liste::where('public', '=', '1')->where("user_id","!=",$userId)->where(function($q){
+                            $q->where("description", "like", "%" . $_GET['search'] . "%")->orwhere("titre", "like", "%" . $_GET['search'] . "%");
+                        })->get();
+                        
+                        $listes = $l1->merge($l2);
+                        
                     } else{
                         
-                        $listes = Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where("titre", "like", "%" . $_GET['search'] . "%")->get();
+                        $l1 = Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where("titre", "like", "%" . $_GET['search'] . "%")->get();
+                        
+                        $l2 =  Liste::where('public', '=', '1')->where("user_id","!=",$userId)->where("titre", "like", "%" . $_GET['search'] . "%")->get();
+                        
+                        $listes = $l1->merge($l2);
                         
                     }
                 }

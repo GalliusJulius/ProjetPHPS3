@@ -9,5 +9,4 @@ class Amis extends Model{
     protected $primaryKey = 'idDemande_idRecu';
     public $timestamps = false;
     
-    
 }
