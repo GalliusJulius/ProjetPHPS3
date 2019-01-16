@@ -72,9 +72,9 @@ class ContItem {
       $item->tarif = $tarif;
     }
 
-    if(isset($_POST['image_url']) and filter_var($_POST['image_url'], FILTER_VALIDATE_URL) and $_POST['image_url'] != '') {
+    if(isset($_POST['image_url']) and filter_var($_POST['image_url'], FILTER_VALIDATE_URL) and !empty($_POST['image_url'])) {
       $item->img = $_POST['image_url'];
-    } elseif(isset($_FILES['image']['name']) and $_FILES['image']['name'] != '') {
+    } elseif(isset($_FILES['image']['name']) and !empty($_FILES['image']['name'])) {
       $erreur = $this->copier_image($_FILES['image']['name']);
       $item->img = $_FILES['image']['name'];
     } else {
@@ -130,9 +130,9 @@ class ContItem {
       $i->tarif = $t;
     }
 
-    if(isset($_POST['image_url']) and filter_var($_POST['image_url'], FILTER_VALIDATE_URL) and $_POST['image_url'] != '') {
+    if(isset($_POST['image_url']) and filter_var($_POST['image_url'], FILTER_VALIDATE_URL) and !empty($_POST['image_url'])) {
       $i->img = $_POST['image_url'];
-    } elseif(isset($_FILES['image']['name']) and $_FILES['image']['name'] != '') {
+    } elseif(isset($_FILES['image']['name']) and !empty($_FILES['image']['name'])) {
       $erreur = $this->copier_image($_FILES['image']['name']);
       $i->img = $_FILES['image']['name'];
     } else {
