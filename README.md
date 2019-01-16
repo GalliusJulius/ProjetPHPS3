@@ -175,3 +175,9 @@ Concernant les diagrammes de séquences, certains ne sont plus en accord avec le
 
 - On applique une politique de password via passwordPolicy
 - Demander à l'utilisateur d'entrer un mot de passe d'au moins 6 caractères avec au moins une majuscule, une minuscule et un chiffre
+
+
+## Informations supplémentaires
+
+- On suppose qu’une personne ayant un compte est un membre. Un membre peut participer à des listes et peut également en créer, à ce moment il obtient le statut de *“créateur”*. 
+- Si un utilisateur non connecté fait des actions qu’il n’est pas censé pouvoir effectuer, il est redirigé vers la page de connexion. (par exemple : modifier les informations de son compte, ajouter un ami, …)

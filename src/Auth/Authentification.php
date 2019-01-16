@@ -5,6 +5,9 @@ use \wishlist\models as m;
 
 class Authentification{
 
+    /*
+    * Methode permettant l'inscription de l'utilisateur
+    */
     static function createUser($mail,$pass,$passC,$nom,$prenom,$pseudo){
         $count=m\Membre::where('email','=',$mail)->count();
         $policy = new \PasswordPolicy\Policy;
@@ -39,6 +42,9 @@ class Authentification{
             }
     }
 
+    /*
+    * Methode permettant la connexion de l'utilisateur 
+    */
     static function authentificate($user,$pass){
         
         if(!filter_var($user,FILTER_VALIDATE_EMAIL)){
@@ -51,6 +57,9 @@ class Authentification{
         }
     }
     
+    /*
+    * Methode permettant de charger le profil de l'utilisateur
+    */
     static function loadProfil($mail){
         //session_start();
         $profil = m\Membre::where('email',"=",$mail)->first();
@@ -64,10 +73,16 @@ class Authentification{
         setcookie("membre", serialize($_SESSION['profil']['Email']), time() + 60*60*24*30);
     }
 	
+    /*
+    * Methode retournant un booleen. Verifie si l'utilisateur est connecte ou non.
+    */
 	public static function isLogged(){
 		return isset($_SESSION['idUser']);
 	}
     
+    /*
+    * TO DO
+    */
     public static function isCreator($token){
         if(self::isLogged()){
             $m = m\Membre::where('email', 'like', $_SESSION['profil']['Email'])->first();
@@ -86,6 +101,9 @@ class Authentification{
         
     }
     
+    /*
+    * TO DO
+    */
     public static function isAuthorized($token){
         if(self::isLogged()){
             $l1 = m\Liste::where('user_id',"=",$_SESSION['idUser'])->where('token', 'like', $token)->first();
@@ -105,6 +123,9 @@ class Authentification{
         
     }
     
+    /*
+    * Methode getter, retourne l'id de l'utilisateur
+    */
     public static function getIdUser(){
         $res = NULL;
         
@@ -115,6 +136,9 @@ class Authentification{
         return $res;
     }
 
+    /*
+    * Methode permettant la deconnexion de l'utilisateur
+    */ 
 	public static function deconnexion(){
         // TODO vérifier désctruction cookie :
         if(isset($_COOKIE['membre'])){
