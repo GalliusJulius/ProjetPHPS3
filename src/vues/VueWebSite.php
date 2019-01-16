@@ -411,24 +411,22 @@ END;
     
     private function affichageListes() {
         $html = '<section><ul class="listes">';
-        $date = date("Y-m-d");
+        /*$date = date("Y-m-d");
         $html .= '<form method="GET" action="' . $this->app->urlFor('listePublic', array('trie' => 'AUTEUR')) . '">';
         $html .= '<button class="btn btn-primary">Trier par Auteur</button>';
         $html .= "</form>";
         $html .= '<form method="GET" action="' . $this->app->urlFor('listePublic', array('trie' => 'DATE')) . '">';
         $html .= '<button class="btn btn-primary">Trier par Date</button>';
-        $html .= "</form>";
+        $html .= "</form>";*/
         foreach($this->liste as $l){
-          if($l->expiration >= $date){
             if(isset($l)){
                 $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3><p class="date">' . $l->expiration . '</p>';
                 $html .= '<form method="GET" action="' . $this->app->urlFor('listeCrea', array('token' => $l->token)) . '">';
                 $html .= '<button class="btn btn-primary">Détails</button>';
-                //$html .= '<p>Nombre de réservations : ' . count($l->reservations()->get()) . '</p>';
+                $html .= '<p>Nombre de réservations : ' . count($l->reservations()->get()) . '</p>';
                 $html .= "</form>";
                 $html .= '</li>';
             }
-          }
         }
 
         $html .= '</ul></section>';
@@ -1162,7 +1160,7 @@ END;
             }
             case 'LISTES':{
                 $contenu = $this->affichageListes();
-				$path = '.';
+				$path = '';
                 $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
                 break;
             }
