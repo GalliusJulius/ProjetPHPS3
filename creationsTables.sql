@@ -117,4 +117,25 @@ INSERT INTO `item` (`id`, `liste_id`, `nom`, `descr`, `img`, `url`, `tarif`) VAL
 INSERT INTO `liste` (`no`, `user_id`, `titre`, `description`, `expiration`, `token`, `share`, `public`, `message`) VALUES
 (1, 1, 'Pour fêter le bac !', 'Pour un week-end à Nancy qui nous fera oublier les épreuves. ', '2018-06-27', 'nosecure1', 'nosecure01', 0, ''),
 (2, 2, 'Liste de mariage d\'Alice et Bob', 'Nous souhaitons passer un week-end royal à Nancy pour notre lune de miel :)', '2018-06-30', 'nosecure2', 'nosecure02', 0, NULL),
-(3, 3, 'C\'est l\'anniversaire de Charlie', 'Pour lui préparer une fête dont il se souviendra :)', '2017-12-12', 'nosecure3', 'nosecure03', 0, NULL);
+(3, 3, 'C\'est l\'anniversaire de Charlie', 'Pour lui préparer une fête dont il se souviendra :)', '2017-12-12', 'nosecure3', 'nosecure03', 0, NULL),
+(4, 1, 'Titre', 'Description de la liste', '2019-01-19', '3fab9d7ab43c17d2803d263c50cc8b19c12a0ab060140125b577faeae6b9a6f5', 'ecc34b0a09044bfe5c7ca5722675f72cf8321ec0b0234cb83315f1849a7cc963', 1, NULL),
+(5, 2, 'Liste numéro 1', 'Ceci est la liste numéro 1', '2019-01-20', '465d0541045ab7b2e26d2803d4fadfa498248f73a77da14f7d8dcb87e58685c8', 'bf6f7963f9556bd0d79f47a480ea53f2e726abb26c5959bf8f58c5f4e73a613f', 1, 'Voici les items de ma liste'),
+(6, 2, 'Liste numéro 2', 'Description de la liste numéro 2', '2019-01-18', 'f7d3f5ccf1aba34dcb379ea89d1ab8d0e2b46ca5c1e82216a5d1b79b0b44baf3', '40495fb125010036cfb86f6ce1a3f3b4f62c012ae54021446b1ad03af5f7e306', 1, 'Voici ma liste avec les deux items');
+
+INSERT INTO `liste_membres` (`liste_no`, `membres_id`) VALUES
+(1, 2),
+(2, 1),
+(3, 1),
+(3, 2);
+
+INSERT INTO `membres` (`idUser`, `nom`, `prenom`, `mdp`, `email`, `pseudo`, `comp`) VALUES
+(2, 'CHAUMONT', 'Tristan', '$2y$10$OmEiP8VMMEGHvSpvQi.8AuzJlUyIB2MJaPE1vS0ffksiyZOwDOLme', 'tristan@root.fr', 'Tristan', 'cbe0db1e2f7a844e6883a400181fdfa23dd2dea540df4e78e3c24bfdf0d11418'),
+(3, 'Test1Nom', 'Test1Prenom', '$2y$10$0DgIGYB65CdZEXDwY3J1HeRPBRZlclZl0ZWyQj/.QLFfJTLy92A2e', 'test1@mail.fr', 'Test1', '8ae33c13499c530a34c5cc61fd4fa1cafef2a3de9954118dd162291ae15b5600'),
+(4, 'Test1Nom', 'Test2Prenom', '$2y$10$MyQ0PRcB.cLkR9OzD6uoqO5tAXYQkXDMwvKTaK5XsWkwOQSVJDAEa', 'test2@mail.fr', 'Test2', 'f3b6a42260bff104fd62bfe0356cb78aa0ce56d2668576b114184faf662f79e3');
+
+INSERT INTO `participation` (`idParticip`, `idItem`, `idUser`, `message`, `nom`, `prenom`, `montant`) VALUES
+(1, 33, 3, 'Voici 10 euros', 'Test1Nom', 'Test1Prenom', 10);
+
+INSERT INTO `amis` (`idDemande`, `idRecu`, `statut`) VALUES
+(2, 3, 'ok'),
+(4, 2, 'Attente');
