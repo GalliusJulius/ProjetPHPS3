@@ -168,13 +168,12 @@ class ContAffichageListe {
                 $vue->render('MESLISTES');
                 
             } else{
-                throw new ExceptionPerso('Vous n\'êtes pas autorisé à ajouter de message sur cette liste !', 'avert');
+                $app = \Slim\Slim::getInstance();
+                $app->redirect($app->urlfor('connexion'));
             }
             
             
         } catch(ExceptionPerso $e){
-            $_SESSION['messageErreur'] = $e->getMessage();
-            $_SESSION['typeErreur'] = $e->getType();
             $app = \Slim\Slim::getInstance();
             $app->redirect($app->urlFor('accueil'));
         }

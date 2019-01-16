@@ -10,40 +10,53 @@ class ControleurCompte{
     protected $erreur = "";
     
     public function recupererVue($type){
-        $v = new v\VueWebSite(array('erreur'=>$this->erreur));
-        $v->render($type);
+        #Si il accède à des fonctionnalités réservervés aux users connectés
+        if(($type == "COMPTE" || $type =="CONTACT") && !Auth::isLogged()){
+            $app = \Slim\Slim::getInstance();
+            $app->redirect($app->urlFor('connexion'));
+        }
+        else{
+            $v = new v\VueWebSite(array('erreur'=>$this->erreur));
+            $v->render($type);
+        }
     }
     
     public function miseAjour(){
-        $this->erreur="";
-        $perso = m\Membre::where("email","=",$_SESSION['profil']['Email'])->first();
-        if(isset($_POST['Nom']) && $_POST['Nom'] != ""){
-           $perso->Nom= $_POST['Nom'];
+        if(!Auth::isLogged()){
+            $app = \Slim\Slim::getInstance();
+            $app->redirect($app->urlFor('connexion'));
         }
-        if(isset($_POST['Prenom']) && $_POST['Prenom'] != ""){
-           $perso->Prenom= $_POST['Prenom'];
-        }
-        if(isset($_POST['Pseudo']) && $_POST['Pseudo'] != ""  && filter_var($_POST['Pseudo'],FILTER_SANITIZE_STRING)){
-           $perso->Pseudo= $_POST['Pseudo'];
-        }
-        if(isset($_POST['Email']) && $_POST['Email'] != "" && filter_var($_POST['Email'],FILTER_VALIDATE_EMAIL)){
-            if(m\Membre::where("email","=",$_POST['Email'])->count() == 0){
-                $perso->email=$_POST['Email'];
-                $_SESSION['profil']['Email'] = $_POST['Email'];
-            }
             else{
-                $this->erreur= "Email déjà liée à un autre compte";
+            $this->erreur="";
+            $perso = m\Membre::where("email","=",$_SESSION['profil']['Email'])->first();
+            if(isset($_POST['Nom']) && $_POST['Nom'] != ""){
+               $perso->Nom= $_POST['Nom'];
             }
+            if(isset($_POST['Prenom']) && $_POST['Prenom'] != ""){
+               $perso->Prenom= $_POST['Prenom'];
+            }
+            if(isset($_POST['Pseudo']) && $_POST['Pseudo'] != ""  && filter_var($_POST['Pseudo'],FILTER_SANITIZE_STRING)){
+               $perso->Pseudo= $_POST['Pseudo'];
+            }
+            if(isset($_POST['Email']) && $_POST['Email'] != "" && filter_var($_POST['Email'],FILTER_VALIDATE_EMAIL)){
+                if(m\Membre::where("email","=",$_POST['Email'])->count() == 0){
+                    $perso->email=$_POST['Email'];
+                    $_SESSION['profil']['Email'] = $_POST['Email'];
+                }
+                else{
+                    $this->erreur= "Email déjà liée à un autre compte";
+                }
+            }
+            if(isset($_POST['mdp']) && isset($_POST['mdpc']) && $_POST['mdp'] != "" && $_POST['mdpc'] != ""){
+                if($_POST['mdp'] == $_POST['mdpc']){
+                    $perso->mdp=password_hash($_POST['mdp'],PASSWORD_DEFAULT);
+                }
+                else{
+                    $this->erreur= "Les mots de passes ne correspondents pas!";
+                }
+            }
+            $perso->save();
         }
-        if(isset($_POST['mdp']) && isset($_POST['mdpc']) && $_POST['mdp'] != "" && $_POST['mdpc'] != ""){
-            if($_POST['mdp'] == $_POST['mdpc']){
-                $perso->mdp=password_hash($_POST['mdp'],PASSWORD_DEFAULT);
-            }
-            else{
-                $this->erreur= "Les mots de passes ne correspondents pas!";
-            }
-        }
-        $perso->save();
     }
     
     public function supprimerCompte(){
@@ -70,7 +83,7 @@ class ControleurCompte{
     }
              
     public function afficherCompte($id){
-        if($id == $_SESSION['idUser']){
+        if(Auth::isLogged() && $id == $_SESSION['idUser']){
             $app = \Slim\Slim::getInstance();
             $app->redirect($app->urlFor('Compte'));
         }
@@ -97,10 +110,16 @@ class ControleurCompte{
     }
     
     public function ajouterAmi($id){
-        $ajout = new m\Amis();
-        $ajout->idDemande=Auth::getIdUser();
-        $ajout->idRecu=$id;
-        $ajout->save();
+        if(Auth::isLogged()){
+            $ajout = new m\Amis();
+            $ajout->idDemande=Auth::getIdUser();
+            $ajout->idRecu=$id;
+            $ajout->save();
+        }
+        else{
+            $app = \Slim\Slim::getInstance();
+            $app->redirect($app->urlFor('connexion'));
+        }
     }
     
     public function affichageContacts(){
@@ -130,8 +149,7 @@ class ControleurCompte{
         }
         $liste['demande'] = $membreAttente;
         $liste['amis'] = $membreAmis;
-        $v = new v\VueWebSite($liste);
-        $v->render('CONTACT');
+        $this->recupererVue('CONTACT');
     }
     
     public function validationContact(){
