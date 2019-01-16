@@ -270,10 +270,10 @@ $app->post('/item/:id/cagnotte/participer', function($id){
     }
 })->name('participerCagnotte');
 
-$app->get('/liste_public', function(){
+$app->get('/liste_public/:trie', function($trie){
     $cont = new c\ContAffichageListe();
     try{
-        $cont->afficherListesPublic();
+        $cont->afficherListesPublic($trie);
     } catch(\Exception $e){
         $_SESSION['messageErreur'] = "Une erreur est survenue lors de l'affichage des listes pubic !";
         $_SESSION['typeErreur'] = "err";

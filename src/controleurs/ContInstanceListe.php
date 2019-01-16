@@ -34,9 +34,8 @@ class ContInstanceListe {
     $descr = filter_var($_POST['descr'], FILTER_SANITIZE_STRING);
     $liste->description = $descr;
       
-    if (new \DateTime(date('Y-m-d')) <= new \DateTime($_POST['date'])) {
-        $liste->expiration = $_POST['date'];
-    }
+    $date = new \DateTime($_POST['date']);
+    $liste->expiration = $date;
 
     $liste->user_id = Auth::getIdUser();
 
@@ -70,10 +69,9 @@ class ContInstanceListe {
       $liste->description = $descr;
     }
 
-    if(isset($_POST['date'])){
-      if (\DateTime::createFromFormat('d/m/y', $_POST['date'])){
-        $liste->expiration = $_POST['date'];
-      }
+     if(isset($_POST['date'])){
+      $date = new \DateTime($_POST['date']);
+      $liste->expiration = $date;
     }
 
     if(isset($_POST['liste_publique'])){
