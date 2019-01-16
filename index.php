@@ -278,7 +278,7 @@ $app->get('/liste/:token/:id/supprimer', function($token, $id) {
 
 $app->post('/liste/:token', function($token) {
     $cont = new c\ContAffichageListe();
-    $cont->afficherMessageListe($token);
+    $cont->ajouterMessageListe($token);
 })->name('ajoutMsgListe');
 
 $app->get('/liste/demandeAcces/:token', function($token) {
