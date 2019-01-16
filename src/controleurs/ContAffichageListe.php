@@ -14,11 +14,18 @@ class ContAffichageListe {
 
     public function __construct(){}
 
-    public function afficherListesPublic(){
-        // A tester :
-        //$listes = m\Liste::where('public', '=', '1')->where('expiration','>=',now())->get();
-        $listes = m\Liste::where('public', '=', '1')->get();
-        
+    public function afficherListesPublic($tri){
+        switch($tri){
+          case 'DATE':{
+              $listes = m\Liste::where('public', '=', '1')->orderBy('expiration')->get();
+              break;
+          }
+          case 'AUTEUR':{
+              $listes = m\Liste::where('public', '=', '1')->orderBy('user_id')->get();
+              break;
+          }
+        }
+
         $vue = new VueWebSite(array('liste' => $listes));
         $vue->render('LISTES');
     }

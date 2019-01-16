@@ -410,22 +410,28 @@ END;
     }
     
     private function affichageListes() {
-        $html = '<div class="container"><h1>Les listes publics disponibles</h1> <p> Vous retrouverez ici toutes les listes publics publiées sur notre site </p><div class="row">';
-
+        $html = '<section><ul class="listes">';
+        $date = date("Y-m-d");
+        $html .= '<form method="GET" action="' . $this->app->urlFor('listePublic', array('trie' => 'AUTEUR')) . '">';
+        $html .= '<button class="btn btn-primary">Trier par Auteur</button>';
+        $html .= "</form>";
+        $html .= '<form method="GET" action="' . $this->app->urlFor('listePublic', array('trie' => 'DATE')) . '">';
+        $html .= '<button class="btn btn-primary">Trier par Date</button>';
+        $html .= "</form>";
         foreach($this->liste as $l){
-
+          if($l->expiration >= $date){
             if(isset($l)){
-                
-                $html .= '<div class=" englob col-md-4 col-sm-6"><p class="titre"><h3>' . $l->titre . '</h3></p><div class="limited"><p class="desc">' . $l->description . '</p><p class="date">' . $l->expiration . '</p></div>';
+                $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3><p class="date">' . $l->expiration . '</p>';
                 $html .= '<form method="GET" action="' . $this->app->urlFor('listeCrea', array('token' => $l->token)) . '">';
                 $html .= '<button class="btn btn-primary">Détails</button>';
-                $html .= '<p>Nombre de réservations : ' . count($l->reservations()->get()) . '</p>';
+                //$html .= '<p>Nombre de réservations : ' . count($l->reservations()->get()) . '</p>';
                 $html .= "</form>";
-                $html .= '</div>';
+                $html .= '</li>';
             }
+          }
         }
 
-        $html .= '</div></div>';
+        $html .= '</ul></section>';
 
         return $html;
     }
@@ -1212,7 +1218,7 @@ END;
         $lienAccueil = $this->app->urlFor('accueil');
         $lienCompte = $this->app->urlFor('Compte');
         $lienMesListes = $this->app->urlFor('mesListes');
-        $lienListesPublic = $this->app->urlFor('listePublic');
+        $lienListesPublic = $this->app->urlFor('listePublic', array('trie' => 'DATE')));
         $lienCreateur = $this->app->urlFor('createur');
         $lienContact = $this->app->urlFor('contact');
         $lienRecherche = $this->app->urlFor('recherche');
