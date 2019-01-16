@@ -258,6 +258,7 @@ $app->post('/item/:id/cagnotte', function($id){
     
 })->name('creerCagnotte');
 
+
 $app->post('/item/:id/cagnotte/participer', function($id){
     $cont = new c\ContCagnotte();
     try{
