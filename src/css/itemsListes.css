@@ -119,3 +119,8 @@ div.err{
         margin: 2% 5% 2% 5%;
     }
 }
+
+div.modal-body {
+    max-height: calc(100% - 120px);
+    overflow-y: scroll;
+}
