@@ -67,7 +67,8 @@ class ContItem {
     }
 
     if(isset($_POST['tarif'])){
-      $tarif = filter_var($_POST['tarif'], FILTER_SANITIZE_NUMBER_FLOAT);
+      $tarif = intVal($_POST['tarif']);
+      $tarif = filter_var($tarif, FILTER_SANITIZE_NUMBER_INT);
       $item->tarif = $tarif;
     }
 
@@ -97,35 +98,36 @@ class ContItem {
   }
 
   // methode pour ajouter un item a la base
-  public function ajouterItem($token,$erreur){
+  public function ajouterItem($token){
     $liste =  m\Liste::where("token","=",$token)->first();
-    $v = new v\VueWebSite(array('liste' => $liste, 'erreur' => $erreur));
+    $v = new v\VueWebSite(array('liste' => $liste));
     $v->render('ITEM_AJOUT');
   }
 
-  public function ajouter_item($token, $ajouter_item){
+  public function ajouter_item($token){
     $i = new m\Item();
     $l = m\Liste::where("token","=",$token)->first();
     $i->liste_id = $l->no;
 
     if(isset($_POST['nom'])){
-      $nom = filter_var($_POST['nom'], FILTER_SANITIZE_STRING);
-      $item->nom = $nom;
+      $n = filter_var($_POST['nom'], FILTER_SANITIZE_STRING);
+      $i->nom = $n;
     }
 
     if(isset($_POST['description'])){
-      $descr = filter_var($_POST['description'], FILTER_SANITIZE_STRING);
-      $item->descr = $descr;
+      $d = filter_var($_POST['description'], FILTER_SANITIZE_STRING);
+      $i->descr = $d;
     }
 
     if(isset($_POST['url'])){
-      $url = filter_var($_POST['url'], FILTER_SANITIZE_URL);
-      $item->url = $url;
+      $u = filter_var($_POST['url'], FILTER_SANITIZE_URL);
+      $i->url = $u;
     }
 
     if(isset($_POST['tarif'])){
-      $tarif = filter_var($_POST['tarif'], FILTER_SANITIZE_NUMBER_FLOAT);
-      $item->tarif = $tarif;
+      $t = intVal($_POST['tarif']);
+      $t = filter_var($t, FILTER_SANITIZE_NUMBER_INT);
+      $i->tarif = $t;
     }
 
     if(isset($_POST['image_url']) and filter_var($_POST['image_url'], FILTER_VALIDATE_URL)) {

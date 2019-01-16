@@ -112,6 +112,10 @@ div.err{
     background-color: rgba(152, 62, 70, 0.5);
 }
 
+.hidden{
+    display: none;
+}
+
 
 @media (max-width: 768px) {
     .navbar-brand{

@@ -73,6 +73,8 @@ class ContRecherche {
         }
     }
     
+    // Voir pourquoi pas d'affichage des erreurs...
+    
     // TESTER : http://localhost/ProjetPHPS3/RechercheAvancee?search=t&on=Les+deux&date=&deep=deep&nbReserv=1&reserv=Maximum&nbItem=2&item=Maximum
     // A vérifier : faire un select sur les éléments utiliser (pour les listes) et unset ces élément dans la fonction ci-dessus.
     public function rechercherAvancee(){
@@ -256,7 +258,6 @@ class ContRecherche {
             
             
         } catch(ExceptionPerso $e){
-            echo $e->getMessage();
             $_SESSION['messageErreur'] = $e->getMessage();
             $_SESSION['typeErreur'] = $e->getType();
             //unset($_GET['search']);
