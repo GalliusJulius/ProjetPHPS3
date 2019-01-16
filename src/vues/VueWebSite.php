@@ -487,7 +487,7 @@ END;
                    $image_item = '<div class="contImage"><img class="imgDesc" src="' . '../src/img/' . $i->img . '"></div>';
                 }
                 
-                $html .= '<h4>' . $i->nom . '</h4>' . $image_item . '<p class="tarif">' . $i->tarif .  '</p>';
+                $html .= '<h4>' . $i->nom . '</h4>' . $image_item . '<p class="tarif">' . $i->tarif .  ' €</p>';
 
                 $html .= '<button class="details btn btn-primary h' . $cpt . '">Description</button>';
                 if(isset($reserv)){
@@ -517,13 +517,13 @@ END;
                 }
 
 
-                $html .= '<section class="details hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
-                $html .= '<p class="hidden desc">' . $i->descr . '</p>';
+                $html .= '<section class="details hidden hide' . $cpt . '"><h6>Description :</h6>';
+                $html .= '<p class="desc">' . $i->descr . '</p>';
 
                 if($i->url != null or $i->url != ""){
-                    $html .= '<a class="hidden" target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
+                    $html .= '<a target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
                 } else{
-                    $html .= '<p class="hidden">Aucune URL associé !</p>';
+                    $html .= '<p>Aucune URL associé !</p>';
                 }
 
                 $html .= '</section>';
@@ -552,7 +552,7 @@ END;
         $html .= '<button class="btn add">Ajouter un item</button>';
         $html .= '</form>';
 
-        $html .= '<p class="col-md-6"><button class="btn btn-primary">Partager</button></p></div>';
+        $html .= '<p class="col-md-6"><button class="partager btn btn-primary">Partager</button></p></div>';
         
         
         $html .= '<form method="POST" class="row bottom" action="' . $this->app->urlFor('ajoutMsgListe', array('token' => $l->token)) . '">';
@@ -653,13 +653,13 @@ END;
                         $html .= '</div>';
                     }
                     
-                    $html .= '<section class="details hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
-                    $html .= '<p class="hidden desc">' . $i->descr . '</p>';
+                    $html .= '<section class="details hidden hide' . $cpt . '"><h6>Description :</h6>';
+                    $html .= '<p class="desc">' . $i->descr . '</p>';
 
                     if($i->url != null and $i->url != ""){
-                        $html .= '<a class="hidden" target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
+                        $html .= '<a target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
                     } else{
-                        $html .= '<p class="hidden">Aucune URL associé !</p>';
+                        $html .= '<p>Aucune URL associé !</p>';
                     }
                     
                     $html .= '</section>';
@@ -726,13 +726,13 @@ END;
 
                     }
 
-                    $html .= '<section class="details hidden hide' . $cpt . '"><h6 class="hidden">Description :</h6>';
-                    $html .= '<p class="hidden desc">' . $i->descr . '</p>';
+                    $html .= '<section class="details hidden hide' . $cpt . '"><h6>Description :</h6>';
+                    $html .= '<p class="desc">' . $i->descr . '</p>';
 
                     if($i->url != null and $i->url != ""){
-                        $html .= '<a class="hidden" target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
+                        $html .= '<a target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
                     } else{
-                        $html .= '<p class="hidden">Aucune URL associé !</p>';
+                        $html .= '<p>Aucune URL associé !</p>';
                     }
                     $html .= '</section>';
 
