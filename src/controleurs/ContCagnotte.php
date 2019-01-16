@@ -33,7 +33,7 @@ class ContCagnotte {
                 $item->save();
 
 
-                $_SESSION['messageErreur'] = "Votre cagnotte a bien été crée !";
+                $_SESSION['messageErreur'] = "Votre cagnotte a bien été créée !";
                 $_SESSION['typeErreur'] = "info";
                 $app = \Slim\Slim::getInstance();
                 $app->redirect($app->urlFor('listeCrea', array('token' => $token)));
@@ -61,7 +61,7 @@ class ContCagnotte {
             if(isset($item) and isset($_POST['nom']) and isset($_POST['prenom']) and isset($_POST['montant']) and is_numeric($_POST['montant'])){
                 
                 if((! filter_var($_POST['nom'], FILTER_SANITIZE_STRING)) or (! filter_var($_POST['prenom'], FILTER_SANITIZE_STRING)) or (! filter_var($_POST['montant'], FILTER_SANITIZE_NUMBER_FLOAT)) or (! filter_var($_POST['message'], FILTER_SANITIZE_STRING))){
-                    throw new ExceptionPerso('Les valeurs entrées ne sont pas valide !', 'avert');
+                    throw new ExceptionPerso('Les valeurs entrées ne sont pas valides !', 'avert');
                 }
                 
                 $verifPart = Participation::where('idItem', '=', $id)->get();
@@ -101,7 +101,7 @@ class ContCagnotte {
                 }
 
             } else{
-                throw new ExceptionPerso('Une erreur est survenue lors de la participation à l\'item, vérifez bien à remplir tout les champs !', 'err');
+                throw new ExceptionPerso('Une erreur est survenue lors de la participation à l\'item, veillez à bien remplir tous les champs !', 'err');
             }
             
         } catch(ExceptionPerso $e){

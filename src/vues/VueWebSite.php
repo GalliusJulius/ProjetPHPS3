@@ -84,9 +84,9 @@ END;
         <div class="row justify-content-md-center">
             <div class="col col-lg-7 justify-content-md-center">
                 <h1>Confirmation</h1>
-                <p>Votre compte a bien été supprimé, nous espérons vous revoir bientot!</p>
+                <p>Votre compte a bien été supprimé, nous espérons vous revoir bientôt !</p>
                      <a href=$lienAccueil>
-                             <button class="btn btn-primary" name="suppression">Retour page de connexion</button>
+                             <button class="btn btn-primary" name="suppression">Retour à la page de connexion</button>
                         </a>
                 </form>
             </div>
@@ -110,7 +110,7 @@ END;
         <div id ="top" class="position-relative overflow-hidden  p-3 p-md-5  text-center bg-light">
               <div class="col-md-5 p-lg-5 mx-auto my-5">
                     <h1 class="display-4 font-weight-normal">Bienvenue sur WishList $pseudo !</h1>
-                    <p class="lead font-weight-normal">Vous pouvez sur notre application créer des listes de cadeaux, participer et consulter celles de vos amis et bien d'autres choses! Sur cette page vous retrouverez un pannel de ce que vous pouvez faire ici!</p>
+                    <p class="lead font-weight-normal">Vous pouvez créer sur notre application des listes de cadeaux, participer et consulter celles de vos amis et bien d'autres choses ! Sur cette page vous retrouverez un pannel de ce que vous pouvez faire ici !</p>
               </div>
         </div>
         
@@ -121,15 +121,17 @@ END;
               <p class="lead">Puis la partager avec vos amis.</p>
             </div>
         <div class="explications bg-light shadow-sm mx-auto" style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;">
-        <p class="lead">Explications</p></div>
+        <p class="lead">Vous pouvez créer vos propres listes en cliquant sur le bouton 'Mes listes' et y ajouter les objets que vous voulez avec l'image et le prix qui leur est associé. Vous pouvez également partager
+        ces listes à vos amis pour qu'ils puissent créer ou participer à une cagnotte pour financer l'objet que vous désirez. <br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed malesuada scelerisque cursus. Quisque non nibh magna. Vestibulum eget imperdiet nunc. Proin viverra iaculis eros sed molestie. Cras cursus turpis enim, ut auctor arcu consectetur non. Suspendisse congue viverra eros, a tempor mi fermentum dignissim. Nam hendrerit convallis consequat.</p></div>
         </div>
       <div class="articles bg-light text-center overflow-hidden">
         <div>
             <h2 class="display-5">Vous pouvez partager votre liste facilement</h2>
-            <p class="lead">Même à ceux qui n'ont pas de compte sur whishList.</p>
+            <p class="lead">Même à ceux qui n'ont pas de compte sur WishList.</p>
             </div>
         <div class="explications2 bg-dark shadow-sm mx-auto" style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;">
-        <p class="lead">Explications</p>
+        <p class="lead">Si vous n'avez pas de compte, vous pouvez consulter les listes publiques et participer aux cagnottes qui ont été créées pour un objet d'une liste. <br>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed malesuada scelerisque cursus. Quisque non nibh magna. Vestibulum eget imperdiet nunc. Proin viverra iaculis eros sed molestie. Cras cursus turpis enim, ut auctor arcu consectetur non. Suspendisse congue viverra eros, a tempor mi fermentum dignissim. Nam hendrerit convallis consequat. Sed sit amet posuere ligula, et pellentesque sem. Integer consequat dolor sit amet metus lobortis, placerat laoreet leo suscipit. Aliquam a tellus tristique, bibendum sapien vitae, vestibulum magna. Ut ac augue ex. Aliquam porttitor imperdiet est sed laoreet.</p>
         </div>
     </div>
 </div>
@@ -199,7 +201,7 @@ END;
     public function mesListes(){
         $html = <<<END
         <div class="container">
-            <h1>Les listes que vous avez créé ou sur lesquelles vous avez des droits de modification:</h1>
+            <h1>Les listes que vous avez créées ou sur lesquelles vous avez des droits de modification :</h1>
 END;
         
         $i=0;
@@ -233,22 +235,22 @@ END;
         
         
         if($i == 0){
-            $html .= "<h3> vous n'avez pas encore créé de listes!</h3>";  
+            $html .= "<h3>Vous n'avez pas encore créé de liste !</h3>";  
         }
         
 		$creerListe = $this->app->urlFor('creerListe');
         $html .= <<<END
         <div class="row separation " >
             <div class="col-sm-8">
-                <h3>Vous voulez créer une liste?</h3>
+                <h3>Voulez-vous créer une liste ?</h3>
             </div>
             <div class="col-sm-4">
               <form method="GET" action= "$creerListe">
-                <button class="btn add" value="creerListe">Créer listes</button>
+                <button class="btn add" value="creerListe">Créer une liste</button>
               </form>
             </div>
         </div>
-        <h1>Vos listes favorites:</h1>
+        <h1>Vos listes favorites :</h1>
         <p>Ici vous pouvez retrouver rapidement une liste que vous vouliez garder sous la main en l'ajoutant grâce à son token.</p>
 END;
         
@@ -263,13 +265,13 @@ END;
         
         
         if($i == 0){
-            $html .= "<h4> Vous n'avez pas encore ajouté de listes de vos amis!</h4>";  
+            $html .= "<h4>Vous n'avez pas encore ajouté de listes de vos amis !</h4>";  
         }
         
         $html .= <<<END
         <div class="row justify-content-md-center">
         <div class="col-sm-8">
-        <p>Ajouter la liste d'un de vos amis? Remplissez le token de sa liste dans le champ prévu et cliquez sur ok</p>
+        <p>Ajouter la liste de l'un de vos amis ? Remplissez le token de sa liste dans le champ prévu et cliquez sur 'Ajouter'</p>
          </div>
          <div class="col-sm-8">
             <form method="post" class="text-center">
@@ -311,15 +313,15 @@ END;
                 $btn = "<h3>En attente de validation</h3>";
             }
             else{
-                $btn = "<h3>Vous etes amis</h3>";
+                $btn = "<h3>Vous êtes amis</h3>";
             }
         }
         
         $html .= $btn;
-        $listes = '<h2 class="col-lg-5" id="titre">Ses listes:</h2>';
+        $listes = '<h2 class="col-lg-5" id="titre">Ses listes :</h2>';
         
         if(count($liste) == 0){
-            $listes .= "<p>Cet utilisateur n'a pas crée de listes</p>";
+            $listes .= "<p>Cet utilisateur n'a pas créé de liste</p>";
         }
         else{
             $listes.='<div class="row">';
@@ -368,7 +370,7 @@ END;
         $att = $this->demande;
         $amis = $this->amis;
         
-        $html = "<div class=\"container\"><h1>Demandes d'amis:</h1>";
+        $html = "<div class=\"container\"><h1>Demandes d'amis :</h1>";
         
         $i = 1;
         foreach($att as $val){
@@ -443,7 +445,7 @@ END;
                 $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><p class="date">' . $l->expiration . '</p>';
                 $html .= '<form method="GET" action="' . $this->app->urlFor('listeCrea', array('token' => $l->token)) . '">';
                 $html .= '<button class="btn btn-primary">Détails</button>';
-                $html .= '<p>Nombre de réservations : ' . count($l->reservation()->get()) . '</p>';
+                $html .= '<p>Nombre de réservation(s) : ' . count($l->reservation()->get()) . '</p>';
                 $html .= "</form>";
                 $html .= '</li>';
             }
@@ -634,8 +636,8 @@ END;
                         
                         $html .= '<div class="cagnotte modal h' . $cpt . '"><div class="form">';
                         $html .= '<form id="Cagn" method="POST" action="' . $this->app->urlFor('participerCagnotte', array('id' => $i->id)) . '">';
-                        $html .= '<p>Nom de l\'item auquel vous participer : </p><input type="text" name="nomItem" value="' . $i->nom . '" disabled>';
-                        $html .= '<p>Montant de participation : </p><input type="text" name="montant" value="" required>';
+                        $html .= '<p>Nom de l\'item auquel vous participez : </p><input type="text" name="nomItem" value="' . $i->nom . '" disabled>';
+                        $html .= '<p>Montant de la participation : </p><input type="text" name="montant" value="" required>';
 
                         $n = ''; $p = '';
                         $idUser = Auth::getIdUser();
@@ -705,7 +707,7 @@ END;
                         $html .= '<div class="reserver modal h' . $cpt . '"><div class="form">';
                         $html .= '<form id="Reserv" method="POST" action="' . $this->app->urlFor('reserver', array('share' => $l->share, 'idItem' => $i->id)) . '">';
                         $html .= '<p>Nom de l\'item à reserver : </p><input type="text" name="nomItem" value="' . $i->nom . '" disabled>';
-                        $html .= '<p>Prix de réservation : </p><input type="text" name="prix" value="' . $i->tarif . '" disabled required>';
+                        $html .= '<p>Prix de la réservation : </p><input type="text" name="prix" value="' . $i->tarif . '" disabled required>';
 
                         $n = ''; $p = '';
                         $idUser = Auth::getIdUser();
@@ -766,7 +768,7 @@ END;
         
         if(isset($this->recherche['on'])){
             $html .= '<div class="col col-md-3">
-            <p>Option de filtre :</p>';
+            <p>Options du filtre :</p>';
             
             if($this->recherche['on'] == 'Listes'){
                 $html .= '<div class="grpRech">
@@ -1081,7 +1083,7 @@ END;
         $li = $this->liste;
 
         $html .= '<div class="row "><div class="col-12">';
-        $html .= '<h1>Vous pouvez modifier les information de la liste ici</h1>';
+        $html .= '<h1>Vous pouvez modifier les informations de la liste ici</h1>';
         $html .= '<div class="row justify-content-md-center">';
         $html .= '<form class="col-12" method="POST" action="">';
         $html .= '<div class ="col-lg-6"><h3>Titre:</h3><input type="text" name="titre" class="form-control col-lg-6" aria-describedby="emailHelp" placeholder="Titre" value="'.$li->titre.'" autofocus/></div>';
@@ -1259,10 +1261,10 @@ END;
                     </div>
                   </li>
                   <li class="nav-item active">
-                    <a class="nav-link" href=$lienCreateur>Listes créateurs<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href=$lienCreateur>Liste des créateurs<span class="sr-only">(current)</span></a>
                   </li>
                   <li class="nav-item active">
-                    <a class="nav-link" href=$lienContact>Contact <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href=$lienContact>Contacts <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item active" id="compte">
                     <a class="nav-link" href=$lienCompte>Mon compte <span class="sr-only">(current)</span></a>
@@ -1281,7 +1283,7 @@ END;
         <footer class="text-muted text-center text-small">
                 <p class="mb-1">&copy; 2018-2019 Site réalisé dans le module de PHP S3</p>
                 <ul class="list-inline">
-                  <li class="list-inline-item"><a href=https://iut-charlemagne.univ-lorraine.fr/>Iut Nancy Charlemagne</a></li>
+                  <li class="list-inline-item"><a href=https://iut-charlemagne.univ-lorraine.fr/>IUT Nancy-Charlemagne</a></li>
                 </ul>
         </footer>
                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

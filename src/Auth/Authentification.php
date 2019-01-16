@@ -123,7 +123,7 @@ class Authentification{
         
     }
     
-    /*
+    /*  
     * Methode getter, retourne l'id de l'utilisateur
     */
     public static function getIdUser(){
@@ -140,9 +140,8 @@ class Authentification{
     * Methode permettant la deconnexion de l'utilisateur
     */ 
 	public static function deconnexion(){
-        // TODO vérifier désctruction cookie :
         if(isset($_COOKIE['membre'])){
-            unset($_COOKIE['membre']);
+            setcookie('membre', NULL, -1);
         }
 		
         if(!isset($_SESSION)) { 

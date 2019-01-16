@@ -105,7 +105,7 @@ class ContAffichageListe {
             if(isset($_POST["nom"]) and isset($_POST["prenom"]) and ($_POST["nom"] != '') and ($_POST["prenom"] != '')){
 
                 if((! filter_var($_POST['nom'], FILTER_SANITIZE_STRING)) or (! filter_var($_POST['prenom'], FILTER_SANITIZE_STRING))){
-                    throw new ExceptionPerso('Les valeurs entrées ne sont pas valide !', 'avert');
+                    throw new ExceptionPerso('Les valeurs entrées ne sont pas valides !', 'avert');
                 } else{
                     $nom = filter_var($_POST['nom'], FILTER_SANITIZE_STRING);
                     $prenom = filter_var($_POST['prenom'], FILTER_SANITIZE_STRING);
@@ -117,7 +117,7 @@ class ContAffichageListe {
 
                 if(isset($_POST["message"]) and ($_POST["message"] != '')){
                     if(! filter_var($_POST['message'], FILTER_SANITIZE_STRING)){
-                        throw new ExceptionPerso('Les valeurs entrées ne sont pas valide !', 'avert');
+                        throw new ExceptionPerso('Les valeurs entrées ne sont pas valides !', 'avert');
                     } else{
                         $msg = filter_var($_POST['message'], FILTER_SANITIZE_STRING);
                     }
@@ -140,7 +140,7 @@ class ContAffichageListe {
                 $app->response->redirect($app->urlFor('listeShare', array('share' => $share)));
 
             } else{
-                throw new ExceptionPerso('Une erreur est survenue lors de la réservation de l\'item, vérifez bien à remplir tout les champs !', 'err');
+                throw new ExceptionPerso('Une erreur est survenue lors de la réservation de l\'item, veillez à bien remplir tous les champs !', 'err');
             }
 
 
@@ -164,12 +164,21 @@ class ContAffichageListe {
             if(Auth::isLogged()){
 
                 $userId = Auth::getIdUser();
-                $fabrique = m\Liste::where('user_id',"=",$userId)->get();
-                #on cherche les listes qui n'ont pas été crée par user mais a accès dessus
-                $listes = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->get();
-                $fusion = array($fabrique,$listes);
+                
+                // Liste de l'utilisateur (directement crée par lui)
+                $lUserAv = m\Liste::where('user_id',"=",$userId)->where('expiration', '<', date("Y-m-d"))->orderBy('expiration')->get();
+                
+                $lUserAp = m\Liste::where('user_id',"=",$userId)->where('expiration', '>=', date("Y-m-d"))->orderBy('expiration')->get();
+                
+                // Liste partagé à l'utilisateur
+                $lShareAv = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where('expiration', '<', date("Y-m-d"))->orderBy('expiration')->get();
+                
+                $lShareAp = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where('expiration', '>=', date("Y-m-d"))->orderBy('expiration')->get();
+                
+                $lShare = array($lShareAv, $lShareAp);
+                $lUser = array($lUserAv, $lUserAp);
 
-                $vue = new VueWebSite(array("erreur" => $err, "liste" => $fusion, "listeParatagee" => $listes));
+                $vue = new VueWebSite(array("erreur" => $err, "liste" => $lUser, "listeParatagee" => $lShare));
                 $vue->render('MESLISTES');
 
             } else{
@@ -235,7 +244,7 @@ class ContAffichageListe {
                 if(isset($_POST['message_liste']) and ($_POST['message_liste'] != '')){
 
                     if(! filter_var($_POST['message_liste'], FILTER_SANITIZE_STRING)){
-                        throw new ExceptionPerso('Les valeurs entrées ne sont pas valide !', 'avert');
+                        throw new ExceptionPerso('Les valeurs entrées ne sont pas valides !', 'avert');
                     } else{
                         $msg = filter_var($_POST['message_liste'], FILTER_SANITIZE_STRING);
                     }
@@ -250,7 +259,7 @@ class ContAffichageListe {
                     $app = \Slim\Slim::getInstance();
                     $app->redirect($app->urlFor('listeCrea', array('token' => $token)));
                 } else{
-                    throw new ExceptionPerso('Une erreur est survenue lors de l\'ajout du message, vérifez bien à remplir tout les champs !', 'err');
+                    throw new ExceptionPerso('Une erreur est survenue lors de l\'ajout du message, veillez à bien remplir tous les champs !', 'err');
                 }
 
             } else{

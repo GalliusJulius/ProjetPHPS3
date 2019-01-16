@@ -97,10 +97,10 @@ class VueAccueil{
                     <a class="nav-link" href=$lienListesPublic>Les listes du moment <span class="sr-only">(current)</span></a>
                   </li>
                   <li class="nav-item active">
-                    <a class="nav-link" href=$lienCreateur>Listes créateurs<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href=$lienCreateur>Liste des créateurs<span class="sr-only">(current)</span></a>
                   </li>
                   <li class="nav-item active">
-                    <a class="nav-link" href=$lienContact>Contact <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href=$lienContact>Contacts <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item active" id="compte">
                     <a class="nav-link" href=$lienCompte>Mon compte <span class="sr-only">(current)</span></a>
@@ -131,7 +131,7 @@ END;
         <div class="row justify-content-md-center">
             <div class="col col-lg-7 justify-content-md-center">
                 <h1>Supprimer son compte</h1>
-                <p>Vous êtes sur le point de supprimer votre compte, si vous confirmez cette suppression toutes vos informations personnelles, listes et toutes informations que notre application possède sur vous sera définitivement supprimé. En cliquant sur le bouton ci-dessus vous l'acceptez, cette action est définitive.</p>
+                <p>Vous êtes sur le point de supprimer votre compte, si vous confirmez cette suppression, toutes vos informations personnelles, listes et toutes informations que notre application possède sur vous seront définitivement supprimées. En cliquant sur le bouton ci-dessus vous l'acceptez, cette action est définitive.</p>
                 <form method="post" action="">
                             <a href=$lienAccueil>
                                 <label class="btn btn-secondary">Annuler</label>
@@ -155,9 +155,9 @@ END;
         <div class="row justify-content-md-center">
             <div class="col col-lg-7 justify-content-md-center">
                 <h1>Confirmation</h1>
-                <p>Votre compte a bien été supprimé, nous espérons vous revoir bientot!</p>
+                <p>Votre compte a bien été supprimé, nous espérons vous revoir bientôt !</p>
                      <a href=$lienAccueil>
-                             <button class="btn btn-primary" name="suppression">Retour page de connexion</button>
+                             <button class="btn btn-primary" name="suppression">Retour sur la page de connexion</button>
                         </a>
                 </form>
             </div>
@@ -214,7 +214,7 @@ END;
                             </a>
                                 <button type="submit" class="btn btn-primary" name="valider" value="validation">Effectuer les modifications</button>
                             <a href=$lienSupp>
-                                <label class="btn btn-danger">Supprimer le compte</label>
+                                <label class="btn btn-danger">Supprimer son compte</label>
                             </a>
                         </form>
                     </div>
@@ -229,7 +229,7 @@ END;
         $html = <<<END
         <div class="row justify-content-md-center">
             <div class="col col-lg-12 justify-content-md-center">
-            <h1>Les listes que vous avez créé:</h1>
+            <h1>Les listes que vous avez créées :</h1>
 END;
         $i=0;
         $app = \Slim\Slim::getInstance();
@@ -255,21 +255,21 @@ END;
             $html .= "</div>";
         }
         if($i==0){
-            $html .= "<h3> vous n'avez pas encore créé de listes!</h3>";  
+            $html .= "<h3>Vous n'avez pas encore créé de liste !</h3>";  
         }
 		$creerListe = $app->urlFor('creerListe');
         $html .= <<<END
         <div class="row">
             <div class="col col-lg-6">
-                <p>Vous voulez créer une liste?</p>
+                <p>Voulez-vous créer une liste?</p>
             </div>
             <div class="col col-lg-6">
               <form method="GET" action= "$creerListe">
-                <button class="btn btn-primary col col-lg-3" value="creerListe">Créer listes</button>
+                <button class="btn btn-primary col col-lg-3" value="creerListe">Créer une liste</button>
               </form>
             </div>
         </div>
-        <h1>Les listes qu'on vous a partagé :</h1>
+        <h1>Les listes qu'on vous a partagées :</h1>
 END;
         $i=0;
         foreach($this->tableau[1] as $val){
@@ -278,12 +278,12 @@ END;
             $html .=  "<div class =\"col-lg-8\"><h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div><div class =\"col-lg-2\"><form method=\"post\"><button type=\"submit\" class=\"btn btn-danger\" name=\"suppression\" value=$val->token>Supprimer</button></form></div>"; 
         }
         if($i==0){
-            $html .= "</div><h3> vous n'avez pas encore ajouté de listes de vos amis, vous pouvez en créer une !</h3>";  
+            $html .= "</div><h3>Vous n'avez pas encore ajouté de listes de vos amis, vous pouvez en créer une !</h3>";  
         }
         $html .= <<<END
         <div class="row justify-content-md-center">
         <div class="col col-lg-6 justify-content-md-center">
-        <p>Ajouter la liste d'un de vos amis? Remplissez le token de sa liste dans le champ prévu et cliquez sur ok</p>
+        <p>Ajouter la liste de l'un de vos amis ? Remplissez le token de sa liste dans le champ prévu et cliquez sur 'Ajouter'</p>
          </div>
          <div class="col col-lg-6 justify-content-md-center">
             <form method="post" class="text-center">
@@ -315,7 +315,7 @@ END;
         $btn = "";
         if(!isset($amis)){
             $btn = "<form method=\"POST\">
-                <button name=\"add\" value=\"y\"class=\"btn btn-primary\">Ajouter à sa liste d'ami</button>
+                <button name=\"add\" value=\"y\"class=\"btn btn-primary\">Ajouter à sa liste d'amis</button>
             </form>";
         }
         else{
@@ -329,7 +329,7 @@ END;
         $contenu.=$btn;
         $listes ="";
         if(count($liste)==0){
-            $listes="<p>Cet utilisateur n'a pas crée de listes</p>";
+            $listes="<p>Cet utilisateur n'a pas créé de liste</p>";
         }
         else{
             $i=0;
@@ -351,7 +351,7 @@ END;
         $contenu = "<div class=\"row\">";
         foreach($this->tableau as $val){
             $personne =$val[0];
-            $contenu .= "<div class=\"col-lg-6\"><h2>$personne->Pseudo</h2><p>Ce créateur n'a pas de messages d'humeurs</p><p>Il a créé : $val[1] liste(s)</div>";
+            $contenu .= "<div class=\"col-lg-6\"><h2>$personne->Pseudo</h2><p>Ce créateur n'a pas de messages d'humeur</p><p>Il a créé : $val[1] liste(s)</div>";
         }
         $contenu .="</div>";
         return $contenu;
@@ -360,7 +360,7 @@ END;
     public function contact(){
         $att = $this->tableau[0];
         $amis = $this->tableau[1];
-        $contenu = "<h1>Demandes d'amis:</h1>";
+        $contenu = "<h1>Demandes d'amis :</h1>";
         foreach($att as $val){
             $contenu .=  
                 "<p>$val->idDemande</p> 

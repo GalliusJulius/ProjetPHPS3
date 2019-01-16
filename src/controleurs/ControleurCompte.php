@@ -46,7 +46,7 @@ class ControleurCompte{
                     $_SESSION['profil']['Email'] = $_POST['Email'];
                 }
                 else{
-                    $this->erreur= "Email déjà liée à un autre compte";
+                    $this->erreur= "Email déjà lié à un autre compte";
                 }
             }
             if(isset($_POST['mdp']) && isset($_POST['mdpc']) && $_POST['mdp'] != "" && $_POST['mdpc'] != ""){
@@ -54,7 +54,7 @@ class ControleurCompte{
                     $perso->mdp=password_hash($_POST['mdp'],PASSWORD_DEFAULT);
                 }
                 else{
-                    $this->erreur= "Les mots de passes ne correspondents pas!";
+                    $this->erreur= "Les mots de passe ne correspondent pas !";
                 }
             }
             $perso->save();
