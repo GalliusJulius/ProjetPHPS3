@@ -40,6 +40,9 @@ class ControleurCompte{
             if(isset($_POST['Pseudo']) && $_POST['Pseudo'] != ""  && filter_var($_POST['Pseudo'],FILTER_SANITIZE_STRING)){
                $perso->Pseudo= $_POST['Pseudo'];
             }
+            if(isset($_POST['Message']) && $_POST['Message'] != ""  && filter_var($_POST['Pseudo'],FILTER_SANITIZE_STRING)){
+               $perso->message= $_POST['Message'];
+            }
             if(isset($_POST['Email']) && $_POST['Email'] != "" && filter_var($_POST['Email'],FILTER_VALIDATE_EMAIL)){
                 if(m\Membre::where("email","=",$_POST['Email'])->count() == 0){
                     $perso->email=$_POST['Email'];

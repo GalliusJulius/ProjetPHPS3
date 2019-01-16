@@ -20,9 +20,9 @@ class Authentification{
                     if($pass == $passC){
                         $insert = new m\Membre();
                         $insert->email=$mail;
-                        $insert->Nom=$nom;
-                        $insert->Prenom=$prenom;
-                        $insert->Pseudo=$pseudo;
+                        $insert->nom=$nom;
+                        $insert->prenom=$prenom;
+                        $insert->pseudo=$pseudo;
                         $token = openssl_random_pseudo_bytes(32);
                         $token = bin2hex($token);
                         $insert->comp = $token;
