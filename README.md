@@ -2,6 +2,17 @@
 
 La branche *'brancheDev'* est à considérer comme la branche **master**.
 
+#### Les logs des différents membres sont :
+1. Contient des amis, des listes et une demande d'ami en attente
+ - identifiant : tristan@root.fr
+ - mdp : Motdepasse54
+2. Possède des listes et un ami
+ - identifiant : test1@mail.fr
+ - mdp : Jesuisletest1
+3. Possède des listes et a envoyé une demande d'ami
+ - identifiant : test2@mail.fr
+ - mdp : Jesuisletest2
+
 ## Pseudos Github
 
 | Pseudos                              | Etudiants |
