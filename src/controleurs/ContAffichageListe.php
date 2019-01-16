@@ -130,7 +130,8 @@ class ContAffichageListe {
                     $r->idUser = $_SESSION["idUser"];
                 }
 
-
+                $_SESSION['messageErreur'] = "L'item a bien été réservé !";
+                $_SESSION['typeErreur'] = "info";
                 $r->save();
                 $app->response->redirect($app->urlFor('listeShare', array('share' => $share)));
                 
@@ -152,14 +153,31 @@ class ContAffichageListe {
     }
     
     public function afficherMesListes($err){
-        $userId = Auth::getIdUser();
-        $fabrique = m\Liste::where('user_id',"=",$userId)->get();
-        #on cherche les listes qui n'ont pas été crée par user mais a accès dessus
-        $listes = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->get();
-        $fusion = array($fabrique,$listes);
         
-        $vue = new VueWebSite(array("erreur" => $err, "liste" => $fusion, "listeParatagee" => $listes));
-        $vue->render('MESLISTES');
+        try{
+            
+            if(Auth::isLogged()){
+                
+                $userId = Auth::getIdUser();
+                $fabrique = m\Liste::where('user_id',"=",$userId)->get();
+                #on cherche les listes qui n'ont pas été crée par user mais a accès dessus
+                $listes = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->get();
+                $fusion = array($fabrique,$listes);
+
+                $vue = new VueWebSite(array("erreur" => $err, "liste" => $fusion, "listeParatagee" => $listes));
+                $vue->render('MESLISTES');
+                
+            } else{
+                throw new ExceptionPerso('Vous n\'êtes pas autorisé à ajouter de message sur cette liste !', 'avert');
+            }
+            
+            
+        } catch(ExceptionPerso $e){
+            $_SESSION['messageErreur'] = $e->getMessage();
+            $_SESSION['typeErreur'] = $e->getType();
+            $app = \Slim\Slim::getInstance();
+            $app->redirect($app->urlFor('accueil'));
+        }
     }
     
     public function ajouterListe($token){
@@ -186,16 +204,58 @@ class ContAffichageListe {
     }
     
     public function supprimerListeShare($token){
-        $liste = m\Liste::where("token","=",$token)->first();
-        m\Membre::where("email","=",$_SESSION['profil']['Email'])->first()->liste()->detach($liste);
+        try{
+            if(Auth::isAuthorized($token)){
+                $liste = m\Liste::where("token","=",$token)->first();
+                m\Membre::where("email","=",$_SESSION['profil']['Email'])->first()->liste()->detach($liste);
+            } else{
+                throw new ExceptionPerso('Vous n\'êtes pas autorisé à supprimer cette liste !', 'avert');
+            }
+        } catch(ExceptionPerso $e){
+            $_SESSION['messageErreur'] = $e->getMessage();
+            $_SESSION['typeErreur'] = $e->getType();
+            $app = \Slim\Slim::getInstance();
+            $app->redirect($app->urlFor('demandeAcces', array('token' => $token)));
+        }
+        
     }
 
-    public function afficherMessageListe($token) {
-        $liste = m\Liste::where("token", "=", $token)->first();
-        $liste->message = $_POST['message_liste'];
-        $liste->save();
-        
-        $app = \Slim\Slim::getInstance();
-        $app->redirect($app->urlFor('listeCrea', array('token' => $token)));
+    public function ajouterMessageListe($token) {
+        try{
+            
+            if(Auth::isAuthorized($token)){
+                
+                if(isset($_POST['message_liste']) and ($_POST['message_liste'] != '')){
+
+                    if(! filter_var($_POST['message_liste'], FILTER_SANITIZE_STRING)){
+                        throw new ExceptionPerso('Les valeurs entrées ne sont pas valide !', 'avert');
+                    } else{
+                        $msg = filter_var($_POST['message_liste'], FILTER_SANITIZE_STRING);
+                    }
+
+                    $liste = m\Liste::where("token", "=", $token)->first();
+                    $liste->message = $msg;
+                    $liste->save();
+
+
+                    $_SESSION['messageErreur'] = "Le message a bien été ajouté !";
+                    $_SESSION['typeErreur'] = "info";
+                    $app = \Slim\Slim::getInstance();
+                    $app->redirect($app->urlFor('listeCrea', array('token' => $token)));
+                } else{
+                    throw new ExceptionPerso('Une erreur est survenue lors de l\'ajout du message, vérifez bien à remplir tout les champs !', 'err');
+                }
+                
+            } else{
+                throw new ExceptionPerso('Vous n\'êtes pas autorisé à ajouter de message sur cette liste !', 'avert');
+            }
+            
+            
+        } catch(ExceptionPerso $e){
+            $_SESSION['messageErreur'] = $e->getMessage();
+            $_SESSION['typeErreur'] = $e->getType();
+            $app = \Slim\Slim::getInstance();
+            $app->redirect($app->urlFor('demandeAcces', array('token' => $token)));
+        }
     }
 }

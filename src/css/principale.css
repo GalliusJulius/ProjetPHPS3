@@ -84,6 +84,7 @@ nav a:hover{
 }
 
 
+/* ////////////////////// Message erreur ////////////////////// */
 div.messageErreur{
     display: none;
     border: 1px solid rgba(52, 62, 70, 0.2);
@@ -115,7 +116,93 @@ div.err{
 .hidden{
     display: none;
 }
+/* //////////////////////////////////////////////////////////// */
 
+/* ////////////////////// Fenêtre modal ////////////////////// */
+.modal textarea{
+    display: block;
+    margin: auto;
+    margin-bottom: 5%;
+    resize: both;
+}
+
+.modal div.form{
+    background-color: rgba(196, 196, 196, 0.5);
+    margin-bottom: 0%;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 3%;
+    border-radius: 20px;
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+
+.modal{
+    display: none;
+    background-color: rgba(57, 62, 70, 0.9);
+    font-size: 1.5em;
+    margin-bottom: 0%;
+}
+/*    ////////////////// Partager /////////////////////////    */
+.partager > h6{
+    margin-bottom: 3%;
+    margin-top: 3%;
+}
+
+.modal.partager h6{
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-bottom: 10%;
+}
+
+.modal.partager p{
+    font-size: 1em;
+    font-weight: 400;
+    margin-bottom: 10%;
+}
+
+div.modal.partager div.form{
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+div.partager input{
+    width: 100%;
+    text-align: center;
+    display: block;
+    margin-bottom: 5%;
+    font-size: 1em;
+}
+
+div.partager .fermer{
+    font-size: 1em;
+    text-align: center;
+}
+/* //////////////////////////////////////////////////////////// */
+/*    ///////////////// Réservation ////////////////////////    */
+div.reserv{
+    margin-bottom: 10%;
+    list-style-type: none;
+    padding-left: 0%;
+    padding-bottom: 5%;
+    border-bottom: 1px solid rgba(52, 62, 70, 0.2);
+    text-align: center;
+    font-weight: 700;
+}
+
+div.reserv > p:first-child{
+    font-weight: 400;
+}
+
+div.modal.reserver div.form{
+    padding-left: 10%;
+    padding-right: 10%;
+    text-align: center;
+}
+
+/* //////////////////////////////////////////////////////////// */
+
+/* //////////////////////////////////////////////////////////// */
 
 @media (max-width: 768px) {
     .navbar-brand{

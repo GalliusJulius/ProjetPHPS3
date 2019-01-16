@@ -634,8 +634,8 @@ END;
 
                         if(isset($idUser)){
                             $m = Membre::where('idUser', '=', $idUser)->first();
-                            $n = $m->Nom;
-                            $p = $m->Prenom;
+                            $n = $m->nom;
+                            $p = $m->prenom;
                         }
 
 
@@ -708,8 +708,8 @@ END;
 
                         if(isset($idUser)){
                             $m = Membre::where('idUser', '=', $idUser)->first();
-                            $n = $m->Nom;
-                            $p = $m->Prenom;
+                            $n = $m->nom;
+                            $p = $m->prenom;
                         }
 
                         $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '" required>';
