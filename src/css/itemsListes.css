@@ -102,6 +102,13 @@ div.err{
     background-color: rgba(152, 62, 70, 0.5);
 }*/
 
+.englob{
+    height: 100%;
+}
+
+.limited{
+    min-height: 25%;
+}
 
 @media (max-width: 1200px) {
     section.listes, section.listes > ul > li, ul.listes > li{

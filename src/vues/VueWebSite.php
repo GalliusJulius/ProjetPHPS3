@@ -249,7 +249,6 @@ END;
         $i = 0;
         if(isset($this->listePart)){
             foreach($this->listePart as $val){
-                $lien = $this->app->urlFor('listeCrea', array('token' => $val->token));
                 $i++;
 
                 $html .=  "<div class =\"col-lg-8\"><h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div><div class =\"col-lg-2\"><form method=\"post\"><button type=\"submit\" class=\"btn del\" name=\"suppression\" value=$val->token>Supprimer</button></form></div>"; 
@@ -289,12 +288,10 @@ END;
         $liste = $this->liste;
         
         $html = <<<END
-        <div class="row justify-content-md-center">
-            <div class="col">
-                <h1>$perso->Pseudo : #$perso->idUser</h1>
+        <div class="container justify-content-md-center">
+                <h1>$perso->pseudo : #$perso->idUser</h1>
                 <img src="../src/img/profil.png" width="150" height="150">
-                <p>Message d'humeur :</p>
-                <h2>Ses listes:</h2>
+                <p>Message d'humeur : $perso->message</p>
 END;
         
         $btn = "";
@@ -308,29 +305,31 @@ END;
                 $btn = "<h3>En attente de validation</h3>";
             }
             else{
-                $btn = "<h3>Vous etes déjà amis</h3>";
+                $btn = "<h3>Vous etes amis</h3>";
             }
         }
         
         $html .= $btn;
-        $listes = "";
+        $listes = '<h2 class="col-lg-5" id="titre">Ses listes:</h2>';
         
         if(count($liste) == 0){
-            $listes = "<p>Cet utilisateur n'a pas crée de listes</p>";
+            $listes .= "<p>Cet utilisateur n'a pas crée de listes</p>";
         }
         else{
+            $listes.='<div class="row">';
             $i=0;
             foreach($liste as $val){
                 $lien = $this->app->urlFor('listeCrea',['token'=>$val->token]);
                 $i++;
-                $listes .= "<div class=\"col col-lg-6 \">
-                <h2><b>$i : </b><a href = $lien>$val->titre</a><h2>
+                $listes .= "<div class=\"col-lg-6 \">
+                <h2><b>$i : </b><a href = $lien>$val->titre</a></h2>
                 </div>";       
             }
+             $listes.='</div>';
         }
         
         $html .= $listes;
-        $html .= "</div></div>";
+        $html .= "</div>";
         
         return $html;
     }
@@ -411,21 +410,22 @@ END;
     }
     
     private function affichageListes() {
-        $html = '<section><ul class="listes">';
+        $html = '<div class="container"><h1>Les listes publics disponibles</h1> <p> Vous retrouverez ici toutes les listes publics publiées sur notre site </p><div class="row">';
 
         foreach($this->liste as $l){
 
             if(isset($l)){
-                $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><p class="date">' . $l->expiration . '</p>';
+                
+                $html .= '<div class=" englob col-md-4 col-sm-6"><p class="titre"><h3>' . $l->titre . '</h3></p><div class="limited"><p class="desc">' . $l->description . '</p><p class="date">' . $l->expiration . '</p></div>';
                 $html .= '<form method="GET" action="' . $this->app->urlFor('listeCrea', array('token' => $l->token)) . '">';
                 $html .= '<button class="btn btn-primary">Détails</button>';
                 $html .= '<p>Nombre de réservations : ' . count($l->reservations()->get()) . '</p>';
                 $html .= "</form>";
-                $html .= '</li>';
+                $html .= '</div>';
             }
         }
 
-        $html .= '</ul></section>';
+        $html .= '</div></div>';
 
         return $html;
     }
@@ -1142,6 +1142,7 @@ END;
             case 'VISIONCOMPTES':{
                 $contenu = $this->visionComptes();
                 $path=".";
+                 $style = '<link rel="stylesheet"  href="' . $path . './src/css/visionCompte.css"/>';
                 break;
             }
             case 'CONTACT':{

@@ -1,0 +1,22 @@
+h1{
+    color:#FC3C3C;
+}
+
+.container{
+    text-align: center;
+}
+
+.container img{
+    border: 2px solid black;
+    border-radius: 2%;
+    padding: 3%;
+}
+
+h3{
+    color: #00BBDE;
+    font-size: 1.5em;
+}
+
+h2#titre{
+    color: #F8B500;
+}

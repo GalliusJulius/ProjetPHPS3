@@ -1,3 +1,8 @@
 h1{
     color: #FC3C3C;
 }
+
+h3:hover{
+    font-weight: bold;
+    transition: 0.2s;
+}
