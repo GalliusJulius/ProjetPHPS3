@@ -59,13 +59,13 @@ END;
              </div>
            </div>
             <form method="post" action="/Projet/projet/test/$id/modifier">
-              <button type="submit" class="btn btn-primary" name="modifier">modifier</button>
+              <button type="submit" class="btn btn-primary" name="modifier">Modifier</button>
            </form>
            <form method="post" action="/Projet/projet/test/$id/ajouter">
-             <button type="submit" class="btn btn-primary" name="ajouter">ajouter</button>
+             <button type="submit" class="btn btn-primary" name="ajouter">Ajouter</button>
           </form>
           <form method="post" action="/Projet/projet/test/$id/supprimer">
-            <button type="submit" class="btn btn-primary" name="supprimer">supprimer</button>
+            <button type="submit" class="btn btn-primary" name="supprimer">Supprimer</button>
          </form>
          </div>
        </div>
@@ -98,7 +98,7 @@ END;
               <div class="col-md-3">
                 <p><input type="number" name="tarif" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Tarif" required/></p>
               </div>
-                <button type="submit" class="btn btn-primary" name="valider">valider</button>
+                <button type="submit" class="btn btn-primary" name="valider">Valider</button>
              </form>
             </div>
           </div>
