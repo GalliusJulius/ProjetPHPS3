@@ -1187,9 +1187,10 @@ END;
                  $style = '<link rel="stylesheet"  href="' . $path . 'src/css/contact.css"/>';
                 break;
             }
-            case 'LISTES_CREA':{
-                $contenu = $this->affichageListesCrea();
-                
+            case 'LISTE_CREA':{
+                $contenu = $this->affichageListeCrea();
+                $path = '.';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'LISTES':{
