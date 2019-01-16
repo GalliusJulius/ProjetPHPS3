@@ -60,6 +60,8 @@ class Authentification{
         $_SESSION['profil']['Pseudo']=$profil->pseudo;
         $_SESSION['profil']['Message']=$profil->message;
         $_SESSION['idUser'] = $profil->idUser;
+        
+        setcookie("membre", serialize($_SESSION['profil']['Email']), time() + 60*60*24*30);
     }
 	
 	public static function isLogged(){
@@ -114,7 +116,15 @@ class Authentification{
     }
 
 	public static function deconnexion(){
-		$_SESSION=[];
+        // TODO vérifier désctruction cookie :
+        if(isset($_COOKIE['membre'])){
+            unset($_COOKIE['membre']);
+        }
+		
+        if(!isset($_SESSION)) { 
+            session_start(); 
+        }
+        
         session_destroy();
 	}
     

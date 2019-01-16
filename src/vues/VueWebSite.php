@@ -464,6 +464,7 @@ END;
 
         if(isset($l)){
             $items = $l->items()->get();
+            
             $html .='<div class="row centrer">';
             if(!isset($l->message) or empty($l->message))  {
                 $html .= '<h1 class="col-12">' . $l->titre . '</h1><p class="col-12">' . $l->description . '</p>';
@@ -471,7 +472,9 @@ END;
                 $html .= '<h1  class="col-12">' . $l->titre . '</h1><p class="col-12"> Description : ' . $l->description . '</p>';
                 $html .= '<p class="col-12"><i>Message du créateur :</i> ' . $l->message . '</p>';
             }
+            
             $html.='</div><div class="row">';
+            
             foreach($items as $i){
                 $reserv = $i->reservation()->first();
 
@@ -491,6 +494,7 @@ END;
                 $html .= '<h4>' . $i->nom . '</h4>' . $image_item . '<p class="tarif">' . $i->tarif .  ' €</p>';
 
                 $html .= '<button class="details btn btn-primary h' . $cpt . '">Description</button>';
+                
                 if(isset($reserv)){
 
                     $html .= '<p>Cet item a été réservé !</p>';
@@ -579,40 +583,40 @@ END;
     }
     
     private function affichageListeInvite() {
-        $html = '<section class="listes">';
+        $html = '<div class="container">';
         $cpt = 1;
 
         $l = $this->liste;
 
         if(isset($l)){
             $items = $l->items()->get();
-
+            
+            $html .='<div class="row centrer">';
             if(!isset($l->message) or empty($l->message))  {
-                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><div class="row items">';
+                $html .= '<h1 class="col-12">' . $l->titre . '</h1><p class="col-12">' . $l->description . '</p>';
             } else {
-                $html .= '<p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p>';
-                $html .= '<br><p><i><b>Message du créateur :</b></i> ' . $l->message . '</p><div class="row items">';
+                $html .= '<h1  class="col-12">' . $l->titre . '</h1><p class="col-12"> Description : ' . $l->description . '</p>';
+                $html .= '<p class="col-12"><i>Message du créateur :</i> ' . $l->message . '</p>';
             }
+            
+            $html.='</div><div class="row">';
             
             foreach($items as $i){
 
                 if(substr($i->img, 0, 4) == 'http') {
-                   $image_item = '<img class="imgDesc" src="' . $i->img . '">'; 
+                   $image_item = '<div class="contImage"><img class="imgDesc" src="' . $i->img . '"></div>'; 
                 } else {
-                   $image_item = '<img class="imgDesc" src="../../src/img/' . $i->img . '">';
+                   $image_item = '<div class="contImage"><img class="imgDesc" src="../../src/img/' . $i->img . '"></div>';
                 }
                 
                 if($i->cagnotte == 1){
                     
-                    $html .= '<div class="col col-l-3">';
+                    //$html .= '<div class="col col-l-3">';
+                    $html .= '<div class="article col-sm-6 col-md-4"><div class="contenu">';
 
-                    $html .= '<p class="nom"><h4>' . $i->nom;
+                    $html .= '<h4>' . $i->nom . '</h4>' . $image_item . '<p class="tarif">' . $i->tarif .  ' €</p>';
 
-                    $html .= '</h4></p>' . $image_item;
-
-                    $html .= '<p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
-
-                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
+                    $html .= '<button class="details btn btn-primary h' . $cpt . '">Description</button>';
 
                     if(! $i->participationPossible()){
 
@@ -666,29 +670,25 @@ END;
                     $html .= '</section>';
 
 
-                    $html .= '</div>';
+                    $html .= '</div></div>';
                     
                 } else{
                     $reserv = $i->reservation()->first();
                     
                     if(isset($reserv)){
-                        $html .= '<div class="reserve col col-l-3">';
+                        $html .= '<div class="article col-sm-6 col-md-4"><div class="contenu">';
                     } else{
-                        $html .= '<div class="col col-l-3">';
+                        $html .= '<div class="article col-sm-6 col-md-4"><div class="contenu">';
                     }
 
-                    $html .= '<p class="nom"><h4>' . $i->nom;
-
-                    $html .= '</h4></p>' . $image_item;
-
-                    $html .= '<p class="tarif">' . $i->tarif .  ' €</p>' . '<br/><br/>';
+                    $html .= '<h4>' . $i->nom . '</h4>' . $image_item . '<p class="tarif">' . $i->tarif .  ' €</p>';
 
                     $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
 
                     
                     if(isset($reserv)){
 
-                        $html .= '<button disabled class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
+                        $html .= '<button disabled class="btn btn-primary reserver h' . $cpt . '">Réservé</button>';
 
                         $html .= '<div class="reserv">';
                         $html .= '<p>Cet item a déjà été réservé par :</p>';
@@ -738,7 +738,7 @@ END;
                     $html .= '</section>';
 
 
-                    $html .= '</div>';
+                    $html .= '</div></div>';
                 }
                 
                 $cpt++;
@@ -749,7 +749,7 @@ END;
             $html .= '<p class="date">Date d\'échéance :</p><p class="date">' . $l->expiration . '</p>';
         }
 
-        $html .= '</section>';
+        $html .= '</div>';
 
         return $html;
     }

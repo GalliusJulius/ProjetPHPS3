@@ -2,7 +2,7 @@
 namespace wishlist\controleurs;
 use \wishlist\models as m;
 use \wishlist\vues as v;
-use \wishlist\Authentification as a;
+use \wishlist\Auth\Authentification as a;
 
 class ControleurConnexion{
     
@@ -12,14 +12,7 @@ class ControleurConnexion{
     }
     
     public function seDeconnecter(){
-        // Je verrais plsu un truc du genre :
-        //a::deconnexion();
-        
-        if(!isset($_SESSION)) 
-        { 
-            session_start(); 
-        } 
-         session_destroy();
+        a::deconnexion();
     }
     
     public function recupererVue($type){

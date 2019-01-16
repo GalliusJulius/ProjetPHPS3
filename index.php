@@ -14,8 +14,21 @@ session_start();
 
 //Routage pour la connexion
 $app->get('/',function(){
-    $gest = new c\ControleurConnexion();
-    $gest->recupererVue("connexion");
+    if(isset($_COOKIE['membre'])){
+        try{
+            a\Authentification::loadProfil(unserialize($_COOKIE['membre']));
+            $app = \Slim\Slim::getInstance();
+            $app->redirect($app->urlFor('accueil'));
+        }
+         catch(Exception $e){
+             $gest = new c\ControleurConnexion();
+             $gest->erreur="ER_CONNEXION";
+             $gest->recupererVue("connexion");
+        }
+    } else{
+        $gest = new c\ControleurConnexion();
+        $gest->recupererVue("connexion");
+    }
 })->name('connexion');
 
 $app->post('/',function(){
@@ -98,7 +111,7 @@ $app->post('/Compte',function(){
     if(isset($_POST['deconnexion'])){
          $gest = new c\ControleurConnexion();
          $gest->seDeconnecter();
-         $app->redirect($app->urlFor('connexion'));
+         // $app->redirect($app->urlFor('connexion'));
      }
     else{
         $acc->miseAjour();
