@@ -16,7 +16,7 @@ class VueConnexion{
                 break;
             }
             case "ER_INSCRIPTION1" :{
-                $err="<p class=\"erreur\">Les mots de passes ne sont pas les mêmes</p>";
+                $err="<p class=\"erreur\">Les mots de passe sont différents</p>";
                 break;
             }
             case "ER_INSCRIPTION2" :{
@@ -24,12 +24,12 @@ class VueConnexion{
                 break;
             }
             case "ER_INSCRIPTION3":{
-                $err='<p class=erreur>Votre mod de passe doit contenir au moins 6 caracteres dont au moins une majuscule, une minuscule et un chiffre!</p>';
+                $err='<p class=erreur>Votre mot de passe doit contenir au moins 6 caractères dont au moins une majuscule, une minuscule et un chiffre !</p>';
                 break;
             }
         }
         
-        $contenu ="<h1>Errer de contenu</h1>";
+        $contenu ="<h1>Erreur de contenu</h1>";
         $style="<link rel='stylesheet'  href='./src/css/bootstrap.min.css'/>
                 <link rel='stylesheet'  href='./src/css/Connexion.css'/>";
         switch($this->typepage){
@@ -122,7 +122,7 @@ END;
                                 <p>
                                    <input type="password" name="pass" class="form-control" id="pass" aria-describedby="emailHelp" placeholder="Mot de passe" required>
                                 </p>
-                                    <a href=$lien><p class="text-muted">Pas de compte ? S'inscrire</p></a>
+                                    <a href=$lien><p class="text-muted">Pas de compte ? S'inscrire.</p></a>
                                 <p>
                                     <button type="submit" class="btn btn-primary" name="connexion" value="connec">Connexion</button>
                                 </p>

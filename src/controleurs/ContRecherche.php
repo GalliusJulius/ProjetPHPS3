@@ -151,7 +151,7 @@ class ContRecherche {
                     if(isset($_GET['nbReserv']) and ($_GET['nbReserv'] != '')){
 
                         if((! filter_var($_GET['nbReserv'], FILTER_SANITIZE_NUMBER_INT)) or (! is_numeric($_GET['nbReserv']))){
-                            throw new ExceptionPerso('La valeur du nombre de réservation entrée n\'est pas valide !', 'avert');
+                            throw new ExceptionPerso('La valeur du nombre de réservations entrée n\'est pas valide !', 'avert');
                         }
 
                         if($_GET['reserv'] == "Minimum"){
