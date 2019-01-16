@@ -48,8 +48,9 @@ class ContAffichageListe {
         
         $listes = m\Liste::where('token', 'like', $token)->get();
         
+        //echo Auth::isAuthorized($token);
         if(Auth::isAuthorized($token)){ // si l'utilisateur est autorisé à accéder à cette liste
-            $vue->render('LISTE_CREA');
+        $vue->render('LISTE_CREA');
         } else{ // sinon redirection vers l'affichage des invités
             $_SESSION['messageErreur'] = "Vous n'êtes pas autorisé à accéder à cette liste !";
             $_SESSION['typeErreur'] = "err";
