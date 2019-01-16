@@ -273,13 +273,15 @@ END;
             foreach($this->listePart as $separation){
                 if(isset($separation)){
                     $j++;
-                    if($j == 1){
-                        $html .= "<h2>Listes avant échéances :</h2>";
-                    } else{
-                        $html .= "<h2>Listes après échéances :</h2>";
-                    }
                     foreach($separation as $val){
                         $i++;
+                        if($j == 1){
+                            $j = 10;
+                            $html .= "<h2>Listes avant échéances :</h2>";
+                        } elseif($j == 10){
+                            $j = 20;
+                            $html .= "<h2>Listes après échéances :</h2>";
+                        }
 
                         $html .=  "<div class =\"col-lg-8\"><h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div><div class =\"col-lg-2\"><form method=\"post\"><button type=\"submit\" class=\"btn del\" name=\"suppression\" value=$val->token>Supprimer</button></form></div>"; 
                     }
