@@ -63,7 +63,8 @@ class ControleurCompte{
         $ligneSuppr = m\Membre::where("email","=",$_SESSION['profil']['Email'])->delete();
         $gest = new c\ControleurConnexion();
         $gest->seDeconnecter();
-        
+        $app = \Slim\Slim::getInstance();
+        $app->redirect($app->urlFor('connexion'));
     }
     
     public function afficherCreateurs(){

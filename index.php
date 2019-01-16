@@ -133,13 +133,13 @@ $app->post('/Contact',function(){
 //routage dans la confirmation de la suppression
 $app->get('/SupprimerCompte',function(){
     $acc = new c\ControleurCompte();
-    $acc->recupererVue("suppCompte");
+    $acc->recupererVue("SUPPCOMPTE");
 })->name('suppCompte');
 
 $app->post('/SupprimerCompte',function(){
     $acc = new c\ControleurCompte();
     $acc->supprimerCompte();
-    $acc->recupererVue("confSupp");
+    $acc->recupererVue("CONFSUPP");
 });
 
 //routage dans le gestionnaire de listes
