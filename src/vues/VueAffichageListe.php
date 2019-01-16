@@ -593,7 +593,7 @@ class VueAffichageListe {
         if(isset($this->membre) and (count($this->membre) > 0)){
             $html .= '<div><h3>Membre / Créateur :</h3>';
             foreach($this->membre as $m){
-                $html .= '<p>' . $m->nom . ' ' . $m->prénom . '</p>';
+                $html .= '<p>' . $m->nom . ' ' . $m->prenom . '</p>';
             }
             $html .= '</div>';
         }

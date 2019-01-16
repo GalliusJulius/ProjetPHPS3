@@ -38,7 +38,8 @@ CREATE TABLE IF NOT EXISTS liste_membres
     liste_no int(255) NOT NULL,
     membres_id int(255) NOT NULL,
     PRIMARY KEY (liste_no, membres_id),
-    KEY fkMembre (membres_id) USING BTREE
+    CONSTRAINT fkListe FOREIGN KEY (liste_no) REFERENCES Liste(no),
+    CONSTRAINT fkMembres FOREIGN KEY (membres_id) REFERENCES Membres(idUser)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS reservation
