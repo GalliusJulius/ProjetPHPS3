@@ -149,10 +149,10 @@ END;
         
         $html = <<<END
         <div class="container">
-        <div class="row">
+        <div class="row justify-content-md-center">
                 <form method="post" action="">
                         <div  class="col col-lg-4"> 
-                                <button type="submit" class="btn btn-primary" name="deconnexion">Se déconnecter</button>
+                                <button type="submit" class="btn btn-danger" name="deconnexion">Se déconnecter</button>
                         </div>
                     </form>
             </div>
@@ -416,22 +416,20 @@ END;
     }
     
     private function affichageListes() {
-        $html = '<section><ul class="listes">';
-        $html .= '<form method="GET" action="' . $this->app->urlFor('listePublic') . '">';
-        $html .= '<button name="trie" value="auteur" class="btn btn-primary">Trier par Auteur</button>';
-        $html .= '<button name="trie" value="date" class="btn btn-primary">Trier par Date</button>';
-        $html .= "</form>";
+        $html = '<div class ="container"><div class="row justify-content-md-center">';
+        $html .= '<form class="row" method="GET" action="' . $this->app->urlFor('listePublic') . '">';
+        $html .= '<button name="trie" value="auteur" class="btn btn-primary col-lg-6">Trier par Auteur</button>';
+        $html .= '<button name="trie" value="date" class="btn btn-primary col-lg-6">Trier par Date</button>';
+        $html .= "</form></div><div class=\"row\">";
         foreach($this->liste as $l){
-            if(isset($l)){
-                $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3><p class="date">' . $l->expiration . '</p>';
+                $html .= '<div class="col-lg-6 sepa"><p class="titre"><h3>' . $l->titre . '</h3><p class="date">' . $l->expiration . '</p>';
                 $html .= '<form method="GET" action="' . $this->app->urlFor('demandeAcces', array('token' => $l->token)) . '">';
-                $html .= '<button class="btn btn-primary">Détails</button>';
+                $html .= '<button class="btn btn-warning col-lg-6">Détails</button>';
                 $html .= "</form>";
-                $html .= '</li>';
-            }
+                $html .= '</div>';
         }
 
-        $html .= '</ul></section>';
+        $html .= '</div></div>';
 
         return $html;
     }
@@ -1028,28 +1026,27 @@ END;
     }
 
     private function modifierItem() {
-        $html = '<section>';
+        $html = '<div class="container">';
         $i = $this->item;
         $modifier_item = $this->app->urlFor('modifier_item');
         $id=$i->id;
 
-        $html .= '<div class="row"><div class="col-md-2">';
-        $html .= '<form method="POST" action="'.$id.'" enctype="multipart/form-data">';
-        $html .= '<p><input type="text" name="nom" class="form-control" aria-describedby="emailHelp" placeholder="Nom" value="'.$i->nom.'" autofocus/></p>';
-        $html .= '<p><textarea rows="5" cols="50" class="form-control" type="text" name="description" value="">'.$i->descr.'</textarea></p>:';
+        $html .= '<h1>Modification de l\'item</h1>';
+        $html .= '<form method="POST" action="'.$id.'" enctype="multipart/form-data" class="row">';
+        $html .= '<div class="col-lg-6"><h3>Nom : </h3><input type="text" name="nom" class="form-control" aria-describedby="emailHelp" placeholder="Nom" value="'.$i->nom.'" autofocus/></div>';
+        $html .= '<div class="col-lg-6"><h3>Description : </h3><textarea rows="1" cols="50" class="form-control" type="text" name="description" value="">'.$i->descr.'</textarea></p></div>';
         //$html .= '<p><input type="text" name="description" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="'.$i->descr.'" /></p>';
-        $html .= '<p><input type="number" name="tarif" class="form-control" aria-describedby="emailHelp" placeholder="Tarif" value="'.$i->tarif.'" /></p>';
-        $html .= '<p><input type="url" name="url" class="form-control" aria-describedby="emailHelp" placeholder="lien utile" value="'.$i->url.'" /></p>';
+        $html .= '<div class="col-lg-6"><h3>Tarif : </h3><input type="number" name="tarif" class="form-control" aria-describedby="emailHelp" placeholder="Tarif" value="'.$i->tarif.'" /></p></div>';
+        $html .= '<div class="col-lg-6"><h3>Lien utiles : </h3><input type="url" name="url" class="form-control" aria-describedby="emailHelp" placeholder="lien utile" value="'.$i->url.'" /></div>';
         $html .= '<input type="hidden" name="MAX_FILE_SIZE" value="10485760"/>';
-        $html .= '<p><input type="file" name="image" id="image" accept=".png, .jpg, .jpeg" /></p>';
-        $html .= '<p><input type="text" name="image_url" class="form-control" placeholder="URL de l\'image"/></p>';
-        $html .= '<p><button type="submit" class="btn btn-primary" name="supprimer_img" value="supprimer_image">Supprimer l\'image</button></p>';
-        $html .= '<p><button type="submit" class="btn btn-primary" name="valider_modif" value="modifier_itesm">Valider modification</button></p>';
+        $html .= '<div class="col-lg-12"><h3>Photo</h3><div class="row"><input class="col-lg-6" type="file" name="image" id="image" accept=".png, .jpg, .jpeg" /></p>';
+        $html .= '<input type="text" name="image_url" class="form-control col-lg-6" placeholder="URL de l\'image"/></div></div>';
+        $html .= '<div class="col-12"><button type="submit" class="btn btn-danger" name="supprimer_img" value="supprimer_image">Supprimer l\'image</button>';
+        $html .= '<button type="submit" class="btn btn-success" name="valider_modif" value="modifier_itesm">Valider modification</button></div>';
         $html .= '</form>';
-        $html .= '</div></div>';
 
 
-        $html .= '</section>';
+        $html .= '</div>';
 
         return $html;
     }
@@ -1087,10 +1084,10 @@ END;
         $html .= '<h1>Vous pouvez modifier les information de la liste ici</h1>';
         $html .= '<div class="row justify-content-md-center">';
         $html .= '<form class="col-12" method="POST" action="">';
-        $html .= '<p class ="col-lg-6"><p>Titre:</p><input type="text" name="titre" class="form-control col-lg-6" aria-describedby="emailHelp" placeholder="Titre" value="'.$li->titre.'" autofocus/></p>';
-        $html .= '<p class ="col-6"><input type="text" name="descr" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="'.$li->description.'" /></p>';
-        $html .= '<p class ="col-6"><input type="date" name="date" class="form-control" aria-describedby="emailHelp" placeholder="Date d\'expiration" value="'.$li->expiration.'" /></p>';
-        $html .= '<div class="row">';
+        $html .= '<div class ="col-lg-6"><h3>Titre:</h3><input type="text" name="titre" class="form-control col-lg-6" aria-describedby="emailHelp" placeholder="Titre" value="'.$li->titre.'" autofocus/></div>';
+        $html .= '<div class ="col-lg-6"><h3>Description:</h3><input type="text" name="descr" class="form-control col-lg-6" aria-describedby="emailHelp" placeholder="Description" value="'.$li->description.'" /></div>';
+        $html .= '<div class ="col-lg-6"><h3>Date expiration:</h3><input type="date" name="date" class="form-control col-lg-6" aria-describedby="emailHelp" placeholder="Date d\'expiration" value="'.$li->expiration.'" /></div>';
+        $html .= '<div class="row col-lg-6">';
         if($li->public == 0){
           $html .= '<p class="col-lg-6"><input type="radio" name="liste_publique" value="1"> Liste publique</p>';
           $html .= '<p class="col-lg-6"><input type="radio" name="liste_publique" value="0" checked> Liste privée</p>';
@@ -1155,12 +1152,14 @@ END;
             }
             case 'LISTES_CREA':{
                 $contenu = $this->affichageListesCrea();
+                
                 break;
             }
             case 'LISTES':{
                 $contenu = $this->affichageListes();
 				$path = '';
-                $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
+                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
+                $style.='<link rel="stylesheet" href="'.$path.'./src/css/listePub.css"/>';
                 break;
             }
             case 'LISTE_CREA':{

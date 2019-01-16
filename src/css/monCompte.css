@@ -13,3 +13,7 @@ p{
 .container input{
     margin-bottom: 1em;
 }
+
+.btn-danger{
+    margin-bottom: 10%;
+}
