@@ -1162,6 +1162,7 @@ END;
             }
             case 'LISTES':{
                 $contenu = $this->affichageListes();
+				$path = '.';
                 $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
                 break;
             }
@@ -1218,7 +1219,7 @@ END;
         $lienAccueil = $this->app->urlFor('accueil');
         $lienCompte = $this->app->urlFor('Compte');
         $lienMesListes = $this->app->urlFor('mesListes');
-        $lienListesPublic = $this->app->urlFor('listePublic', array('trie' => 'DATE')));
+        $lienListesPublic = $this->app->urlFor('listePublic', array('trie' => 'DATE'));
         $lienCreateur = $this->app->urlFor('createur');
         $lienContact = $this->app->urlFor('contact');
         $lienRecherche = $this->app->urlFor('recherche');
