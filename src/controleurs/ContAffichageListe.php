@@ -11,9 +11,10 @@ use \wishlist\controleurs\ExceptionPerso;
 use \wishlist\Auth\Authentification as Auth;
 
 class ContAffichageListe {
-
-    public function __construct(){}
-
+	
+	public function __construct(){}
+    
+	// fonction qui permet d'afficher les listes publiques mais aussi de faire le trie sur ces listes
     public function afficherListesPublic(){
 
         if(isset($_GET['trie']) and (in_array($_GET['trie'], ['auteur', 'date']))){
@@ -31,7 +32,7 @@ class ContAffichageListe {
         $vue->render('LISTES');
     }
 
-    // Inutile ???
+    // fonction qui affiches les listes crées par un utilisateur, si c'est impossible, la fonction redirige vers l'accueil
     public function afficherListesUtilisateurs(){
         $listes = m\Liste::get();
         $userId = Auth::getIdUser();
@@ -46,10 +47,11 @@ class ContAffichageListe {
             $_SESSION['messageErreur'] = "Vous n'êtes pas autorisé à accéder à cette liste !";
             $_SESSION['typeErreur'] = "err";
             $app = \Slim\Slim::getInstance();
-            $app->response->redirect($app->urlFor('listePublic'));
+            $app->response->redirect($app->urlFor('accueil'));
         }
     }
 
+	// fonction qui affiche les listes disponibles pour l'utilisateur connecté, sinon redirige vers les listes partagées 
     public function afficherListe($token){
         $liste = m\Liste::where('token', 'like', $token)->first();
         $vue = new VueWebSite(array('liste' => $liste));
@@ -66,6 +68,7 @@ class ContAffichageListe {
         }
     }
 
+	// fonction qui permet de vérifié si l'utilisateur à les droits pour modifier ses listes ou avoir plus de détails, sinon redirige vers les listes publiques
     public function demandeAcces($token){
         $liste = m\Liste::where('token', 'like', $token)->first();
         $app = \Slim\Slim::getInstance();
@@ -77,6 +80,7 @@ class ContAffichageListe {
         }
     }
 
+	// fonction qui affiche les listes sur lequels l'utilisateur a été invité 
     public function afficherListeInvite($share){
 
         $liste = m\Liste::where('share', 'like', $share)->first();
@@ -90,7 +94,8 @@ class ContAffichageListe {
             $vue->render('LISTE_INV');
         }
     }
-
+	
+	// fonction qui permet de réserver un item 
     public function reserverItem($share, $idItem){
         try{
 
@@ -151,6 +156,7 @@ class ContAffichageListe {
 
     }
 
+	// fonction qui affiches les liste auxquels l'utilisateur peut accéder 
     public function afficherMesListes($err){
 
         try{
@@ -188,6 +194,7 @@ class ContAffichageListe {
         }
     }
 
+	// fonction qui permet de rediriger vers le formulaire de creation de liste 
     public function ajouterListe($token){
         $erreur="";
         $verif=m\Liste::where("token","=",$token)->count();
@@ -211,6 +218,7 @@ class ContAffichageListe {
         return $erreur;
     }
 
+	// fonction qui permet de supprimer un liste qui nous a été partagé 
     public function supprimerListeShare($token){
         try{
             if(Auth::isAuthorized($token)){
@@ -228,6 +236,7 @@ class ContAffichageListe {
 
     }
 
+	// fonction qui permet d'ajouter un message à une liste 
     public function ajouterMessageListe($token) {
         try{
 
