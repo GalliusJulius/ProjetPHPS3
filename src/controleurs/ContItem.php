@@ -67,7 +67,8 @@ class ContItem {
     }
 
     if(isset($_POST['tarif'])){
-      $tarif = filter_var($_POST['tarif'], FILTER_SANITIZE_NUMBER_INT);
+      $tarif = intVal($_POST['tarif']);
+      $tarif = filter_var($tarif, FILTER_SANITIZE_NUMBER_INT);
       $item->tarif = $tarif;
     }
 
@@ -124,7 +125,8 @@ class ContItem {
     }
 
     if(isset($_POST['tarif'])){
-      $t = filter_var($_POST['tarif'], FILTER_SANITIZE_NUMBER_INT);
+      $t = intVal($_POST['tarif']);
+      $t = filter_var($t, FILTER_SANITIZE_NUMBER_INT);
       $i->tarif = $t;
     }
 
