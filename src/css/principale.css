@@ -143,7 +143,7 @@ div.err{
     font-size: 1.5em;
     margin-bottom: 0%;
 }
-/*    ////////////////// Partager /////////////////////////    */
+
 .partager > h6{
     margin-bottom: 3%;
     margin-top: 3%;
@@ -174,14 +174,12 @@ div.partager input{
     font-size: 1em;
 }
 
-div.partager .fermer{
+div.partager .fermer{/*, div.reserver .annulerR, div.cagnotte .annulerC{*/
     font-size: 1em;
     text-align: center;
 }
-/* //////////////////////////////////////////////////////////// */
-/*    ///////////////// Réservation ////////////////////////    */
-div.reserv{
-    margin-bottom: 10%;
+
+div.reserv, div.cagnotte{
     list-style-type: none;
     padding-left: 0%;
     padding-bottom: 5%;
@@ -190,17 +188,15 @@ div.reserv{
     font-weight: 700;
 }
 
-div.reserv > p:first-child{
-    font-weight: 400;
-}
-
-div.modal.reserver div.form{
+div.modal.reserver div.form, div.modal.cagnotte div.form{
     padding-left: 10%;
     padding-right: 10%;
     text-align: center;
 }
 
-/* //////////////////////////////////////////////////////////// */
+div.modal.reserver input, div.modal.cagnotte input{
+    margin-bottom: 3%;
+}
 
 /* //////////////////////////////////////////////////////////// */
 
