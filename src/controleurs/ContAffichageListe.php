@@ -164,10 +164,11 @@ class ContAffichageListe {
                 
                 $lUserAp = m\Liste::where('user_id',"=",$userId)->where('expiration', '>=', date("Y-m-d"))->orderBy('expiration')->get();
                 
-                // Liste partagé à l'utilisateur
+                // Liste partagée à l'utilisateur
                 $lShareAv = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where('expiration', '<', date("Y-m-d"))->orderBy('expiration')->get();
                 
                 $lShareAp = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where('expiration', '>=', date("Y-m-d"))->orderBy('expiration')->get();
+                
                 
                 $lShare = array($lShareAv, $lShareAp);
                 $lUser = array($lUserAv, $lUserAp);
