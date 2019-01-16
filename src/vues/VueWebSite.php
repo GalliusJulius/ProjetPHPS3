@@ -201,7 +201,7 @@ END;
     public function mesListes(){
         $html = <<<END
         <div class="container">
-            <h1>Les listes que vous avez créées ou sur lesquelles vous avez des droits de modification :</h1>
+            <h1>Les listes que vous avez créées :</h1>
 END;
         
         $i = 0;
@@ -214,10 +214,10 @@ END;
                         
                         if($j == 1){
                             $j = 10;
-                            $html .= "<h2>Listes avant échéances :</h2>";
-                        } elseif($j == 10){
-                            $j = 20;
                             $html .= "<h2>Listes après échéances :</h2>";
+                        } elseif(($j == 10) or ($j == 2)){
+                            $j = 20;
+                            $html .= "<h2>Listes avant échéances :</h2>";
                         }
                         
                         $lien = $this->app->urlFor('listeCrea', array('token' => $val->token));
@@ -264,7 +264,7 @@ END;
             </div>
         </div>
         <h1>Vos listes favorites :</h1>
-        <p>Ici vous pouvez retrouver rapidement une liste que vous vouliez garder sous la main en l'ajoutant grâce à son token.</p>
+        <p>Ici vous pouvez retrouver rapidement une liste que vous vouliez garder sous la main en l'ajoutant grâce à son url.</p>
 END;
         
         $i = 0;
@@ -275,15 +275,17 @@ END;
                     $j++;
                     foreach($separation as $val){
                         $i++;
+                        
                         if($j == 1){
                             $j = 10;
-                            $html .= "<h2>Listes avant échéances :</h2>";
-                        } elseif($j == 10){
-                            $j = 20;
                             $html .= "<h2>Listes après échéances :</h2>";
+                        } elseif(($j == 10) or ($j == 2)){
+                            $j = 20;
+                            $html .= "<h2>Listes avant échéances :</h2>";
                         }
+                        $lien = $this->app->urlFor('listeShare', array('share' => $val->share));
 
-                        $html .=  "<div class =\"col-lg-8\"><h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div><div class =\"col-lg-2\"><form method=\"post\"><button type=\"submit\" class=\"btn del\" name=\"suppression\" value=$val->token>Supprimer</button></form></div>"; 
+                        $html .=  "<div class =\"col-lg-8\"><h2><b>$i : </b><a href = $lien  >$val->titre</a></h2><p>$val->expiration</p>'" . "</div><div class =\"col-lg-2\"><form method=\"post\"><button type=\"submit\" class=\"btn del\" name=\"suppression\" value=$val->token>Supprimer</button></form></div>"; 
                     }
                 }
             }
@@ -297,11 +299,11 @@ END;
         $html .= <<<END
         <div class="row justify-content-md-center">
         <div class="col-sm-8">
-        <p>Ajouter la liste de l'un de vos amis ? Remplissez le token de sa liste dans le champ prévu et cliquez sur 'Ajouter'</p>
+        <p>Ajouter la liste de l'un de vos amis ? Remplissez le champ prévu et cliquez sur 'Ajouter'</p>
          </div>
          <div class="col-sm-8">
-            <form method="post" class="text-center">
-                <input type="text" name="token" class="form-control" placeholder="Token liste">
+            <form method="POST" class="text-center">
+                <input type="text" name="url" class="form-control" placeholder="URL d'une liste">
                 <button type="submit" class="btn add" name="ajout" value="add">Ajouter</button>
             </form>
             <p class="">$this->erreur</p>

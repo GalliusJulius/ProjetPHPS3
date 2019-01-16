@@ -209,7 +209,7 @@ $app->post('/MesListes',function(){
     }
     else{
         $cont = new c\ContAffichageListe();
-        $err = $cont->ajouterListe($_POST['token']);
+        $err = $cont->ajouterListe($_POST['url']);
         $cont->afficherMesListes($err);
     }
 });

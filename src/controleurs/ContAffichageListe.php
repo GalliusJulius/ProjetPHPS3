@@ -194,26 +194,28 @@ class ContAffichageListe {
         }
     }
 
-	// fonction qui permet de rediriger vers le formulaire de creation de liste 
-    public function ajouterListe($token){
-        $erreur="";
-        $verif=m\Liste::where("token","=",$token)->count();
+	// fonction qui permet d'ajouter une liste partagée à un membre 
+    public function ajouterListe($url){
+        $erreur="t";
+        $share = substr($url, 1, -8);
+        $share = substr($share, 27, -1);
+        $verif=m\Liste::where("share","=",$share)->count();
 
         if($verif!=0){
-            $verif2 = m\Membre::where("email","=",$_SESSION['profil']['Email'])->first()->liste()->where("token","=",$token)->count();
-            $verif2+= m\Liste::where("token","=",$token)->where('user_id',"=",Auth::getIdUser())->count();
+            $verif2 = m\Membre::where("email","=",$_SESSION['profil']['Email'])->first()->liste()->where("share","=",$share)->count();
+            $verif2+= m\Liste::where("share","=",$share)->where('user_id',"=",Auth::getIdUser())->count();
             if($verif2==0){
-                $liste = m\Liste::where("token","=",$token)->first();
+                $liste = m\Liste::where("share","=",$share)->first();
                 m\Membre::where("email","=",$_SESSION['profil']['Email'])->first()->liste()->attach($liste->no);
-                $erreur = "Ajouté";
+                $erreur = "Ajoutée !";
             }
             else{
-                $erreur = "Deja ajouté!";
+                $erreur = "Déjà présente !";
             }
 
         }
         else{
-            $erreur = "Liste inconnu";
+            $erreur = "Liste inconnu !";
         }
         return $erreur;
     }

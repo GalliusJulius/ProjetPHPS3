@@ -14,7 +14,6 @@ class Membre extends Model{
        return $this->belongsToMany('\wishlist\models\Liste','liste_membres','membres_id','liste_no');
    }
 
-    // Ne fonctionne plus :
     public function listes() {
         return $this->hasMany('\wishlist\models\Liste','user_id');
     }
