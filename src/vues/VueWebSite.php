@@ -99,11 +99,12 @@ END;
     
     public function accueil(){
         $lien = $this->app->urlFor('Compte');
+        $pseudo = $_SESSION['profil']['Pseudo'];
         
         $html = <<< END
         <div id ="top" class="position-relative overflow-hidden  p-3 p-md-5  text-center bg-light">
               <div class="col-md-5 p-lg-5 mx-auto my-5">
-                    <h1 class="display-4 font-weight-normal">Bienvenue sur whishList!</h1>
+                    <h1 class="display-4 font-weight-normal">Bienvenue sur WishList $pseudo !</h1>
                     <p class="lead font-weight-normal">Vous pouvez sur notre application créer des listes de cadeaux, participer et consulter celles de vos amis et bien d'autres choses! Sur cette page vous retrouverez un pannel de ce que vous pouvez faire ici!</p>
               </div>
         </div>
