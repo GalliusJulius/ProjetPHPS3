@@ -41,7 +41,7 @@ class ContCagnotte {
                 throw new ExceptionPerso('Vous n\'êtes pas autorisé à créer une cagnotte sur cet item !', 'avert');
             }
             
-        } catch(ExceptionPerso){
+        } catch(ExceptionPerso $e){
             $_SESSION['messageErreur'] = $e->getMessage();
             $_SESSION['typeErreur'] = $e->getType();
             $share = Item::where('id', '=', $id)->first()->liste()->first()->share;
@@ -88,7 +88,9 @@ class ContCagnotte {
                     $part->save();
 
                     $share = Liste::where('no', '=', $item->liste_id)->first()->share;
-
+                    
+                    $_SESSION['messageErreur'] = "Votre participation a bien été prise en compte !";
+                    $_SESSION['typeErreur'] = "info";
                     $app = \Slim\Slim::getInstance();
                     $app->redirect($app->urlFor('listeShare', array('share' => $share)));
 
@@ -100,7 +102,7 @@ class ContCagnotte {
                 throw new ExceptionPerso('Une erreur est survenue lors de la participation à l\'item, vérifez bien à remplir tout les champs !', 'err');
             }
             
-        } catch(ExceptionPerso){
+        } catch(ExceptionPerso $e){
             $_SESSION['messageErreur'] = $e->getMessage();
             $_SESSION['typeErreur'] = $e->getType();
             $share = Item::where('id', '=', $id)->first()->liste()->first()->share;
