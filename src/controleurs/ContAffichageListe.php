@@ -101,7 +101,7 @@ class ContAffichageListe {
             if(isset($_POST["nom"]) and isset($_POST["prenom"]) and ($_POST["nom"] != '') and ($_POST["prenom"] != '')){
 
                 if((! filter_var($_POST['nom'], FILTER_SANITIZE_STRING)) or (! filter_var($_POST['prenom'], FILTER_SANITIZE_STRING))){
-                    throw new ExceptionPerso('Les valeurs entrées ne sont pas valide !', 'avert');
+                    throw new ExceptionPerso('Les valeurs entrées ne sont pas valides !', 'avert');
                 } else{
                     $nom = filter_var($_POST['nom'], FILTER_SANITIZE_STRING);
                     $prenom = filter_var($_POST['prenom'], FILTER_SANITIZE_STRING);
@@ -113,7 +113,7 @@ class ContAffichageListe {
 
                 if(isset($_POST["message"]) and ($_POST["message"] != '')){
                     if(! filter_var($_POST['message'], FILTER_SANITIZE_STRING)){
-                        throw new ExceptionPerso('Les valeurs entrées ne sont pas valide !', 'avert');
+                        throw new ExceptionPerso('Les valeurs entrées ne sont pas valides !', 'avert');
                     } else{
                         $msg = filter_var($_POST['message'], FILTER_SANITIZE_STRING);
                     }
@@ -136,7 +136,7 @@ class ContAffichageListe {
                 $app->response->redirect($app->urlFor('listeShare', array('share' => $share)));
                 
             } else{
-                throw new ExceptionPerso('Une erreur est survenue lors de la réservation de l\'item, vérifez bien à remplir tout les champs !', 'err');
+                throw new ExceptionPerso('Une erreur est survenue lors de la réservation de l\'item, veillez à bien remplir tous les champs !', 'err');
             }
             
             
@@ -227,7 +227,7 @@ class ContAffichageListe {
                 if(isset($_POST['message_liste']) and ($_POST['message_liste'] != '')){
 
                     if(! filter_var($_POST['message_liste'], FILTER_SANITIZE_STRING)){
-                        throw new ExceptionPerso('Les valeurs entrées ne sont pas valide !', 'avert');
+                        throw new ExceptionPerso('Les valeurs entrées ne sont pas valides !', 'avert');
                     } else{
                         $msg = filter_var($_POST['message_liste'], FILTER_SANITIZE_STRING);
                     }
@@ -242,7 +242,7 @@ class ContAffichageListe {
                     $app = \Slim\Slim::getInstance();
                     $app->redirect($app->urlFor('listeCrea', array('token' => $token)));
                 } else{
-                    throw new ExceptionPerso('Une erreur est survenue lors de l\'ajout du message, vérifez bien à remplir tout les champs !', 'err');
+                    throw new ExceptionPerso('Une erreur est survenue lors de l\'ajout du message, veillez à bien remplir tous les champs !', 'err');
                 }
                 
             } else{
