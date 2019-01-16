@@ -47,6 +47,7 @@ class VueConnexion{
         <!DOCTYPE html>
         <html>
             <head>
+            <link rel="icon" href="./src/img/favicon.png">
                 <meta charset="utf-8">
                   <title>Connexion/Inscription</title>
                     $style

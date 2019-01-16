@@ -1252,7 +1252,7 @@ END;
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../../favicon.ico">
+    <link rel="icon" href="$path./src/img/favicon.png">
 
     <title>$title</title>
     <link rel="stylesheet" href="$path./src/css/bootstrap.min.css">
