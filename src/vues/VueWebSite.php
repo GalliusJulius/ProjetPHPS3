@@ -204,31 +204,44 @@ END;
             <h1>Les listes que vous avez créées ou sur lesquelles vous avez des droits de modification :</h1>
 END;
         
-        $i=0;
+        $i = 0;
+        $j = 0;
         if(isset($this->liste)){
             foreach($this->liste as $separation){
-                foreach($separation as $val){
-                    $lien = $this->app->urlFor('listeCrea', array('token' => $val->token));
-                    $i++;
-                    $modifierListe = $this->app->urlFor('modifierListe', array('token' => $val->token));
-                    $supprimerListe = $this->app->urlFor('supprimer_liste', array('token' => $val->token));
-                    $html .= '<div class="row">';
-                    $html .= '<div class="col-sm-8">';
-                    $html .= '<h2><b>'.$i.' : </b><a href =' . $lien . '  >'.$val->titre.'</a></h2><p>' . $val->expiration . '</p>';
-                    $html .= '</div>';
-                    $html .= '<div class ="col-sm-4">';
-                    $html .= '<div class="row">';
-                    $html .= '<form method="GET" action= "'.$modifierListe.'">';
-                    $html .= '<button class="btn modif col col-lg-6" value="modifierListe">Modifier liste</button>';
-                    $html .= "</form>";
-                    $html .= '</div>';
-                    $html .= '<div class="row">';
-                    $html .= '<form method="GET" action= "'.$supprimerListe.'" >';
-                    $html .= '<button class="btn del col col-lg-6" value="supprimerListe">Supprimer liste</button>';
-                    $html .= "</form>";
-                    $html .= "</div>";
-                    $html .= "</div>";
-                    $html .= "</div>";
+                if(isset($separation) and ($separation)){
+                    $j++;
+                    foreach($separation as $val){
+                        
+                        if($j == 1){
+                            $j = 10;
+                            $html .= "<h2>Listes avant échéances :</h2>";
+                        } elseif($j == 10){
+                            $j = 20;
+                            $html .= "<h2>Listes après échéances :</h2>";
+                        }
+                        
+                        $lien = $this->app->urlFor('listeCrea', array('token' => $val->token));
+                        $i++;
+                        $modifierListe = $this->app->urlFor('modifierListe', array('token' => $val->token));
+                        $supprimerListe = $this->app->urlFor('supprimer_liste', array('token' => $val->token));
+                        $html .= '<div class="row">';
+                        $html .= '<div class="col-sm-8">';
+                        $html .= '<h2><b>'.$i.' : </b><a href =' . $lien . '  >'.$val->titre.'</a></h2><p>' . $val->expiration . '</p>';
+                        $html .= '</div>';
+                        $html .= '<div class ="col-sm-4">';
+                        $html .= '<div class="row">';
+                        $html .= '<form method="GET" action= "'.$modifierListe.'">';
+                        $html .= '<button class="btn modif col col-lg-6" value="modifierListe">Modifier liste</button>';
+                        $html .= "</form>";
+                        $html .= '</div>';
+                        $html .= '<div class="row">';
+                        $html .= '<form method="GET" action= "'.$supprimerListe.'" >';
+                        $html .= '<button class="btn del col col-lg-6" value="supprimerListe">Supprimer liste</button>';
+                        $html .= "</form>";
+                        $html .= "</div>";
+                        $html .= "</div>";
+                        $html .= "</div>";
+                    }
                 } 
             }
         }
@@ -255,11 +268,24 @@ END;
 END;
         
         $i = 0;
+        $j = 0;
         if(isset($this->listePart)){
-            foreach($this->listePart as $val){
-                $i++;
+            foreach($this->listePart as $separation){
+                if(isset($separation)){
+                    $j++;
+                    foreach($separation as $val){
+                        $i++;
+                        if($j == 1){
+                            $j = 10;
+                            $html .= "<h2>Listes avant échéances :</h2>";
+                        } elseif($j == 10){
+                            $j = 20;
+                            $html .= "<h2>Listes après échéances :</h2>";
+                        }
 
-                $html .=  "<div class =\"col-lg-8\"><h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div><div class =\"col-lg-2\"><form method=\"post\"><button type=\"submit\" class=\"btn del\" name=\"suppression\" value=$val->token>Supprimer</button></form></div>"; 
+                        $html .=  "<div class =\"col-lg-8\"><h2><b>$i : </b><a href = $lien  >$val->titre</a><h2>" . "</div><div class =\"col-lg-2\"><form method=\"post\"><button type=\"submit\" class=\"btn del\" name=\"suppression\" value=$val->token>Supprimer</button></form></div>"; 
+                    }
+                }
             }
         }
         
@@ -1002,14 +1028,9 @@ END;
     }
     
     private function ajouterItem() {
-        $html = '<section>';
+        $html = '<div class="container">';
         $ajouter_item = $this->app->urlFor('ajouter_item');
-
-        //    $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><p class="date">' . $l->expiration . '</p>';
-        //  $html .= '<form method="GET" action="' . $this->app->urlFor('ajouterItem', array('token' => $l->token)) . '">';
-        //  $html .= '<button class="btn btn-primary">Détails</button>';
-        //  $html .= "</form>";
-        $html .= '<div class="row"><div class="col-md-2">';
+        $html .= '<div class="row"><h1></h1><div class="col-lg-6">';
         $html .= '<form method="post" action="$ajouter_item" enctype="multipart/form-data">';
         $html .= '<p><input type="text" name="nom" class="form-control" aria-describedby="emailHelp" placeholder="Nom" required autofocus/></p>';
         $html .= '<p><textarea type="text" rows="5" cols="50" name="description" class="form-control" aria-describedby="emailHelp" placeholder="Description" required/></textarea></p>';
@@ -1022,7 +1043,7 @@ END;
         $html .= '</form>';
         $html .= '</div></div>';
 
-        $html .= '</section>';
+        $html .= '</div>';
 
         return $html;
     }

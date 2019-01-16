@@ -11,10 +11,12 @@ class ControleurConnexion{
     public function __construct(){
     }
     
+	// fonction qui permet de se deconnecter 
     public function seDeconnecter(){
         a::deconnexion();
     }
     
+	// fonction qui permet de rediriger vers la vue de connection après la déconnection 
     public function recupererVue($type){
         $v = new v\VueConnexion($type);
         $v->render($this->erreur);

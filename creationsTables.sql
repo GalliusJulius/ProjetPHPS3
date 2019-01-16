@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS Liste
+CREATE TABLE IF NOT EXISTS liste
 (
     no INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id INT(11),
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS Liste
     message TEXT
 );
 
-CREATE TABLE IF NOT EXISTS Item
+CREATE TABLE IF NOT EXISTS item
 (
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     liste_id INT(11) NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS Item
     tarif DEC(5, 2)
 );
 
-CREATE TABLE IF NOT EXISTS Membres
+CREATE TABLE IF NOT EXISTS membres
 (
     idUser int(255) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(255) NOT NULL,
@@ -114,7 +114,7 @@ INSERT INTO `item` (`id`, `liste_id`, `nom`, `descr`, `img`, `url`, `tarif`) VAL
 (26, 1, 'Planètes Laser', 'Laser game : Gilet électronique et pistolet laser comme matériel, vous voilà équipé.', 'laser.jpg', '', '15.00'),
 (27, 1, 'Fort Aventure', 'Découvrez Fort Aventure à Bainville-sur-Madon, un site Accropierre unique en Lorraine ! Des Parcours Acrobatiques pour petits et grands, Jeu Mission Aventure, Crypte de Crapahute, Tyrolienne, Saut à l\'élastique inversé, Toboggan géant... et bien plus encore.', 'fort.jpg', '', '25.00');
 
-INSERT INTO `liste` (`no`, `user_id`, `titre`, `description`, `expiration`, `token`, `share`, `public`, `message`) VALUES
+INSERT INTO `Liste` (`no`, `user_id`, `titre`, `description`, `expiration`, `token`, `share`, `public`, `message`) VALUES
 (1, 1, 'Pour fêter le bac !', 'Pour un week-end à Nancy qui nous fera oublier les épreuves. ', '2018-06-27', 'nosecure1', 'nosecure01', 0, ''),
 (2, 2, 'Liste de mariage d\'Alice et Bob', 'Nous souhaitons passer un week-end royal à Nancy pour notre lune de miel :)', '2018-06-30', 'nosecure2', 'nosecure02', 0, NULL),
 (3, 3, 'C\'est l\'anniversaire de Charlie', 'Pour lui préparer une fête dont il se souviendra :)', '2017-12-12', 'nosecure3', 'nosecure03', 0, NULL),

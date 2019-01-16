@@ -18,7 +18,8 @@ use \wishlist\Auth\Authentification as Auth;
 class ContCagnotte {
     
     public function __construct(){}
-    
+	
+    // fonction qui permet rediriger vers la creation d'une gagnotte, si l'utilisateur n'a pas les droits, il est redirigé vers les listes partagées 
     public function creerCagnotte($id){
         try{
             
@@ -51,6 +52,7 @@ class ContCagnotte {
         
     }
     
+	// fonction qui permet de créer une gagnotte pour un item sélectionné dans une liste définien, si il y a une erreur l'utilisateur est redirigé vers les listes publiques  
     public function participerCagnotte($id){
         try{
             
