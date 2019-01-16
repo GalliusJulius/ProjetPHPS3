@@ -1026,14 +1026,9 @@ END;
     }
     
     private function ajouterItem() {
-        $html = '<section>';
+        $html = '<div class="container">';
         $ajouter_item = $this->app->urlFor('ajouter_item');
-
-        //    $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><p class="date">' . $l->expiration . '</p>';
-        //  $html .= '<form method="GET" action="' . $this->app->urlFor('ajouterItem', array('token' => $l->token)) . '">';
-        //  $html .= '<button class="btn btn-primary">Détails</button>';
-        //  $html .= "</form>";
-        $html .= '<div class="row"><div class="col-md-2">';
+        $html .= '<div class="row"><h1></h1><div class="col-lg-6">';
         $html .= '<form method="post" action="$ajouter_item" enctype="multipart/form-data">';
         $html .= '<p><input type="text" name="nom" class="form-control" aria-describedby="emailHelp" placeholder="Nom" required autofocus/></p>';
         $html .= '<p><textarea type="text" rows="5" cols="50" name="description" class="form-control" aria-describedby="emailHelp" placeholder="Description" required/></textarea></p>';
@@ -1046,7 +1041,7 @@ END;
         $html .= '</form>';
         $html .= '</div></div>';
 
-        $html .= '</section>';
+        $html .= '</div>';
 
         return $html;
     }
