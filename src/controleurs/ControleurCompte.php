@@ -9,6 +9,7 @@ class ControleurCompte{
     
     protected $erreur = "";
     
+	// fonction qui redirige vers la page de connection 
     public function recupererVue($type){
         #Si il accède à des fonctionnalités réservervés aux users connectés
         if(($type == "COMPTE" || $type =="CONTACT") && !Auth::isLogged()){
@@ -21,6 +22,7 @@ class ControleurCompte{
         }
     }
     
+	// fonction qui connecte les utilisateurs 
     public function miseAjour(){
         if(!Auth::isLogged()){
             $app = \Slim\Slim::getInstance();
@@ -59,6 +61,7 @@ class ControleurCompte{
         }
     }
     
+	// fonction qui supprime un compte
     public function supprimerCompte(){
         $ligneSuppr = m\Membre::where("email","=",$_SESSION['profil']['Email'])->delete();
         $gest = new c\ControleurConnexion();
@@ -67,6 +70,7 @@ class ControleurCompte{
         $app->redirect($app->urlFor('connexion'));
     }
     
+	// fonction qui affiche les utilisateurs avec les listes qu'ils ont crées 
     public function afficherCreateurs(){
         $createur = m\Membre::get();
         $res = array();
@@ -82,7 +86,8 @@ class ControleurCompte{
         $v = new v\VueWebSite(array('membre'=>$res));
         $v->render("CREATEURS");
     }
-             
+     
+	// fonction qui affiche les élements du compte connecté 
     public function afficherCompte($id){
         if(Auth::isLogged() && $id == $_SESSION['idUser']){
             $app = \Slim\Slim::getInstance();
@@ -110,6 +115,7 @@ class ControleurCompte{
         }
     }
     
+	// fonction qui permet j'ajouter un amis 
     public function ajouterAmi($id){
         if(Auth::isLogged()){
             $ajout = new m\Amis();
@@ -123,6 +129,7 @@ class ControleurCompte{
         }
     }
     
+	// fonction qui affiche les contacts de l'utilisateur connecté 
     public function affichageContacts(){
         if(Auth::isLogged()){
             $liste = array();
@@ -159,6 +166,7 @@ class ControleurCompte{
         }
     }
     
+	// fonction qui affiche les demandes d'amis en cours et donne la possibilité de les accepter 
     public function validationContact(){
         #si il veux accepter la demande
         if(isset($_POST['ok'])){
@@ -174,6 +182,7 @@ class ControleurCompte{
         }
     }
     
+	// fonction qui supprime un contact 
     public function supprimerContact($id){
         $amis = m\Amis::where(function($q) use ($id){
             $q->where("idRecu","=",$id)->where("idDemande","=",Auth::getIdUser());

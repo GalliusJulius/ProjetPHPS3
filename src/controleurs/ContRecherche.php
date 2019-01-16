@@ -18,6 +18,7 @@ class ContRecherche {
     
     public function __construct(){}
     
+	// fonction qui supprime une liste
     private function delListe($l){
         unset($l->no);
         unset($l->user_id);
@@ -30,6 +31,7 @@ class ContRecherche {
         unset($l->message);
     }
     
+	// fonction qui affiche le résultat de la recherche, si il a une erreur lors de la recherche (recherche null, ou erreur), l'utilisateur est redirigé vers la page de recherche avancé
     public function afficherRecherche(){
         try{
             
@@ -73,10 +75,8 @@ class ContRecherche {
         }
     }
     
-    // Voir pourquoi pas d'affichage des erreurs...
-    
-    // TESTER : http://localhost/ProjetPHPS3/RechercheAvancee?search=t&on=Les+deux&date=&deep=deep&nbReserv=1&reserv=Maximum&nbItem=2&item=Maximum
-    // A vérifier : faire un select sur les éléments utiliser (pour les listes) et unset ces élément dans la fonction ci-dessus.
+  
+    // fonction qui affiche la page de recherche avancée 
     public function rechercherAvancee(){
         try{
             
