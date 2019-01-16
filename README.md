@@ -15,6 +15,7 @@
 ## Base de données
 
 Nous avons créé un fichier `creationTables.sql` à exécuter avant de tester le projet car il contient les différentes tables que nous avons ajoutées et les attributs supplémentaires de certaines tables déjà présentes initialement.
+Concernant les diagrammes de séquences, certains ne sont plus en accord avec les routes et méthodes que nous avons réalisées suite aux modifications faites sur le code.
 
 
 
