@@ -343,7 +343,7 @@ END;
             $pers = $m[0];
             $lien = $app->urlFor('user', array('id' => $pers->idUser));
             $vous="";
-            if($pers->idUser == $_SESSION['idUser']){
+            if(Auth::isLogged() && $pers->idUser == $_SESSION['idUser']){
                 $vous=' (Vous)';
             }
             $html .= <<<END
@@ -1114,11 +1114,9 @@ END;
                 break;
             }
             case 'COMPTE':{
-                // A voir :
                 if($this->messageErreur!=""){
                     $this->messageErreur="<p class=\"erreur\">$this->messageErreur</p>";
                 }
-                ////
                 $contenu = $this->monCompte();
                 $style = "<link rel=\"stylesheet\" href=\"./src/css/monCompte.css\">"; 
                 break;
