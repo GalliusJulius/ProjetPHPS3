@@ -206,7 +206,7 @@ END;
                     $supprimerListe = $this->app->urlFor('supprimer_liste', array('token' => $val->token));
                     $html .= '<div class="row">';
                     $html .= '<div class="col-sm-8">';
-                    $html .= '<h2><b>'.$i.' : </b><a href =' . $lien . '  >'.$val->titre.'</a><h2>';
+                    $html .= '<h2><b>'.$i.' : </b><a href =' . $lien . '  >'.$val->titre.'</a></h2><p>' . $val->expiration . '</p>';
                     $html .= '</div>';
                     $html .= '<div class ="col-sm-4">';
                     $html .= '<div class="row">';
@@ -523,7 +523,7 @@ END;
                 if($i->url != null or $i->url != ""){
                     $html .= '<a target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
                 } else{
-                    $html .= '<p>Aucune URL associé !</p>';
+                    $html .= '<p>Aucune URL associée !</p>';
                 }
 
                 $html .= '</section>';
@@ -659,7 +659,7 @@ END;
                     if($i->url != null and $i->url != ""){
                         $html .= '<a target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
                     } else{
-                        $html .= '<p>Aucune URL associé !</p>';
+                        $html .= '<p>Aucune URL associée !</p>';
                     }
                     
                     $html .= '</section>';
@@ -732,7 +732,7 @@ END;
                     if($i->url != null and $i->url != ""){
                         $html .= '<a target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
                     } else{
-                        $html .= '<p>Aucune URL associé !</p>';
+                        $html .= '<p>Aucune URL associée !</p>';
                     }
                     $html .= '</section>';
 
@@ -1269,7 +1269,8 @@ END;
                     <img src="$path./src/img/profil.png" width="40" height="40" alt="">
                 </a>
             </nav>
-            
+                <div class="messageErreur $this->typeErreur"><p>$this->messageErreur</p></div>
+                
                 $contenu
         
         </body>
