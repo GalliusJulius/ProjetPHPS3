@@ -124,33 +124,39 @@ class ControleurCompte{
     }
     
     public function affichageContacts(){
-        $liste = array();
-        $attente = m\Amis::where("idRecu","=",Auth::getIdUser())->where("statut","=","Attente")->get();
-        $amis = m\Amis::where(function($q){
-            $q->where("idRecu","=",Auth::getIdUser());
-        })->orWhere(function($q){
-            $q->where("idDemande","=",Auth::getIdUser());
-        })->get();
-        $membreAttente = array();
-        foreach($attente as $temp){
-            $membre = m\Membre::where("idUser","=",$temp->idDemande)->first();
-            $membreAttente[]=$membre;
-        }
-        $membreAmis = array();
-        foreach($amis as $m){
-            if($m->statut != "Attente"){
-                if($m->idDemande == Auth::getIdUser() ){
-                    $membre = m\Membre::where("idUser","=",$m->idRecu)->first();
-                }
-                else{
-                   $membre = m\Membre::where("idUser","=",$m->idDemande)->first(); 
-                }
-                $membreAmis[] = $membre;
+        if(Auth::isLogged()){
+            $liste = array();
+            $attente = m\Amis::where("idRecu","=",Auth::getIdUser())->where("statut","=","Attente")->get();
+            $amis = m\Amis::where(function($q){
+                $q->where("idRecu","=",Auth::getIdUser());
+            })->orWhere(function($q){
+                $q->where("idDemande","=",Auth::getIdUser());
+            })->get();
+            $membreAttente = array();
+            foreach($attente as $temp){
+                $membre = m\Membre::where("idUser","=",$temp->idDemande)->first();
+                $membreAttente[]=$membre;
             }
+            $membreAmis = array();
+            foreach($amis as $m){
+                if($m->statut != "Attente"){
+                    if($m->idDemande == Auth::getIdUser() ){
+                        $membre = m\Membre::where("idUser","=",$m->idRecu)->first();
+                    }
+                    else{
+                       $membre = m\Membre::where("idUser","=",$m->idDemande)->first(); 
+                    }
+                    $membreAmis[] = $membre;
+                }
+            }
+            $liste['demande'] = $membreAttente;
+            $liste['amis'] = $membreAmis;
+            $v = new v\VueWebSite($liste);
+            $v->render('CONTACT');
         }
-        $liste['demande'] = $membreAttente;
-        $liste['amis'] = $membreAmis;
-        $this->recupererVue('CONTACT');
+        else{
+            $this->recupererVue('CONTACT');
+        }
     }
     
     public function validationContact(){

@@ -99,7 +99,12 @@ END;
     
     public function accueil(){
         $lien = $this->app->urlFor('Compte');
-        $pseudo = $_SESSION['profil']['Pseudo'];
+        if(Auth::isLogged()){
+            $pseudo = $_SESSION['profil']['Pseudo'];
+        }
+        else{
+            $pseudo ="inconnu";
+        }
         
         $html = <<< END
         <div id ="top" class="position-relative overflow-hidden  p-3 p-md-5  text-center bg-light">
@@ -1074,30 +1079,29 @@ END;
     }
     
     private function modifierListe() {
-        $html = '<section>';
+        $html = '<div class="container justify-content-md-center">';
         $creer_liste = $this->app->urlFor('modifier_liste');
         $li = $this->liste;
 
-        $html .= '<div class="row"><div class="col-md-8">';
+        $html .= '<div class="row "><div class="col-12">';
         $html .= '<h1>Vous pouvez modifier les information de la liste ici</h1>';
-        $html .= '<div class="row"><div class="col-md-5">';
-        $html .= '<form method="POST" action="">';
-        $html .= '<p><input type="text" name="titre" class="form-control" aria-describedby="emailHelp" placeholder="Titre" value="'.$li->titre.'" autofocus/></p>';
-        $html .= '<p><input type="text" name="descr" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="'.$li->description.'" /></p>';
-        $html .= '<p><input type="date" name="date" class="form-control" aria-describedby="emailHelp" placeholder="Date d\'expiration" value="'.$li->expiration.'" /></p>';
-        $html .= '<div class="col-md-6">';
+        $html .= '<div class="row justify-content-md-center">';
+        $html .= '<form class="col-12" method="POST" action="">';
+        $html .= '<p class ="col-lg-6"><p>Titre:</p><input type="text" name="titre" class="form-control col-lg-6" aria-describedby="emailHelp" placeholder="Titre" value="'.$li->titre.'" autofocus/></p>';
+        $html .= '<p class ="col-6"><input type="text" name="descr" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="'.$li->description.'" /></p>';
+        $html .= '<p class ="col-6"><input type="date" name="date" class="form-control" aria-describedby="emailHelp" placeholder="Date d\'expiration" value="'.$li->expiration.'" /></p>';
+        $html .= '<div class="row">';
         if($li->public == 0){
-          $html .= '<p><input type="radio" name="liste_publique" value="1"> Liste publique</p>';
-          $html .= '<p><input type="radio" name="liste_publique" value="0" checked> Liste privée</p>';
+          $html .= '<p class="col-lg-6"><input type="radio" name="liste_publique" value="1"> Liste publique</p>';
+          $html .= '<p class="col-lg-6"><input type="radio" name="liste_publique" value="0" checked> Liste privée</p>';
         }else{
-          $html .= '<p><input type="radio" name="liste_publique" value="1" checked> Liste publique</p>';
-          $html .= '<p><input type="radio" name="liste_publique" value="0"> Liste privée</p>';
+          $html .= '<p class="col-lg-6"><input type="radio" name="liste_publique" value="1" checked> Liste publique</p>';
+          $html .= '<p class="col-lg-6"><input type="radio" name="liste_publique" value="0"> Liste privée</p>';
         }
         $html .= '</div>';
         $html .= '<p><button type="submit" class="btn btn-primary" name="valider_modif" value="modifier_liste">Valider modification</button></p>';
         $html .= '</form>';
-        $html .= '</div></div></div>';
-        $html .= '</section>';
+        $html .= '</div></div></div></div>';
 
         return $html;
     }
