@@ -49,11 +49,22 @@ class ContAffichageListe {
         $listes = m\Liste::where('token', 'like', $token)->get();
         
         if(Auth::isAuthorized($token)){ // si l'utilisateur est autorisé à accéder à cette liste
-        $vue->render('LISTE_CREA');
+            $vue->render('LISTE_CREA');
         } else{ // sinon redirection vers l'affichage des invités
             $_SESSION['messageErreur'] = "Vous n'êtes pas autorisé à accéder à cette liste !";
             $_SESSION['typeErreur'] = "err";
             $app = \Slim\Slim::getInstance();
+            $app->response->redirect($app->urlFor('listeShare', array('share' => $liste->share)));
+        }
+    }
+    
+    public function demandeAcces($token){
+        $liste = m\Liste::where('token', 'like', $token)->first();
+        $app = \Slim\Slim::getInstance();
+        
+        if(Auth::isAuthorized($token)){ // si l'utilisateur est autorisé à accéder à cette liste
+            $app->response->redirect($app->urlFor('listeCrea', array('token' => $liste->token)));
+        } else{ // sinon redirection vers l'affichage des invités
             $app->response->redirect($app->urlFor('listeShare', array('share' => $liste->share)));
         }
     }

@@ -318,4 +318,10 @@ $app->post('/liste/:token', function($token) {
     $cont->afficherMessageListe($token);
 })->name('ajoutMsgListe');
 
+$app->get('/liste/demandeAcces/:token', function($token) {
+    $cont = new c\ContAffichageListe();
+    $cont->demandeAcces($token);
+})->name('demandeAcces');
+
+
 $app->run();

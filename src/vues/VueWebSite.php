@@ -319,7 +319,7 @@ END;
             $listes.='<div class="row">';
             $i=0;
             foreach($liste as $val){
-                $lien = $this->app->urlFor('listeCrea',['token'=>$val->token]);
+                $lien = $this->app->urlFor('demandeAcces',['token'=>$val->token]);
                 $i++;
                 $listes .= "<div class=\"col-lg-6 \">
                 <h2><b>$i : </b><a href = $lien>$val->titre</a></h2>
