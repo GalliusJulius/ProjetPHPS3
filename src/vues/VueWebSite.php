@@ -206,7 +206,7 @@ END;
                     $supprimerListe = $this->app->urlFor('supprimer_liste', array('token' => $val->token));
                     $html .= '<div class="row">';
                     $html .= '<div class="col-sm-8">';
-                    $html .= '<h2><b>'.$i.' : </b><a href =' . $lien . '  >'.$val->titre.'</a><h2>';
+                    $html .= '<h2><b>'.$i.' : </b><a href =' . $lien . '  >'.$val->titre.'</a></h2><p>' . $val->expiration . '</p>';
                     $html .= '</div>';
                     $html .= '<div class ="col-sm-4">';
                     $html .= '<div class="row">';
@@ -319,7 +319,7 @@ END;
             $listes.='<div class="row">';
             $i=0;
             foreach($liste as $val){
-                $lien = $this->app->urlFor('listeCrea',['token'=>$val->token]);
+                $lien = $this->app->urlFor('demandeAcces',['token'=>$val->token]);
                 $i++;
                 $listes .= "<div class=\"col-lg-6 \">
                 <h2><b>$i : </b><a href = $lien>$val->titre</a></h2>
@@ -410,22 +410,22 @@ END;
     }
     
     private function affichageListes() {
-        $html = '<div class="container"><h1>Les listes publics disponibles</h1> <p> Vous retrouverez ici toutes les listes publics publiées sur notre site </p><div class="row">';
-
+        $html = '<section><ul class="listes">';
+        $html .= '<form method="GET" action="' . $this->app->urlFor('listePublic') . '">';
+        $html .= '<button name="trie" value="auteur" class="btn btn-primary">Trier par Auteur</button>';
+        $html .= '<button name="trie" value="date" class="btn btn-primary">Trier par Date</button>';
+        $html .= "</form>";
         foreach($this->liste as $l){
-
             if(isset($l)){
-                
-                $html .= '<div class=" englob col-md-4 col-sm-6"><p class="titre"><h3>' . $l->titre . '</h3></p><div class="limited"><p class="desc">' . $l->description . '</p><p class="date">' . $l->expiration . '</p></div>';
-                $html .= '<form method="GET" action="' . $this->app->urlFor('listeCrea', array('token' => $l->token)) . '">';
+                $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3><p class="date">' . $l->expiration . '</p>';
+                $html .= '<form method="GET" action="' . $this->app->urlFor('demandeAcces', array('token' => $l->token)) . '">';
                 $html .= '<button class="btn btn-primary">Détails</button>';
-                $html .= '<p>Nombre de réservations : ' . count($l->reservations()->get()) . '</p>';
                 $html .= "</form>";
-                $html .= '</div>';
+                $html .= '</li>';
             }
         }
 
-        $html .= '</div></div>';
+        $html .= '</ul></section>';
 
         return $html;
     }
@@ -523,7 +523,7 @@ END;
                 if($i->url != null or $i->url != ""){
                     $html .= '<a target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
                 } else{
-                    $html .= '<p>Aucune URL associé !</p>';
+                    $html .= '<p>Aucune URL associée !</p>';
                 }
 
                 $html .= '</section>';
@@ -634,8 +634,8 @@ END;
 
                         if(isset($idUser)){
                             $m = Membre::where('idUser', '=', $idUser)->first();
-                            $n = $m->Nom;
-                            $p = $m->Prenom;
+                            $n = $m->nom;
+                            $p = $m->prenom;
                         }
 
 
@@ -659,7 +659,7 @@ END;
                     if($i->url != null and $i->url != ""){
                         $html .= '<a target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
                     } else{
-                        $html .= '<p>Aucune URL associé !</p>';
+                        $html .= '<p>Aucune URL associée !</p>';
                     }
                     
                     $html .= '</section>';
@@ -708,8 +708,8 @@ END;
 
                         if(isset($idUser)){
                             $m = Membre::where('idUser', '=', $idUser)->first();
-                            $n = $m->Nom;
-                            $p = $m->Prenom;
+                            $n = $m->nom;
+                            $p = $m->prenom;
                         }
 
                         $html .= '<p>Votre nom : </p><input type="text" name="nom" value="' . $n . '" required>';
@@ -732,7 +732,7 @@ END;
                     if($i->url != null and $i->url != ""){
                         $html .= '<a target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
                     } else{
-                        $html .= '<p>Aucune URL associé !</p>';
+                        $html .= '<p>Aucune URL associée !</p>';
                     }
                     $html .= '</section>';
 
@@ -1006,7 +1006,7 @@ END;
         $html .= '<div class="row"><div class="col-md-2">';
         $html .= '<form method="post" action="$ajouter_item" enctype="multipart/form-data">';
         $html .= '<p><input type="text" name="nom" class="form-control" aria-describedby="emailHelp" placeholder="Nom" required autofocus/></p>';
-        $html .= '<p><input type="text" name="description" class="form-control" aria-describedby="emailHelp" placeholder="Description" required/></p>';
+        $html .= '<p><textarea type="text" rows="5" cols="50" name="description" class="form-control" aria-describedby="emailHelp" placeholder="Description" required/></textarea></p>';
         $html .= '<p><input type="number" name="tarif" class="form-control" aria-describedby="emailHelp" placeholder="Tarif" required/></p>';
         $html .= '<p><input type="url" name="url" class="form-control" aria-describedby="emailHelp" placeholder="lien utile"/></p>';
         $html .= '<input type="hidden" name="MAX_FILE_SIZE" value="10485760" />';
@@ -1030,7 +1030,7 @@ END;
         $html .= '<div class="row"><div class="col-md-2">';
         $html .= '<form method="POST" action="'.$id.'" enctype="multipart/form-data">';
         $html .= '<p><input type="text" name="nom" class="form-control" aria-describedby="emailHelp" placeholder="Nom" value="'.$i->nom.'" autofocus/></p>';
-        $html .= '<p><textarea rows="5" cols="50" type="text" name="description" value="">'.$i->descr.'</textarea></p>:';
+        $html .= '<p><textarea rows="5" cols="50" class="form-control" type="text" name="description" value="">'.$i->descr.'</textarea></p>:';
         //$html .= '<p><input type="text" name="description" class="form-control" aria-describedby="emailHelp" placeholder="Description" value="'.$i->descr.'" /></p>';
         $html .= '<p><input type="number" name="tarif" class="form-control" aria-describedby="emailHelp" placeholder="Tarif" value="'.$i->tarif.'" /></p>';
         $html .= '<p><input type="url" name="url" class="form-control" aria-describedby="emailHelp" placeholder="lien utile" value="'.$i->url.'" /></p>';
@@ -1156,6 +1156,7 @@ END;
             }
             case 'LISTES':{
                 $contenu = $this->affichageListes();
+				$path = '';
                 $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
                 break;
             }
@@ -1212,7 +1213,7 @@ END;
         $lienAccueil = $this->app->urlFor('accueil');
         $lienCompte = $this->app->urlFor('Compte');
         $lienMesListes = $this->app->urlFor('mesListes');
-        $lienListesPublic = $this->app->urlFor('listePublic');
+        $lienListesPublic = $this->app->urlFor('listePublic', array('trie' => 'DATE'));
         $lienCreateur = $this->app->urlFor('createur');
         $lienContact = $this->app->urlFor('contact');
         $lienRecherche = $this->app->urlFor('recherche');
@@ -1270,7 +1271,8 @@ END;
                     <img src="$path./src/img/profil.png" width="40" height="40" alt="">
                 </a>
             </nav>
-            
+                <div class="messageErreur $this->typeErreur"><p>$this->messageErreur</p></div>
+                
                 $contenu
         
         </body>

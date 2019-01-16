@@ -193,28 +193,12 @@ $app->get('/Createurs',function(){
 
 $app->get('/Recherche',function(){
     $cont = new c\contRecherche();
-    //try{
-        $cont->afficherRecherche();
-    /*} catch(\Exception $e){
-        $_SESSION['messageErreur'] = "Une erreur est survenue lors de la recherche !";
-        $_SESSION['typeErreur'] = "err";
-        unset($_GET['search']);
-        $app = \Slim\Slim::getInstance();
-        $app->redirect($app->urlFor('recherche'));
-    }*/
+    $cont->afficherRecherche();
 })->name('recherche');
 
 $app->get('/RechercheAvancee',function(){
     $cont = new c\contRecherche();
-    //try{
-        $cont->rechercherAvancee();
-    /*} catch(\Exception $e){
-        $_SESSION['messageErreur'] = "Une erreur est survenue lors de la recherche !";
-        $_SESSION['typeErreur'] = "err";
-        unset($_GET['search']);
-        $app = \Slim\Slim::getInstance();
-        $app->redirect($app->urlFor('recherche'));
-    }*/
+    $cont->rechercherAvancee();
 })->name('rechercheAvancee');
 
 $app->get('/liste/:token', function($token){
@@ -230,14 +214,7 @@ $app->get('/liste/:share/partager', function($share){
 
 $app->post('/liste/:share/partager/reserver/:idItem', function($share, $idItem){
     $cont = new c\ContAffichageListe();
-    try{
-        $cont->reserverItem($share, $idItem);
-    } catch(c\ExceptionPerso $e){
-        $_SESSION['messageErreur'] = $e->getMessage();
-        $_SESSION['typeErreur'] = $e->getType();
-        $app = \Slim\Slim::getInstance();
-        $app->redirect($app->urlFor('listeShare', array('share' => $share)));
-    }
+    $cont->reserverItem($share, $idItem);
 })->name('reserver');
 
 /*$app->get('/item/:id', function($id){
@@ -247,14 +224,7 @@ $app->post('/liste/:share/partager/reserver/:idItem', function($share, $idItem){
 
 $app->post('/item/:id/cagnotte', function($id){
     $cont = new c\ContCagnotte();
-    try{
-        $cont->creerCagnotte($id);
-    } catch(\Exception $e){
-        $_SESSION['messageErreur'] = "Une erreur est survenue lors de la création de la cagnotte !";
-        $_SESSION['typeErreur'] = "err";
-        $app = \Slim\Slim::getInstance();
-        $app->redirect($app->urlFor('accueil'));
-    }
+    $cont->creerCagnotte($id);
     
 })->name('creerCagnotte');
 
@@ -273,14 +243,7 @@ $app->post('/item/:id/cagnotte/participer', function($id){
 
 $app->get('/liste_public', function(){
     $cont = new c\ContAffichageListe();
-    try{
-        $cont->afficherListesPublic();
-    } catch(\Exception $e){
-        $_SESSION['messageErreur'] = "Une erreur est survenue lors de l'affichage des listes pubic !";
-        $_SESSION['typeErreur'] = "err";
-        $app = \Slim\Slim::getInstance();
-        $app->redirect($app->urlFor('accueil'));
-    }
+    $cont->afficherListesPublic();
 })->name('listePublic');
 
 $app->get('/liste/:token/ajouterItem', function($token) {
@@ -316,7 +279,13 @@ $app->get('/liste/:token/:id/supprimer', function($token, $id) {
 
 $app->post('/liste/:token', function($token) {
     $cont = new c\ContAffichageListe();
-    $cont->afficherMessageListe($token);
+    $cont->ajouterMessageListe($token);
 })->name('ajoutMsgListe');
+
+$app->get('/liste/demandeAcces/:token', function($token) {
+    $cont = new c\ContAffichageListe();
+    $cont->demandeAcces($token);
+})->name('demandeAcces');
+
 
 $app->run();

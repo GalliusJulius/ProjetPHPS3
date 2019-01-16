@@ -168,3 +168,10 @@ Concernant les diagrammes de séquences, certains ne sont plus en accord avec le
 ### *“Rechercher seulement un contact (recherche paramétrée)”*
 
 - On peut choisir un créateur, un membre via les options de filtrage
+
+
+
+### *"Appliquer une politique de password"*
+
+- On applique une politique de password via passwordPolicy
+- Demander à l'utilisateur d'entrer un mot de passe d'au moins 6 caractères avec au moins une majuscule, une minuscule et un chiffre
