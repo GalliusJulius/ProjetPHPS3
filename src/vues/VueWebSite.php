@@ -199,7 +199,7 @@ END;
     public function mesListes(){
         $html = <<<END
         <div class="container">
-            <h1>Les listes que vous avez créé ou sur lesquelles vous avez des droits de modification:</h1>
+            <h1>Les listes que vous avez créé ou sur lesquelles vous avez des droits de modification :</h1>
 END;
         
         $i=0;

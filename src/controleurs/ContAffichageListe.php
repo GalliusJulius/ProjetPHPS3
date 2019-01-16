@@ -158,12 +158,21 @@ class ContAffichageListe {
             if(Auth::isLogged()){
 
                 $userId = Auth::getIdUser();
-                $fabrique = m\Liste::where('user_id',"=",$userId)->get();
-                #on cherche les listes qui n'ont pas été crée par user mais a accès dessus
-                $listes = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->get();
-                $fusion = array($fabrique,$listes);
+                
+                // Liste de l'utilisateur (directement crée par lui)
+                $lUserAv = m\Liste::where('user_id',"=",$userId)->where('expiration', '<', date("Y-m-d"))->orderBy('expiration')->get();
+                
+                $lUserAp = m\Liste::where('user_id',"=",$userId)->where('expiration', '>=', date("Y-m-d"))->orderBy('expiration')->get();
+                
+                // Liste partagé à l'utilisateur
+                $lShareAv = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where('expiration', '<', date("Y-m-d"))->orderBy('expiration')->get();
+                
+                $lShareAp = m\Membre::where('email',"=",$_SESSION['profil']['Email'])->first()->liste()->where("user_id","!=",$userId)->where('expiration', '>=', date("Y-m-d"))->orderBy('expiration')->get();
+                
+                $lShare = array($lShareAv, $lShareAp);
+                $lUser = array($lUserAv, $lUserAp);
 
-                $vue = new VueWebSite(array("erreur" => $err, "liste" => $fusion, "listeParatagee" => $listes));
+                $vue = new VueWebSite(array("erreur" => $err, "liste" => $lUser, "listeParatagee" => $lShare));
                 $vue->render('MESLISTES');
 
             } else{
