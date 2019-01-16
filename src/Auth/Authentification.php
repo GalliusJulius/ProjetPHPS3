@@ -86,9 +86,11 @@ class Authentification{
     
     public static function isAuthorized($token){
         if(self::isLogged()){
-            $res = m\Liste::where('user_id',"=",$_SESSION['idUser'])->where('token', 'like', $token)->first();
+            $l1 = m\Liste::where('user_id',"=",$_SESSION['idUser'])->where('token', 'like', $token)->first();
+            $l2 = m\Membre::where('idUser',"=",$_SESSION['idUser'])->first()->liste()->where('token', 'like', $token)->first();
             
-            if(($res != null) and isset($res) and ($res != false) and ($res != '')){
+            if((($l1 != null) and isset($l1) and ($l1 != false) and ($l1 != '')) or
+                ($l2 != null) and isset($l2) and ($l2 != false) and ($l2 != '')){
                 return true;
             } else{
                 return false;

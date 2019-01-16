@@ -206,7 +206,7 @@ END;
                     $supprimerListe = $this->app->urlFor('supprimer_liste', array('token' => $val->token));
                     $html .= '<div class="row">';
                     $html .= '<div class="col-sm-8">';
-                    $html .= '<h2><b>'.$i.' : </b><a href =' . $lien . '  >'.$val->titre.'</a><h2>';
+                    $html .= '<h2><b>'.$i.' : </b><a href =' . $lien . '  >'.$val->titre.'</a></h2><p>' . $val->expiration . '</p>';
                     $html .= '</div>';
                     $html .= '<div class ="col-sm-4">';
                     $html .= '<div class="row">';
@@ -319,7 +319,7 @@ END;
             $listes.='<div class="row">';
             $i=0;
             foreach($liste as $val){
-                $lien = $this->app->urlFor('listeCrea',['token'=>$val->token]);
+                $lien = $this->app->urlFor('demandeAcces',['token'=>$val->token]);
                 $i++;
                 $listes .= "<div class=\"col-lg-6 \">
                 <h2><b>$i : </b><a href = $lien>$val->titre</a></h2>
@@ -411,24 +411,22 @@ END;
     
     private function affichageListes() {
         $html = '<section><ul class="listes">';
-        $date = date("Y-m-d");
+        /*$date = date("Y-m-d");
         $html .= '<form method="GET" action="' . $this->app->urlFor('listePublic', array('trie' => 'AUTEUR')) . '">';
         $html .= '<button class="btn btn-primary">Trier par Auteur</button>';
         $html .= "</form>";
         $html .= '<form method="GET" action="' . $this->app->urlFor('listePublic', array('trie' => 'DATE')) . '">';
         $html .= '<button class="btn btn-primary">Trier par Date</button>';
-        $html .= "</form>";
+        $html .= "</form>";*/
         foreach($this->liste as $l){
-          if($l->expiration >= $date){
             if(isset($l)){
                 $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3><p class="date">' . $l->expiration . '</p>';
                 $html .= '<form method="GET" action="' . $this->app->urlFor('listeCrea', array('token' => $l->token)) . '">';
                 $html .= '<button class="btn btn-primary">Détails</button>';
-                //$html .= '<p>Nombre de réservations : ' . count($l->reservations()->get()) . '</p>';
+                $html .= '<p>Nombre de réservations : ' . count($l->reservations()->get()) . '</p>';
                 $html .= "</form>";
                 $html .= '</li>';
             }
-          }
         }
 
         $html .= '</ul></section>';
@@ -529,7 +527,7 @@ END;
                 if($i->url != null or $i->url != ""){
                     $html .= '<a target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
                 } else{
-                    $html .= '<p>Aucune URL associé !</p>';
+                    $html .= '<p>Aucune URL associée !</p>';
                 }
 
                 $html .= '</section>';
@@ -665,7 +663,7 @@ END;
                     if($i->url != null and $i->url != ""){
                         $html .= '<a target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
                     } else{
-                        $html .= '<p>Aucune URL associé !</p>';
+                        $html .= '<p>Aucune URL associée !</p>';
                     }
                     
                     $html .= '</section>';
@@ -738,7 +736,7 @@ END;
                     if($i->url != null and $i->url != ""){
                         $html .= '<a target="_blank" href="' . $i->url . '">Produit disponible ici !</a>';
                     } else{
-                        $html .= '<p>Aucune URL associé !</p>';
+                        $html .= '<p>Aucune URL associée !</p>';
                     }
                     $html .= '</section>';
 
@@ -1162,7 +1160,7 @@ END;
             }
             case 'LISTES':{
                 $contenu = $this->affichageListes();
-				$path = '.';
+				$path = '';
                 $style = '<link rel="stylesheet"  href="' . $path . 'src/css/itemsListes.css"/>';
                 break;
             }
@@ -1277,7 +1275,8 @@ END;
                     <img src="$path./src/img/profil.png" width="40" height="40" alt="">
                 </a>
             </nav>
-            
+                <div class="messageErreur $this->typeErreur"><p>$this->messageErreur</p></div>
+                
                 $contenu
         
         </body>
