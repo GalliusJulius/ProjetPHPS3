@@ -179,7 +179,7 @@ class ContAffichageListe {
                 $lShare = array($lShareAv, $lShareAp);
                 $lUser = array($lUserAv, $lUserAp);
 
-                $vue = new VueWebSite(array("erreur" => $err, "liste" => $lUser, "listeParatagee" => $lShare));
+                $vue = new VueWebSite(array("erreur" => $err, "liste" => $lUser, "listePartagee" => $lShare));
                 $vue->render('MESLISTES');
 
             } else{
