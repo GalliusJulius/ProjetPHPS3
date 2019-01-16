@@ -1,5 +1,7 @@
 # WishList - S3B (CHAUMONT - GAUCHOTTE - LUC - MORELIERE)
 
+La branche *'brancheDev'* est à considérer comme la branche **master**.
+
 ## Pseudos Github
 
 | Pseudos                              | Etudiants |
@@ -181,3 +183,4 @@ Concernant les diagrammes de séquences, certains ne sont plus en accord avec le
 
 - On suppose qu’une personne ayant un compte est un membre. Un membre peut participer à des listes et peut également en créer, à ce moment il obtient le statut de *“créateur”*. 
 - Si un utilisateur non connecté fait des actions qu’il n’est pas censé pouvoir effectuer, il est redirigé vers la page de connexion. (par exemple : modifier les informations de son compte, ajouter un ami, …)
+- Les images extérieures ne peuvent pas dépasser 100Mo.
