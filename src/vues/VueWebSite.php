@@ -8,6 +8,10 @@ class VueWebSite{
     
     private $liste, $listePart, $item, $membre, $amis, $demande, $recherche, $messageErreur, $typeErreur, $app;
     
+    /*
+    * Constructeur de la vue prenant en paramètre un tableau correspondant à différente
+    * varaible utilie en fonction de l'affichage.
+    */
     public function __construct($tab = array()){
         
         if(isset($tab['liste'])){
@@ -42,6 +46,7 @@ class VueWebSite{
             $this->demande = $tab['demande'];
         }
         
+        // Message d'erreur géré dans la session
         if(isset($_SESSION['messageErreur']) and isset($_SESSION['typeErreur'])){
             $this->messageErreur = $_SESSION['messageErreur'];
             $this->typeErreur = $_SESSION['typeErreur'];
@@ -52,6 +57,7 @@ class VueWebSite{
         $this->app = \Slim\Slim::getInstance();
     }
     
+    // Permet de supprimer un compte
     public function supprimerCompte(){
         $lienAccueil = $this->app->urlFor('accueil');
         
@@ -77,6 +83,7 @@ END;
             
     } 
     
+    // Permet d'afficher la confirmation de la suppression d'un compte.
     public function confSupp(){
         $lienAccueil = $this->app->urlFor('connexion');
         
@@ -97,13 +104,15 @@ END;
         
     }
     
+    // Permet d'afficher l'accueil du site
     public function accueil(){
         $lien = $this->app->urlFor('Compte');
+        // On vérifie si le membre est connécté
         if(Auth::isLogged()){
             $pseudo = $_SESSION['profil']['Pseudo'];
         }
         else{
-            $pseudo ="inconnu";
+            $pseudo ="";
         }
         
         $html = <<< END
@@ -141,6 +150,7 @@ END;
         return $html;
     }
     
+    // Affiche le compte de l'utilisateur
     public function monCompte(){
         $lienAccueil = $this->app->urlFor('accueil');
         $lienSupp = $this->app->urlFor('suppCompte');
@@ -198,6 +208,7 @@ END;
         
     }
     
+    // Affiche les listes de l'utilisateur
     public function mesListes(){
         $html = <<<END
         <div class="container">
@@ -207,6 +218,7 @@ END;
         $i = 0;
         $j = 0;
         if(isset($this->liste)){
+            // Séparation en liste avant et après d'échéance
             foreach($this->liste as $separation){
                 if(isset($separation) and ($separation)){
                     $j++;
@@ -270,6 +282,7 @@ END;
         $i = 0;
         $j = 0;
         if(isset($this->listePart)){
+            // Séparation en liste avant et après d'échéance
             foreach($this->listePart as $separation){
                 if(isset($separation)){
                     $j++;
@@ -318,6 +331,7 @@ END;
         return $html;
     }
     
+    // Affiche les infos du compte
     public function visionComptes(){
         $perso = $this->membre;
         $amis = $this->amis;
@@ -370,6 +384,7 @@ END;
         return $html;
     }
     
+    // Affiche la liste des créateurs (plusieurs créateurs et non leur listes)
     public function createurs(){
         
         $html = "<div class=\"container\"><div class=\"row\">";
@@ -394,6 +409,7 @@ END;
         return $html;
     }
     
+    // Affiche les contacts de l'utilisateur
     public function contact(){
         $att = $this->demande;
         $amis = $this->amis;
@@ -445,6 +461,7 @@ END;
         return $html;
     }
     
+    // Affiche les listes public du site (avant échéance)
     private function affichageListes() {
         $html = '<div class ="container"><div class="row justify-content-md-center">';
         $html .= '<form class="row" method="GET" action="' . $this->app->urlFor('listePublic') . '">';
@@ -464,30 +481,7 @@ END;
         return $html;
     }
     
-    private function affichageListesCrea() {
-        $html = '<section><ul class="listes">';
-
-        foreach($this->liste as $l){
-
-            if(isset($l)){
-                $html .= '<li><p class="titre"><h3>' . $l->titre . '</h3></p><p class="desc">' . $l->description . '</p><p class="date">' . $l->expiration . '</p>';
-                $html .= '<form method="GET" action="' . $this->app->urlFor('listeCrea', array('token' => $l->token)) . '">';
-                $html .= '<button class="btn btn-primary">Détails</button>';
-                $html .= '<p>Nombre de réservation(s) : ' . count($l->reservation()->get()) . '</p>';
-                $html .= "</form>";
-                $html .= '</li>';
-            }
-        }
-
-        $html .= '<form method="GET" action="#">'; // TODO mettre route **TRISTAN**
-        $html .= '<button class="btn btn-primary">Ajouter une liste</button>';
-        $html .= '</form>';
-
-        $html .= '</ul></section>';
-
-        return $html;
-    }
-    
+    // Affiche une liste en tant que créateur
     private function affichageListeCrea() {
         $html = '<div class="container">';
         $cpt = 1;
@@ -527,6 +521,8 @@ END;
                 $html .= '<h4>' . $i->nom . '</h4>' . $image_item . '<p class="tarif">' . $i->tarif .  ' €</p>';
 
                 $html .= '<button class="details btn btn-primary h' . $cpt . '">Description</button>';
+                
+                // Les formulaires de modifications d'une liste
                 
                 if(isset($reserv)){
 
@@ -599,6 +595,7 @@ END;
         $html .= '</form>';
         
         if(isset($l)){
+            // Fenêtre modal pour le lien de partgae d'une liste
             $html .= '<div class="partager hidden hide modal">';
             $html .= '<div class="form">';
             $html .= '<h6>Lien de partage :</h6>';
@@ -615,6 +612,7 @@ END;
         return $html;
     }
     
+    // Affiche une liste en tant qu'invité
     private function affichageListeInvite() {
         $html = '<div class="container">';
         $cpt = 1;
@@ -644,7 +642,6 @@ END;
                 
                 if($i->cagnotte == 1){
                     
-                    //$html .= '<div class="col col-l-3">';
                     $html .= '<div class="article col-sm-6 col-md-4"><div class="contenu">';
 
                     $html .= '<h4>' . $i->nom . '</h4>' . $image_item . '<p class="tarif">' . $i->tarif .  ' €</p>';
@@ -661,6 +658,8 @@ END;
 
                     } else{
                         $html .= '<button class="btn btn-primary cagnotte h' . $cpt . '">Participer à la cagnotte</button>';
+                        
+                        // Fenêtre modal de la cagnotte
                         
                         $html .= '<div class="cagnotte modal h' . $cpt . '"><div class="form">';
                         $html .= '<form id="Cagn" method="POST" action="' . $this->app->urlFor('participerCagnotte', array('id' => $i->id)) . '">';
@@ -718,6 +717,7 @@ END;
 
                     $html .= '<button class="details btn btn-primary h' . $cpt . '">Détails</button>';
 
+                    // Affichage des détails / mesage d'une liste
                     
                     if(isset($reserv)){
 
@@ -732,6 +732,8 @@ END;
 
                         $html .= '<button class="btn btn-primary reserver h' . $cpt . '">Réserver</button>';
 
+                        // Fenêtre modal pour la réservation
+                        
                         $html .= '<div class="reserver modal h' . $cpt . '"><div class="form">';
                         $html .= '<form id="Reserv" method="POST" action="' . $this->app->urlFor('reserver', array('share' => $l->share, 'idItem' => $i->id)) . '">';
                         $html .= '<p>Nom de l\'item à reserver : </p><input type="text" name="nomItem" value="' . $i->nom . '" disabled>';
@@ -787,12 +789,15 @@ END;
         return $html;
     }
     
+    // Affichage de la recherche avec souvegarde des données sur les éléments
     private function recherche(){
         $html = '<div class="recherche row justify-content-md-center">';
         $html .= '<form class="form-inline my-2 my-md-0" id="search" method="GET" action="' . $this->app->urlFor('rechercheAvancee') . '">';
         $html .= '<div class="row col-md-12 justify-content-md-center">
         <input class="form-control" type="text" name="search" placeholder="Terme recherché" value="' . $this->recherche['search'] . '">
         </div>';
+        
+        // Sauvegarde des états des éléments
         
         if(isset($this->recherche['on'])){
             $html .= '<div class="col col-md-3">
@@ -1003,6 +1008,7 @@ END;
         $html .= '</form></div>';
         $html .= '<section>';
         
+        // Résultats de la recherche
         
         if(isset($this->liste) and (count($this->liste) > 0)){
             $html .= '<div><h3>Listes :</h3>';
@@ -1029,6 +1035,7 @@ END;
         return $html;
     }
     
+    // Permet l'ajout d'un item
     private function ajouterItem() {
         $html = '<div class="container">';
         $ajouter_item = $this->app->urlFor('ajouter_item');
@@ -1050,6 +1057,7 @@ END;
         return $html;
     }
 
+    // Permet la modification d'un item
     private function modifierItem() {
         $html = '<div class="container">';
         $i = $this->item;
@@ -1076,6 +1084,7 @@ END;
         return $html;
     }
 
+    // Permet la création d'une liste
     private function creerListe() {
         $html = '<section>';
         $creer_liste = $this->app->urlFor('creer_liste');
@@ -1100,6 +1109,7 @@ END;
         return $html;
     }
     
+    // Permet le modification d'une liste
     private function modifierListe() {
         $html = '<div class="container justify-content-md-center">';
         $creer_liste = $this->app->urlFor('modifier_liste');
@@ -1128,6 +1138,8 @@ END;
         return $html;
     }
     
+    
+    // Affichage de la vue en fonction des cas
     public function render($code){
         
         $contenu = "<h1>ERREUR !</h1>";
@@ -1185,12 +1197,6 @@ END;
 				$path = '';
                 $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 $style.='<link rel="stylesheet" href="'.$path.'./src/css/listePub.css"/>';
-                break;
-            }
-            case 'LISTE_CREA':{
-                $contenu = $this->affichageListeCrea();
-                $path = '.';
-                $style = '<link rel="stylesheet"  href="' . $path . './src/css/itemsListes.css"/>';
                 break;
             }
             case 'LISTE_CO':{
