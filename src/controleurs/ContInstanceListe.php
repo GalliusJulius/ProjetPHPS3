@@ -12,11 +12,14 @@ use \wishlist\Auth\Authentification as Auth;
 
 class ContInstanceListe {
 
+
+  // fonction qui redirige vers le formulaire de création de liste 
   public function creerListe(){
     $v = new v\VueWebSite();
     $v->render('CREER_LISTE');
   }
 
+  // fonction qui créer une liste avec un token d'indentification, un token de partage par défault et les valeurs dans le POST  
   public function creer_liste(){
     $app = \Slim\Slim::getInstance();
     $liste = new m\Liste();
@@ -48,13 +51,15 @@ class ContInstanceListe {
     $app->redirect($app->urlFor('listeCrea',array('token' => $token)));
   }
 
-
+ 
+  // fonction qui redirige vers le formulaire de modification de liste 
   public function modifierListe($token){
     $liste =  m\Liste::where("token","=",$token)->first();
     $v = new v\VueWebSite(array('liste'=> $liste));
     $v->render('MODIFIER_LISTE');
   }
 
+  // fonction qui modifie la liste sélectionnée en fonction des valeurs dans le POST
   public function modifier_liste($token){
     $app = \Slim\Slim::getInstance();
     $liste =  m\Liste::where("token","=",$token)->first();
@@ -83,6 +88,8 @@ class ContInstanceListe {
     $app->redirect($app->urlFor('listeCrea',array('token' => $token)));
   }
 
+  
+  // fonction qui supprime la liste sélectionnée 
   public function supprimer_liste($token){
     $app = \Slim\Slim::getInstance();
     $liste =  m\Liste::where("token","=",$token)->first();

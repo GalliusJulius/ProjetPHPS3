@@ -12,6 +12,8 @@ const LISTES = 1.0;
 
 class ContItem {
 
+
+  // fonction pour rediriger vers un formulaire de modification  
   public function modifier($token, $id){
     $liste =  m\Liste::where("token","=",$token)->first();
     $item = m\Item::where("id","=",$id)->first();
@@ -19,7 +21,9 @@ class ContItem {
     $v->render('MODIFIER');
 
   }
-
+  
+	 
+  // fonction qui copie l'image dans la base de donnée 
   public function copier_image($url) {
     $cptImage = m\Item::where("img", "=", $url)->count();
     $erreur = "";
@@ -47,6 +51,8 @@ class ContItem {
     return $erreur;
   }
 
+  
+  // fonction qui modifie les éléments de l'item sélectionné en fonction des valeurs dans le POST
   public function modifierItem($token, $id){
     $liste =  m\Liste::where("token","=",$token)->first();
     $item = m\Item::where("id","=", $id)->first();
@@ -86,6 +92,8 @@ class ContItem {
     $app->redirect($app->urlFor('listeCrea',array('token' => $token)));
   }
 
+  
+  // fonction qui supprime l'image sélectionné pour l'item en sélectionné
   public function supprimer_image($token, $id) {
       $liste = m\Liste::where("token", "=", $token)->first();
       $item = m\Item::where("id", "=", $id)->first();
@@ -97,13 +105,16 @@ class ContItem {
       $app->redirect($app->urlFor('listeCrea', array('token' => $token)));
   }
 
-  // methode pour ajouter un item a la base
+  
+  // fonction qui redirige vers le formulaire pour ajouter un item a la liste sélectionnée
   public function ajouterItem($token){
     $liste =  m\Liste::where("token","=",$token)->first();
     $v = new v\VueWebSite(array('liste' => $liste));
     $v->render('ITEM_AJOUT');
   }
 
+  
+  // fonction qui ajoute un item en fonction des valeurs dans le POST pour la liste sélectionnée
   public function ajouter_item($token){
     $i = new m\Item();
     $l = m\Liste::where("token","=",$token)->first();
@@ -144,6 +155,8 @@ class ContItem {
     $app->redirect($app->urlFor('listeCrea',array('token' => $token)));
   }
 
+  
+  //fonction qui supprime le l'item sélectionné 
   public function supprimerItem($token, $id){
     $i = m\Item::where("id","=",$id)->first();
     $i->delete();

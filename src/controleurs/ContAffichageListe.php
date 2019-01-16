@@ -15,32 +15,31 @@ class ContAffichageListe {
     public function __construct(){}
 
     public function afficherListesPublic(){
-        
+
         if(isset($_GET['trie']) and (in_array($_GET['trie'], ['auteur', 'date']))){
             if($_GET['trie'] == 'date'){
                 $listes = m\Liste::where('public', '=', '1')->where('expiration', '>=', date("Y-m-d"))->orderBy('expiration')->get();
             } else{
-                ////////// TODO à modifier :
-                $listes = m\Liste::where('public', '=', '1')->where('expiration', '>=', date("Y-m-d"))->orderBy('expiration')->get();
+                $listes = m\Liste::where('public', '=', '1')->where('expiration', '>=', date("Y-m-d"))->join('membres', function($join){$join->on('liste.user_id', '=', 'membres.idUser');})->orderBy('nom')->get();
             }
         } else{
             $listes = m\Liste::where('public', '=', '1')->where('expiration', '>=', date("Y-m-d"))->orderBy('expiration')->get();
         }
-        
+
 
         $vue = new VueWebSite(array('liste' => $listes));
         $vue->render('LISTES');
     }
-    
+
     // Inutile ???
     public function afficherListesUtilisateurs(){
         $listes = m\Liste::get();
         $userId = Auth::getIdUser();
-        
+
         if(isset($userId)){
             $m = m\Membre::where('idUser', '=', $userId)->first();
             $listes = $m->listes()->get();
-            
+
             $vue = new VueWebSite(array('liste' => $listes));
             $vue->render('LISTES_CREA');
         } else{
@@ -54,9 +53,9 @@ class ContAffichageListe {
     public function afficherListe($token){
         $liste = m\Liste::where('token', 'like', $token)->first();
         $vue = new VueWebSite(array('liste' => $liste));
-        
+
         $listes = m\Liste::where('token', 'like', $token)->get();
-        
+
         if(Auth::isAuthorized($token)){ // si l'utilisateur est autorisé à accéder à cette liste
             $vue->render('LISTE_CREA');
         } else{ // sinon redirection vers l'affichage des invités
@@ -66,24 +65,24 @@ class ContAffichageListe {
             $app->response->redirect($app->urlFor('listeShare', array('share' => $liste->share)));
         }
     }
-    
+
     public function demandeAcces($token){
         $liste = m\Liste::where('token', 'like', $token)->first();
         $app = \Slim\Slim::getInstance();
-        
+
         if(Auth::isAuthorized($token)){ // si l'utilisateur est autorisé à accéder à cette liste
             $app->response->redirect($app->urlFor('listeCrea', array('token' => $liste->token)));
         } else{ // sinon redirection vers l'affichage des invités
             $app->response->redirect($app->urlFor('listeShare', array('share' => $liste->share)));
         }
     }
-    
+
     public function afficherListeInvite($share){
-        
+
         $liste = m\Liste::where('share', 'like', $share)->first();
-        
+
         $vue = new VueWebSite(array('liste' => $liste));
-        
+
         // Voir si utile ? (la condition)
         if(Auth::isLogged()){ // si l'utilisateur est connecté
             $vue->render('LISTE_CO');
@@ -91,11 +90,11 @@ class ContAffichageListe {
             $vue->render('LISTE_INV');
         }
     }
-    
+
     public function reserverItem($share, $idItem){
         try{
-            
-            
+
+
             $app = \Slim\Slim::getInstance();
 
             if(isset($_POST["nom"]) and isset($_POST["prenom"]) and ($_POST["nom"] != '') and ($_POST["prenom"] != '')){
@@ -134,30 +133,30 @@ class ContAffichageListe {
                 $_SESSION['typeErreur'] = "info";
                 $r->save();
                 $app->response->redirect($app->urlFor('listeShare', array('share' => $share)));
-                
+
             } else{
                 throw new ExceptionPerso('Une erreur est survenue lors de la réservation de l\'item, vérifez bien à remplir tout les champs !', 'err');
             }
-            
-            
+
+
         } catch(ExceptionPerso $e){
             $_SESSION['messageErreur'] = $e->getMessage();
             $_SESSION['typeErreur'] = $e->getType();
             $app = \Slim\Slim::getInstance();
             $app->redirect($app->urlFor('listeShare', array('share' => $share)));
         }
-        
-        
-        
-        
+
+
+
+
     }
-    
+
     public function afficherMesListes($err){
-        
+
         try{
-            
+
             if(Auth::isLogged()){
-                
+
                 $userId = Auth::getIdUser();
                 $fabrique = m\Liste::where('user_id',"=",$userId)->get();
                 #on cherche les listes qui n'ont pas été crée par user mais a accès dessus
@@ -166,23 +165,23 @@ class ContAffichageListe {
 
                 $vue = new VueWebSite(array("erreur" => $err, "liste" => $fusion, "listeParatagee" => $listes));
                 $vue->render('MESLISTES');
-                
+
             } else{
                 $app = \Slim\Slim::getInstance();
                 $app->redirect($app->urlfor('connexion'));
             }
-            
-            
+
+
         } catch(ExceptionPerso $e){
             $app = \Slim\Slim::getInstance();
             $app->redirect($app->urlFor('accueil'));
         }
     }
-    
+
     public function ajouterListe($token){
         $erreur="";
         $verif=m\Liste::where("token","=",$token)->count();
-        
+
         if($verif!=0){
             $verif2 = m\Membre::where("email","=",$_SESSION['profil']['Email'])->first()->liste()->where("token","=",$token)->count();
             $verif2+= m\Liste::where("token","=",$token)->where('user_id',"=",Auth::getIdUser())->count();
@@ -194,14 +193,14 @@ class ContAffichageListe {
             else{
                 $erreur = "Deja ajouté!";
             }
-            
+
         }
         else{
             $erreur = "Liste inconnu";
         }
         return $erreur;
     }
-    
+
     public function supprimerListeShare($token){
         try{
             if(Auth::isAuthorized($token)){
@@ -216,14 +215,14 @@ class ContAffichageListe {
             $app = \Slim\Slim::getInstance();
             $app->redirect($app->urlFor('demandeAcces', array('token' => $token)));
         }
-        
+
     }
 
     public function ajouterMessageListe($token) {
         try{
-            
+
             if(Auth::isAuthorized($token)){
-                
+
                 if(isset($_POST['message_liste']) and ($_POST['message_liste'] != '')){
 
                     if(! filter_var($_POST['message_liste'], FILTER_SANITIZE_STRING)){
@@ -244,12 +243,12 @@ class ContAffichageListe {
                 } else{
                     throw new ExceptionPerso('Une erreur est survenue lors de l\'ajout du message, vérifez bien à remplir tout les champs !', 'err');
                 }
-                
+
             } else{
                 throw new ExceptionPerso('Vous n\'êtes pas autorisé à ajouter de message sur cette liste !', 'avert');
             }
-            
-            
+
+
         } catch(ExceptionPerso $e){
             $_SESSION['messageErreur'] = $e->getMessage();
             $_SESSION['typeErreur'] = $e->getType();
